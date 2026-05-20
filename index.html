@@ -391,6 +391,35 @@ main {
   border-color: rgba(88,166,255,.5);
 }
 
+/* ── ABOUT ── */
+.about-section {
+  max-width: 620px;
+  margin: 0 auto 56px;
+  text-align: center;
+}
+
+.about-section p {
+  font-size: 15px;
+  color: var(--muted-lt);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+
+.about-section p:last-child { margin-bottom: 0; }
+
+.about-section p strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.about-divider {
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--purple), var(--teal));
+  border-radius: 99px;
+  margin: 0 auto 20px;
+}
+
 /* ── MORE COMING ── */
 .more-section {
   margin-top: 56px;
@@ -462,16 +491,16 @@ footer a:hover { text-decoration: underline; }
   <div class="header-inner">
     <div class="avatar">OE</div>
     <h1>Onur Esen</h1>
-    <div class="header-role">Innovation &amp; Digitalization Engineer · Obayashi Corporation</div>
-    <div class="header-bio">"I build tools. Some for me, some for my team, some for clients."</div>
+    <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
+    <div class="header-bio">"Builder first. I make tools for the built environment."</div>
     <div class="header-chips">
       <span class="chip">
         <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13zm.75-9.75v3.94l2.47 2.47-.97.97L7.5 9.38V4.75h1.25z"/></svg>
-        Kawasaki → Shinagawa
+        Tokyo
       </span>
       <span class="chip">
         <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 0 1 1-1h8z"/></svg>
-        BIM · IC · AI
+        Obayashi Corporation
       </span>
       <span class="chip">
         <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25v-9.5zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25H1.75z"/></svg>
@@ -493,6 +522,13 @@ footer a:hover { text-decoration: underline; }
 
 <!-- ── MAIN ── -->
 <main>
+  <div class="about-section">
+    <div class="about-divider"></div>
+    <p>Most of what I build starts as personal curiosity and ends up useful at work. That overlap is where the interesting tools come from.</p>
+    <p>The common thread: connect things that are currently disconnected — BIM data to AI agents, site capture to model context, personal decisions to project tracking.</p>
+    <p><strong>Based in Tokyo at a Japanese general contractor.</strong> Civil engineer by training, Revit API developer by practice — buildingSMART BIM Foundation certified, with years on real construction projects behind the screen.</p>
+  </div>
+
   <div class="section-label">Open Source Projects</div>
 
   <div class="project-grid">
@@ -525,9 +561,13 @@ footer a:hover { text-decoration: underline; }
         <span class="tech">Playwright</span>
       </div>
       <div class="card-actions">
-        <a class="action-btn primary" href="https://github.com/onuresen/onexus" target="_blank" rel="noopener">
+        <a class="action-btn primary" href="https://onuresen.github.io/onexus/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z"/></svg>
+          Live Demo
+        </a>
+        <a class="action-btn" href="https://github.com/onuresen/onexus" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          View on GitHub
+          GitHub
         </a>
       </div>
     </div>
@@ -562,9 +602,13 @@ footer a:hover { text-decoration: underline; }
         <span class="tech">Obsidian sync</span>
       </div>
       <div class="card-actions">
-        <a class="action-btn primary" href="https://github.com/onuresen/thinking-hub" target="_blank" rel="noopener">
+        <a class="action-btn primary" href="https://onuresen.github.io/Thinking-Hub/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z"/></svg>
+          Live Demo
+        </a>
+        <a class="action-btn" href="https://github.com/onuresen/Thinking-Hub" target="_blank" rel="noopener">
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          View on GitHub
+          GitHub
         </a>
       </div>
     </div>
