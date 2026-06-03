@@ -1,697 +1,827 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onur Esen — Builder Portfolio</title>
-<meta name="description" content="Open-source tools by Onur Esen — BIM, AI, and graph tooling for the built environment.">
-
-<!-- Favicon -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d1117'/><text y='.9em' font-size='52' font-family='system-ui,sans-serif' font-weight='700' fill='%2358a6ff' x='50%25' text-anchor='middle' dominant-baseline='hanging' dy='10'>OE</text></svg>">
-
-<!-- Open Graph -->
-<meta property="og:type"        content="website">
-<meta property="og:url"         content="https://onuresen.github.io/">
-<meta property="og:title"       content="Onur Esen — Builder Portfolio">
-<meta property="og:description" content="Open-source tools for the built environment — graph intelligence, BIM tooling, and AI integrations. Builder first.">
-<meta property="og:image"       content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
-
-<!-- Twitter / X -->
-<meta name="twitter:card"        content="summary_large_image">
-<meta name="twitter:title"       content="Onur Esen — Builder Portfolio">
-<meta name="twitter:description" content="Open-source tools for the built environment — graph intelligence, BIM tooling, and AI integrations.">
-<meta name="twitter:image"       content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:          #0d1117;
-  --surface:     #161b22;
-  --surface-2:   #1e2430;
-  --border:      #30363d;
-  --border-lt:   #21262d;
-  --text:        #e6edf3;
-  --muted:       #7d8590;
-  --muted-lt:    #b1bac4;
-
-  --purple:      #a78bfa;
-  --purple-bg:   rgba(167,139,250,.08);
-  --purple-border: rgba(167,139,250,.25);
-
-  --teal:        #2dd4bf;
-  --teal-bg:     rgba(45,212,191,.08);
-  --teal-border: rgba(45,212,191,.25);
-
-  --amber:       #fbbf24;
-  --amber-bg:    rgba(251,191,36,.08);
-  --amber-border: rgba(251,191,36,.25);
-
-  --blue:        #58a6ff;
-  --green:       #3fb950;
-
-  --radius:      12px;
-  --radius-sm:   8px;
-  --shadow:      0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
-  --shadow-lg:   0 8px 24px rgba(0,0,0,.4);
-}
-
-body {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-
-a { color: inherit; text-decoration: none; }
-
-/* ── HEADER ── */
-header {
-  position: relative;
-  padding: 72px 32px 64px;
-  text-align: center;
-  overflow: hidden;
-}
-
-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(88,166,255,.12), transparent),
-    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(167,139,250,.07), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 50%, rgba(45,212,191,.06), transparent);
-  pointer-events: none;
-}
-
-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
-.header-inner {
-  position: relative;
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #58a6ff 0%, #a78bfa 50%, #2dd4bf 100%);
-  margin: 0 auto 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: 700;
-  color: #0d1117;
-  letter-spacing: -.5px;
-  box-shadow: 0 0 0 4px rgba(88,166,255,.15);
-}
-
-header h1 {
-  font-size: 38px;
-  font-weight: 700;
-  letter-spacing: -.6px;
-  line-height: 1.1;
-  margin-bottom: 12px;
-  background: linear-gradient(135deg, #e6edf3 30%, #b1bac4 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.header-role {
-  font-size: 15px;
-  color: var(--muted-lt);
-  margin-bottom: 8px;
-}
-
-.header-bio {
-  font-size: 17px;
-  color: var(--muted);
-  font-style: italic;
-  margin-bottom: 28px;
-}
-
-.header-chips {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 32px;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted-lt);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 4px 12px;
-}
-
-.chip svg {
-  width: 13px; height: 13px;
-  flex-shrink: 0;
-  opacity: .7;
-}
-
-.header-links {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--muted-lt);
-  transition: border-color .15s, color .15s, background .15s;
-}
-
-.link-btn:hover {
-  border-color: var(--blue);
-  color: var(--blue);
-  background: rgba(88,166,255,.06);
-}
-
-.link-btn svg { width: 15px; height: 15px; }
-
-/* ── MAIN ── */
-main {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 64px 32px 80px;
-}
-
-.section-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 32px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.section-label::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-/* ── PROJECT GRID ── */
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
-}
-
-/* ── PROJECT CARD ── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px 28px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  box-shadow: var(--shadow);
-  transition: border-color .2s, box-shadow .2s, transform .2s;
-  position: relative;
-  overflow: hidden;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-}
-
-.card.onexus::before      { background: linear-gradient(90deg, #a78bfa, #60a5fa); }
-.card.thinking::before    { background: linear-gradient(90deg, #2dd4bf, #38bdf8); }
-.card.kitofparts::before  { background: linear-gradient(90deg, #fbbf24, #fb923c); }
-
-.card:hover {
-  border-color: rgba(255,255,255,.12);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
-}
-
-/* card header row */
-.card-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 4px;
-}
-
-.card-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.card.onexus     .card-icon { background: var(--purple-bg); border: 1px solid var(--purple-border); }
-.card.thinking   .card-icon { background: var(--teal-bg);   border: 1px solid var(--teal-border);   }
-.card.kitofparts .card-icon { background: var(--amber-bg);  border: 1px solid var(--amber-border);  }
-
-.card-status {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .05em;
-  padding: 3px 9px;
-  border-radius: 99px;
-  white-space: nowrap;
-  background: rgba(63,185,80,.1);
-  border: 1px solid rgba(63,185,80,.2);
-  color: var(--green);
-}
-
-.card-name {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -.3px;
-  color: var(--text);
-  margin-top: 14px;
-  margin-bottom: 4px;
-}
-
-.card-tagline {
-  font-size: 13.5px;
-  color: var(--muted);
-  font-style: italic;
-  margin-bottom: 16px;
-  line-height: 1.4;
-}
-
-.card-desc {
-  font-size: 14px;
-  color: var(--muted-lt);
-  line-height: 1.65;
-  margin-bottom: 20px;
-  flex: 1;
-}
-
-/* differentiator callout */
-.callout {
-  border-radius: var(--radius-sm);
-  padding: 12px 14px;
-  margin-bottom: 20px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.callout-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  margin-bottom: 5px;
-}
-
-.card.onexus     .callout { background: var(--purple-bg); border: 1px solid var(--purple-border); color: var(--purple); }
-.card.onexus     .callout-label { color: rgba(167,139,250,.6); }
-.card.thinking   .callout { background: var(--teal-bg);   border: 1px solid var(--teal-border);   color: var(--teal); }
-.card.thinking   .callout-label { color: rgba(45,212,191,.6); }
-.card.kitofparts .callout { background: var(--amber-bg);  border: 1px solid var(--amber-border);  color: var(--amber); }
-.card.kitofparts .callout-label { color: rgba(251,191,36,.6); }
-
-/* tech badges */
-.tech-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 22px;
-}
-
-.tech {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--muted);
-  background: rgba(255,255,255,.04);
-  border: 1px solid var(--border-lt);
-  border-radius: 5px;
-  padding: 2px 8px;
-}
-
-/* action links */
-.card-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 7px 14px;
-  border-radius: 7px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted-lt);
-  transition: border-color .15s, color .15s, background .15s;
-  cursor: pointer;
-}
-
-.action-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
-.action-btn:hover {
-  color: var(--text);
-  border-color: rgba(255,255,255,.2);
-  background: rgba(255,255,255,.04);
-}
-
-.action-btn.primary {
-  background: rgba(88,166,255,.08);
-  border-color: rgba(88,166,255,.3);
-  color: var(--blue);
-}
-
-.action-btn.primary:hover {
-  background: rgba(88,166,255,.14);
-  border-color: rgba(88,166,255,.5);
-}
-
-/* ── ABOUT ── */
-.about-section {
-  max-width: 620px;
-  margin: 0 auto 56px;
-  text-align: center;
-}
-
-.about-section p {
-  font-size: 15px;
-  color: var(--muted-lt);
-  line-height: 1.75;
-  margin-bottom: 14px;
-}
-
-.about-section p:last-child { margin-bottom: 0; }
-
-.about-section p strong {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.about-divider {
-  width: 32px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--purple), var(--teal));
-  border-radius: 99px;
-  margin: 0 auto 20px;
-}
-
-/* ── MORE COMING ── */
-.more-section {
-  margin-top: 56px;
-  padding-top: 40px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-
-.more-text h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-
-.more-text p {
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.more-projects {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.more-pill {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--muted);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 99px;
-  padding: 5px 14px;
-}
-
-/* ── FOOTER ── */
-footer {
-  padding: 24px 32px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  border-top: 1px solid var(--border-lt);
-}
-
-footer a { color: var(--blue); }
-footer a:hover { text-decoration: underline; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 720px) {
-  header { padding: 48px 20px 40px; }
-  header h1 { font-size: 28px; }
-  main { padding: 40px 20px 60px; }
-  .project-grid { grid-template-columns: 1fr; }
-  .card { padding: 22px 20px 20px; }
-  .more-section { flex-direction: column; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Onur Esen — Builder Portfolio</title>
+  <meta name="description"
+    content="Open-source tools by Onur Esen — BIM, AI, and graph tooling for the built environment.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onuresen.github.io/">
+  <meta property="og:title" content="Onur Esen — Builder Portfolio">
+  <meta property="og:description"
+    content="Open-source tools for the built environment — graph intelligence, BIM tooling, and AI integrations. Builder first.">
+  <meta property="og:image" content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Onur Esen — Builder Portfolio">
+  <meta name="twitter:description"
+    content="Open-source tools for the built environment — graph intelligence, BIM tooling, and AI integrations.">
+  <meta name="twitter:image" content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-2: #1e2430;
+      --border: #30363d;
+      --border-lt: #21262d;
+      --text: #e6edf3;
+      --muted: #7d8590;
+      --muted-lt: #b1bac4;
+
+      --purple: #a78bfa;
+      --purple-bg: rgba(167, 139, 250, .08);
+      --purple-border: rgba(167, 139, 250, .25);
+
+      --teal: #2dd4bf;
+      --teal-bg: rgba(45, 212, 191, .08);
+      --teal-border: rgba(45, 212, 191, .25);
+
+      --amber: #fbbf24;
+      --amber-bg: rgba(251, 191, 36, .08);
+      --amber-border: rgba(251, 191, 36, .25);
+
+      --blue: #58a6ff;
+      --green: #3fb950;
+
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .2);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, .4);
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      padding: 72px 32px 64px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(88, 166, 255, .12), transparent),
+        radial-gradient(ellipse 60% 40% at 20% 50%, rgba(167, 139, 250, .07), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 50%, rgba(45, 212, 191, .06), transparent);
+      pointer-events: none;
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .header-inner {
+      position: relative;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #58a6ff 0%, #a78bfa 50%, #2dd4bf 100%);
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: #0d1117;
+      letter-spacing: -.5px;
+      box-shadow: 0 0 0 4px rgba(88, 166, 255, .15);
+    }
+
+    header h1 {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -.6px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #e6edf3 30%, #b1bac4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-role {
+      font-size: 15px;
+      color: var(--muted-lt);
+      margin-bottom: 8px;
+    }
+
+    .header-bio {
+      font-size: 17px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 28px;
+    }
+
+    .header-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted-lt);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 4px 12px;
+    }
+
+    .chip svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
+      opacity: .7;
+    }
+
+    .header-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted-lt);
+      transition: border-color .15s, color .15s, background .15s;
+    }
+
+    .link-btn:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      background: rgba(88, 166, 255, .06);
+    }
+
+    .link-btn svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 64px 32px 80px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── PROJECT GRID ── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    /* ── PROJECT CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      box-shadow: var(--shadow);
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .card.onexus::before {
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+    }
+
+    .card.thinking::before {
+      background: linear-gradient(90deg, #2dd4bf, #38bdf8);
+    }
+
+    .card.kitofparts::before {
+      background: linear-gradient(90deg, #fbbf24, #fb923c);
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, .12);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+    }
+
+    /* card header row */
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .card.onexus .card-icon {
+      background: var(--purple-bg);
+      border: 1px solid var(--purple-border);
+    }
+
+    .card.thinking .card-icon {
+      background: var(--teal-bg);
+      border: 1px solid var(--teal-border);
+    }
+
+    .card.kitofparts .card-icon {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+    }
+
+    .card-status {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      padding: 3px 9px;
+      border-radius: 99px;
+      white-space: nowrap;
+      background: rgba(63, 185, 80, .1);
+      border: 1px solid rgba(63, 185, 80, .2);
+      color: var(--green);
+    }
+
+    .card-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      color: var(--text);
+      margin-top: 14px;
+      margin-bottom: 4px;
+    }
+
+    .card-tagline {
+      font-size: 13.5px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--muted-lt);
+      line-height: 1.65;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+
+    /* differentiator callout */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .callout-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .card.onexus .callout {
+      background: var(--purple-bg);
+      border: 1px solid var(--purple-border);
+      color: var(--purple);
+    }
+
+    .card.onexus .callout-label {
+      color: rgba(167, 139, 250, .6);
+    }
+
+    .card.thinking .callout {
+      background: var(--teal-bg);
+      border: 1px solid var(--teal-border);
+      color: var(--teal);
+    }
+
+    .card.thinking .callout-label {
+      color: rgba(45, 212, 191, .6);
+    }
+
+    .card.kitofparts .callout {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+    }
+
+    .card.kitofparts .callout-label {
+      color: rgba(251, 191, 36, .6);
+    }
+
+    /* tech badges */
+    .tech-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 22px;
+    }
+
+    .tech {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border-lt);
+      border-radius: 5px;
+      padding: 2px 8px;
+    }
+
+    /* action links */
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted-lt);
+      transition: border-color .15s, color .15s, background .15s;
+      cursor: pointer;
+    }
+
+    .action-btn svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .action-btn:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, .2);
+      background: rgba(255, 255, 255, .04);
+    }
+
+    .action-btn.primary {
+      background: rgba(88, 166, 255, .08);
+      border-color: rgba(88, 166, 255, .3);
+      color: var(--blue);
+    }
+
+    .action-btn.primary:hover {
+      background: rgba(88, 166, 255, .14);
+      border-color: rgba(88, 166, 255, .5);
+    }
+
+    /* ── ABOUT ── */
+    .about-section {
+      max-width: 620px;
+      margin: 0 auto 56px;
+      text-align: center;
+    }
+
+    .about-section p {
+      font-size: 15px;
+      color: var(--muted-lt);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+
+    .about-section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about-section p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about-divider {
+      width: 32px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--purple), var(--teal));
+      border-radius: 99px;
+      margin: 0 auto 20px;
+    }
+
+    /* ── MORE COMING ── */
+    .more-section {
+      margin-top: 56px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .more-text h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .more-text p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .more-projects {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .more-pill {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 5px 14px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--border-lt);
+    }
+
+    footer a {
+      color: var(--blue);
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      header {
+        padding: 48px 20px 40px;
+      }
+
+      header h1 {
+        font-size: 28px;
+      }
+
+      main {
+        padding: 40px 20px 60px;
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 22px 20px 20px;
+      }
+
+      .more-section {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ── HEADER ── -->
-<header>
-  <div class="header-inner">
-    <div class="avatar">OE</div>
-    <h1>Onur Esen</h1>
-    <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
-    <div class="header-bio">"Builder first. I make tools for the built environment."</div>
-    <div class="header-chips">
-      <span class="chip">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13zm.75-9.75v3.94l2.47 2.47-.97.97L7.5 9.38V4.75h1.25z"/></svg>
-        Tokyo
-      </span>
-      <span class="chip">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 0 1 1-1h8z"/></svg>
-        Obayashi Corporation
-      </span>
-      <span class="chip">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25v-9.5zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25H1.75z"/></svg>
-        MCP Integrations
-      </span>
-    </div>
-    <div class="header-links">
-      <a class="link-btn" href="https://github.com/onuresen" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-        github.com/onuresen
-      </a>
-      <a class="link-btn" href="https://www.linkedin.com/in/onuresen" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
-        LinkedIn
-      </a>
-    </div>
-  </div>
-</header>
-
-<!-- ── MAIN ── -->
-<main>
-  <div class="about-section">
-    <div class="about-divider"></div>
-    <p>Most of what I build starts as personal curiosity and ends up useful at work. That overlap is where the interesting tools come from.</p>
-    <p>The common thread: connect things that are currently disconnected — BIM data to AI agents, site capture to model context, personal decisions to project tracking.</p>
-    <p><strong>Based in Tokyo at a Japanese general contractor.</strong></p>
-  </div>
-
-  <div class="section-label">Open Source Projects</div>
-
-  <div class="project-grid">
-
-    <!-- ONEXUS -->
-    <div class="card onexus">
-      <div class="card-header">
-        <div class="card-icon">◈</div>
-        <span class="card-status">v1.0</span>
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="header-inner">
+      <div class="avatar">OE</div>
+      <h1>Onur Esen</h1>
+      <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
+      <div class="header-bio">"Builder first. I make tools for the built environment."</div>
+      <div class="header-chips">
+        <span class="chip">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm0 14.5a6.5 6.5 0 1 1 0-13 6.5 6.5 0 0 1 0 13zm.75-9.75v3.94l2.47 2.47-.97.97L7.5 9.38V4.75h1.25z" />
+          </svg>
+          Tokyo
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 0 1 1-1h8z" />
+          </svg>
+          Obayashi Corporation
+        </span>
+        <span class="chip">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25v-9.5zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25H1.75z" />
+          </svg>
+          MCP Integrations
+        </span>
       </div>
-      <div class="card-name">ONEXUS</div>
-      <div class="card-tagline">A graph viewer that Claude can query and control live.</div>
-      <p class="card-desc">
-        Browser-based graph visualization and composition tool built for the AEC industry.
-        Runs as plain HTML with no build step — load any JSON graph, IFC file, or CSV and
-        explore relationships visually. Connects to Claude via an MCP server so an AI agent
-        can navigate, highlight, and filter the graph in real time.
-      </p>
-      <div class="callout">
-        <div class="callout-label">What's different</div>
-        Ask Claude: "Show me all nodes connected to Room 105" — ONEXUS highlights them live.
-        The same graph you see in the browser is the one the AI is navigating.
-      </div>
-      <div class="tech-row">
-        <span class="tech">Vanilla JS</span>
-        <span class="tech">Cytoscape.js</span>
-        <span class="tech">MCP Server</span>
-        <span class="tech">Python FastMCP</span>
-        <span class="tech">No build step</span>
-        <span class="tech">Playwright</span>
-      </div>
-      <div class="card-actions">
-        <a class="action-btn primary" href="https://onuresen.github.io/onexus/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z"/></svg>
-          Live Demo
+      <div class="header-links">
+        <a class="link-btn" href="https://github.com/onuresen" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+          </svg>
+          github.com/onuresen
         </a>
-        <a class="action-btn" href="https://github.com/onuresen/onexus" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          GitHub
+        <a class="link-btn" href="https://www.linkedin.com/in/onuresen" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path
+              d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z" />
+          </svg>
+          LinkedIn
         </a>
       </div>
     </div>
+  </header>
 
-    <!-- THINKING HUB -->
-    <div class="card thinking">
-      <div class="card-header">
-        <div class="card-icon">⬡</div>
-        <span class="card-status">v1.0</span>
-      </div>
-      <div class="card-name">Thinking Hub</div>
-      <div class="card-tagline">20+ tools. One browser tab. No install.</div>
-      <p class="card-desc">
-        A personal productivity suite — project tracker, decision log, KMQT board,
-        goal planner, Pomodoro timer, risk register, and 15+ more tools — all running
-        inside a single shell HTML file with no server and no build step. Data syncs
-        to the cloud via Supabase or stays local. Connects to an Obsidian vault
-        through the File System Access API.
-      </p>
-      <div class="callout">
-        <div class="callout-label">What's different</div>
-        Every tool shares the same data store and can deep-link to each other.
-        A decision in Decision Hub appears as context in the project tracker.
-        Zero friction — open the file, start working.
-      </div>
-      <div class="tech-row">
-        <span class="tech">Vanilla JS</span>
-        <span class="tech">No build step</span>
-        <span class="tech">Supabase</span>
-        <span class="tech">localStorage</span>
-        <span class="tech">File System API</span>
-        <span class="tech">Obsidian sync</span>
-      </div>
-      <div class="card-actions">
-        <a class="action-btn primary" href="https://onuresen.github.io/Thinking-Hub/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z"/></svg>
-          Live Demo
-        </a>
-        <a class="action-btn" href="https://github.com/onuresen/Thinking-Hub" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          GitHub
-        </a>
-      </div>
+  <!-- ── MAIN ── -->
+  <main>
+    <div class="about-section">
+      <div class="about-divider"></div>
+      <p>Most of what I build starts as personal curiosity and ends up useful at work. That overlap is where the
+        interesting tools come from.</p>
+      <p>The common thread: connect things that are currently disconnected — BIM data to AI agents, site capture to
+        model context, personal decisions to project tracking.</p>
+      <p><strong>Based in Tokyo at a Japanese general contractor.</strong></p>
     </div>
 
-    <!-- KIT OF PARTS -->
-    <div class="card kitofparts">
-      <div class="card-header">
-        <div class="card-icon">⊞</div>
-        <span class="card-status">v1.0</span>
+    <div class="section-label">Open Source Projects</div>
+
+    <div class="project-grid">
+
+      <!-- ONEXUS -->
+      <div class="card onexus">
+        <div class="card-header">
+          <div class="card-icon">◈</div>
+          <span class="card-status">v1.0</span>
+        </div>
+        <div class="card-name">ONEXUS</div>
+        <div class="card-tagline">A graph viewer that Claude can query and control live.</div>
+        <p class="card-desc">
+          Browser-based graph visualization and composition tool built for the AEC industry.
+          Runs as plain HTML with no build step — load any JSON graph, IFC file, or CSV and
+          explore relationships visually. Connects to Claude via an MCP server so an AI agent
+          can navigate, highlight, and filter the graph in real time.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Ask Claude: "Show me all nodes connected to Room 105" — ONEXUS highlights them live.
+          The same graph you see in the browser is the one the AI is navigating.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">Cytoscape.js</span>
+          <span class="tech">MCP Server</span>
+          <span class="tech">Python FastMCP</span>
+          <span class="tech">No build step</span>
+          <span class="tech">Playwright</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/onexus/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Live Demo
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/onexus" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
       </div>
-      <div class="card-name">Kit of Parts</div>
-      <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
-      <p class="card-desc">
-        Interactive 3D building configurator for modular and prefabricated systems.
-        Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
-        simulations, fire spread visualizations, crane collision checks, and
-        sustainability metrics — all in the browser. Built against real Japanese
-        standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
-      </p>
-      <div class="callout">
-        <div class="callout-label">What's different</div>
-        Not a geometry viewer — a decision tool. Every part has variants with
-        trade-off data. The AI carbon optimiser swaps your assembly toward the
-        lowest embodied carbon configuration automatically.
+
+      <!-- THINKING HUB -->
+      <div class="card thinking">
+        <div class="card-header">
+          <div class="card-icon">⬡</div>
+          <span class="card-status">v1.0</span>
+        </div>
+        <div class="card-name">Thinking Hub</div>
+        <div class="card-tagline">20+ tools. One browser tab. No install.</div>
+        <p class="card-desc">
+          A personal productivity suite — project tracker, decision log, KMQT board,
+          goal planner, Pomodoro timer, risk register, and 15+ more tools — all running
+          inside a single shell HTML file with no server and no build step. Data syncs
+          to the cloud via Supabase or stays local. Connects to an Obsidian vault
+          through the File System Access API.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Every tool shares the same data store and can deep-link to each other.
+          A decision in Decision Hub appears as context in the project tracker.
+          Zero friction — open the file, start working.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">No build step</span>
+          <span class="tech">Supabase</span>
+          <span class="tech">localStorage</span>
+          <span class="tech">File System API</span>
+          <span class="tech">Obsidian sync</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/Thinking-Hub/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Live Demo
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/Thinking-Hub" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
       </div>
-      <div class="tech-row">
-        <span class="tech">React 19</span>
-        <span class="tech">Three.js</span>
-        <span class="tech">@react-three/fiber</span>
-        <span class="tech">GSAP</span>
-        <span class="tech">Vite</span>
-        <span class="tech">GitHub Pages</span>
+
+      <!-- KIT OF PARTS -->
+      <div class="card kitofparts">
+        <div class="card-header">
+          <div class="card-icon">⊞</div>
+          <span class="card-status">v1.0</span>
+        </div>
+        <div class="card-name">Kit of Parts</div>
+        <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
+        <p class="card-desc">
+          Interactive 3D building configurator for modular and prefabricated systems.
+          Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
+          simulations, fire spread visualizations, crane collision checks, and
+          sustainability metrics — all in the browser. Built against real Japanese
+          standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Not a geometry viewer — a decision tool. Every part has variants with
+          trade-off data. The AI carbon optimiser swaps your assembly toward the
+          lowest embodied carbon configuration automatically.
+        </div>
+        <div class="tech-row">
+          <span class="tech">React 19</span>
+          <span class="tech">Three.js</span>
+          <span class="tech">@react-three/fiber</span>
+          <span class="tech">GSAP</span>
+          <span class="tech">Vite</span>
+          <span class="tech">GitHub Pages</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/Kit-of-Parts/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Live Demo
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/Kit-of-Parts" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
       </div>
-      <div class="card-actions">
-        <a class="action-btn primary" href="https://onuresen.github.io/Kit-of-Parts/" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z"/></svg>
-          Live Demo
-        </a>
-        <a class="action-btn" href="https://github.com/onuresen/Kit-of-Parts" target="_blank" rel="noopener">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          GitHub
-        </a>
-      </div>
+
     </div>
 
-  </div>
-
-  <!-- MORE COMING -->
-  <div class="more-section">
-    <div class="more-text">
-      <h3>More in progress</h3>
-      <p>Work tools and exploratory projects — some Obayashi-specific, some purely personal.</p>
+    <!-- MORE COMING -->
+    <div class="more-section">
+      <div class="more-text">
+        <h3>More in progress</h3>
+        <p>Work tools and exploratory projects — some Obayashi-specific, some purely personal.</p>
+      </div>
+      <div class="more-projects">
+        <span class="more-pill">ONES Revit Plugin</span>
+        <span class="more-pill">AI Orchestration</span>
+        <span class="more-pill">Revit Model Dashboard</span>
+        <span class="more-pill">OneBridge MCP</span>
+      </div>
     </div>
-    <div class="more-projects">
-      <span class="more-pill">ONES Revit Plugin</span>
-      <span class="more-pill">AI Orchestration</span>
-      <span class="more-pill">Revit Model Dashboard</span>
-      <span class="more-pill">OneBridge MCP</span>
-    </div>
-  </div>
-</main>
+  </main>
 
-<!-- ── FOOTER ── -->
-<footer>
-  <p>Built by <a href="https://github.com/onuresen">Onur Esen</a> · Zero dependencies · Plain HTML</p>
-</footer>
+  <!-- ── FOOTER ── -->
+  <footer>
+    <p>Built by <a href="https://github.com/onuresen">Onur Esen</a> · Zero dependencies · Plain HTML</p>
+  </footer>
 
 </body>
+
 </html>
