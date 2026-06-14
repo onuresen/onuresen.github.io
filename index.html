@@ -30,6 +30,10 @@
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
     rel="stylesheet">
+
+  <!-- Shared UI system (canonical: Vibe_Coding/ui-system) — Executive "Boardroom" palette -->
+  <link rel="stylesheet" href="ui-base.css">
+  <link rel="stylesheet" href="executive.css">
   <style>
     *,
     *::before,
@@ -40,34 +44,34 @@
     }
 
     :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --surface-2: #1e2430;
-      --border: #30363d;
-      --border-lt: #21262d;
-      --text: #e6edf3;
-      --muted: #7d8590;
-      --muted-lt: #b1bac4;
+      /* Core palette (--bg/--surface/--surface2/--surface3/--border/--border2/
+         --text/--text2/--text3/--accent/--accent2) comes from executive.css.
+         Below: alias this file's local names + executive-toned category accents. */
+      --surface-2: var(--surface2);
+      --border-lt: var(--border2);
+      --muted: var(--text3);
+      --muted-lt: var(--text2);
 
-      --purple: #a78bfa;
-      --purple-bg: rgba(167, 139, 250, .08);
-      --purple-border: rgba(167, 139, 250, .25);
+      /* Category accents — restrained, readable on light (navy / teal / bronze) */
+      --purple: #3f5a8a;
+      --purple-bg: rgba(63, 90, 138, .08);
+      --purple-border: rgba(63, 90, 138, .22);
 
-      --teal: #2dd4bf;
-      --teal-bg: rgba(45, 212, 191, .08);
-      --teal-border: rgba(45, 212, 191, .25);
+      --teal: #2e7d6b;
+      --teal-bg: rgba(46, 125, 107, .08);
+      --teal-border: rgba(46, 125, 107, .22);
 
-      --amber: #fbbf24;
-      --amber-bg: rgba(251, 191, 36, .08);
-      --amber-border: rgba(251, 191, 36, .25);
+      --amber: #9a6b1f;
+      --amber-bg: rgba(154, 107, 31, .08);
+      --amber-border: rgba(154, 107, 31, .22);
 
-      --blue: #58a6ff;
-      --green: #3fb950;
+      --blue: var(--accent);
+      --green: #3f7d52;
 
       --radius: 12px;
       --radius-sm: 8px;
-      --shadow: 0 1px 3px rgba(0, 0, 0, .3), 0 1px 2px rgba(0, 0, 0, .2);
-      --shadow-lg: 0 8px 24px rgba(0, 0, 0, .4);
+      --shadow: 0 1px 3px rgba(17, 36, 58, .08), 0 1px 2px rgba(17, 36, 58, .06);
+      --shadow-lg: 0 8px 24px rgba(17, 36, 58, .12);
     }
 
     body {
@@ -97,9 +101,9 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(88, 166, 255, .12), transparent),
-        radial-gradient(ellipse 60% 40% at 20% 50%, rgba(167, 139, 250, .07), transparent),
-        radial-gradient(ellipse 60% 40% at 80% 50%, rgba(45, 212, 191, .06), transparent);
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(31, 95, 139, .10), transparent),
+        radial-gradient(ellipse 60% 40% at 20% 50%, rgba(31, 95, 139, .05), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 50%, rgba(176, 125, 43, .05), transparent);
       pointer-events: none;
     }
 
@@ -123,16 +127,16 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #58a6ff 0%, #a78bfa 50%, #2dd4bf 100%);
+      background: linear-gradient(135deg, #1f5f8b 0%, #11243a 100%);
       margin: 0 auto 24px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 26px;
       font-weight: 700;
-      color: #0d1117;
+      color: #ffffff;
       letter-spacing: -.5px;
-      box-shadow: 0 0 0 4px rgba(88, 166, 255, .15);
+      box-shadow: 0 0 0 4px rgba(31, 95, 139, .15);
     }
 
     header h1 {
@@ -141,7 +145,7 @@
       letter-spacing: -.6px;
       line-height: 1.1;
       margin-bottom: 12px;
-      background: linear-gradient(135deg, #e6edf3 30%, #b1bac4 100%);
+      background: linear-gradient(135deg, #11243a 30%, #1f5f8b 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -212,7 +216,7 @@
     .link-btn:hover {
       border-color: var(--blue);
       color: var(--blue);
-      background: rgba(88, 166, 255, .06);
+      background: var(--accent-dim);
     }
 
     .link-btn svg {
@@ -278,19 +282,19 @@
     }
 
     .card.onexus::before {
-      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+      background: linear-gradient(90deg, var(--accent), #4a90c8);
     }
 
     .card.thinking::before {
-      background: linear-gradient(90deg, #2dd4bf, #38bdf8);
+      background: linear-gradient(90deg, #2e7d6b, #4aa088);
     }
 
     .card.kitofparts::before {
-      background: linear-gradient(90deg, #fbbf24, #fb923c);
+      background: linear-gradient(90deg, var(--accent2), #d6a45a);
     }
 
     .card:hover {
-      border-color: rgba(255, 255, 255, .12);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
       box-shadow: var(--shadow-lg);
       transform: translateY(-2px);
     }
@@ -391,7 +395,7 @@
     }
 
     .card.onexus .callout-label {
-      color: rgba(167, 139, 250, .6);
+      color: var(--purple);
     }
 
     .card.thinking .callout {
@@ -401,7 +405,7 @@
     }
 
     .card.thinking .callout-label {
-      color: rgba(45, 212, 191, .6);
+      color: var(--teal);
     }
 
     .card.kitofparts .callout {
@@ -411,7 +415,7 @@
     }
 
     .card.kitofparts .callout-label {
-      color: rgba(251, 191, 36, .6);
+      color: var(--amber);
     }
 
     /* tech badges */
@@ -426,7 +430,7 @@
       font-size: 11px;
       font-weight: 500;
       color: var(--muted);
-      background: rgba(255, 255, 255, .04);
+      background: var(--surface2);
       border: 1px solid var(--border-lt);
       border-radius: 5px;
       padding: 2px 8px;
@@ -462,19 +466,19 @@
 
     .action-btn:hover {
       color: var(--text);
-      border-color: rgba(255, 255, 255, .2);
-      background: rgba(255, 255, 255, .04);
+      border-color: var(--border2);
+      background: var(--surface2);
     }
 
     .action-btn.primary {
-      background: rgba(88, 166, 255, .08);
-      border-color: rgba(88, 166, 255, .3);
-      color: var(--blue);
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--on-accent);
     }
 
     .action-btn.primary:hover {
-      background: rgba(88, 166, 255, .14);
-      border-color: rgba(88, 166, 255, .5);
+      background: #194e74;
+      border-color: #194e74;
     }
 
     /* ── ABOUT ── */
@@ -503,7 +507,7 @@
     .about-divider {
       width: 32px;
       height: 2px;
-      background: linear-gradient(90deg, var(--purple), var(--teal));
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
       border-radius: 99px;
       margin: 0 auto 20px;
     }

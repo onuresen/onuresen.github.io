@@ -1,0 +1,30 @@
+/* =============================================================================
+   Executive palette — "Boardroom"  ·  ui-system v1.0.0
+   Light, professional / leadership-facing. Cool navy authority + bronze signal.
+   Used by: onuresen.github.io, OneBridge, ROD, BIM Modelling Guide.
+   Load AFTER ui-base.css.   See esen-vault › concepts/Shared-UI-System.md
+   ============================================================================= */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #11243a;   /* deep navy ink */
+  --text2:     #3d5066;
+  --text3:     #7c8aa0;
+
+  --accent:        #1f5f8b;   /* brand blue — dim/glow derive from this in ui-base */
+  --on-accent:     #ffffff;
+
+  --accent2:       #b07d2b;   /* bronze — signal color, use sparingly (never a 2nd primary) */
+  --accent2-dim:   #f3e9d6;
+  --accent2-text:  #7a5519;
+
+  --font-display: 'Archivo', 'DM Sans', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
