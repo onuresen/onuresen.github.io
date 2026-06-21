@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes — Onur Esen</title>
+  <meta name="description" content="Short notes and updates from Onur Esen — projects, decisions, and things learned along the way.">
+
+  <link rel="icon" href="favicon.png" type="image/png+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="ui-base.css">
+  <link rel="stylesheet" href="executive.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      padding: 56px 32px 40px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text3);
+      margin-bottom: 24px;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 15px;
+      color: var(--text3);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 32px 80px;
+    }
+
+    .note-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .note-card {
+      display: block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 26px;
+      box-shadow: 0 1px 3px rgba(17, 36, 58, .08), 0 1px 2px rgba(17, 36, 58, .06);
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+
+    .note-card:hover {
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+      box-shadow: 0 8px 24px rgba(17, 36, 58, .12);
+      transform: translateY(-2px);
+    }
+
+    .note-date {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+
+    .note-title {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -.2px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .note-excerpt {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .note-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .note-tag {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text3);
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 5px;
+      padding: 2px 8px;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--text3);
+      padding: 40px 0;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text3);
+      border-top: 1px solid var(--border2);
+    }
+
+    footer a {
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a class="back-link" href="index.html">&larr; Back to projects</a>
+    <h1>Notes</h1>
+    <p>Short updates on projects, decisions, and things learned along the way. Not a blog with a schedule — just a log.</p>
+  </header>
+
+  <main>
+    <div class="note-list" id="note-list">
+      <div class="empty-state">Loading notes…</div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Built by <a href="https://github.com/onuresen">Onur Esen</a> · Zero dependencies · Plain HTML</p>
+  </footer>
+
+  <script>
+    fetch('notes/index.json')
+      .then(r => r.json())
+      .then(notes => {
+        const list = document.getElementById('note-list');
+        if (!notes.length) {
+          list.innerHTML = '<div class="empty-state">No notes yet.</div>';
+          return;
+        }
+        notes.sort((a, b) => new Date(b.date) - new Date(a.date));
+        list.innerHTML = notes.map(n => `
+          <a class="note-card" href="notes/post.html?slug=${encodeURIComponent(n.slug)}">
+            <div class="note-date">${new Date(n.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+            <div class="note-title">${n.title}</div>
+            <div class="note-excerpt">${n.excerpt}</div>
+            <div class="note-tags">${(n.tags || []).map(t => `<span class="note-tag">${t}</span>`).join('')}</div>
+          </a>
+        `).join('');
+      })
+      .catch(() => {
+        document.getElementById('note-list').innerHTML = '<div class="empty-state">Couldn\'t load notes.</div>';
+      });
+  </script>
+
+</body>
+
+</html>

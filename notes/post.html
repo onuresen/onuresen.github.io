@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes — Onur Esen</title>
+
+  <link rel="icon" href="../favicon.png" type="image/png+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="../ui-base.css">
+  <link rel="stylesheet" href="../executive.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    header {
+      padding: 56px 32px 0;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text3);
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 32px 80px;
+    }
+
+    .post-date {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 16px;
+    }
+
+    .post-body h1 {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -.5px;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .post-body h2 {
+      font-size: 21px;
+      font-weight: 700;
+      margin: 32px 0 12px;
+    }
+
+    .post-body h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 24px 0 10px;
+    }
+
+    .post-body p {
+      font-size: 15.5px;
+      color: var(--text2);
+      line-height: 1.75;
+      margin-bottom: 16px;
+    }
+
+    .post-body code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 13px;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    .post-body pre {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+
+    .post-body pre code {
+      border: none;
+      padding: 0;
+      background: none;
+    }
+
+    .post-body ul,
+    .post-body ol {
+      margin: 0 0 16px 22px;
+      color: var(--text2);
+    }
+
+    .post-body li {
+      margin-bottom: 6px;
+    }
+
+    .post-body a {
+      text-decoration: underline;
+    }
+
+    .post-body blockquote {
+      border-left: 3px solid var(--border2);
+      padding-left: 16px;
+      color: var(--text3);
+      margin-bottom: 16px;
+    }
+
+    .empty-state {
+      color: var(--text3);
+      font-size: 14px;
+      padding: 40px 0;
+    }
+
+    footer {
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text3);
+      border-top: 1px solid var(--border2);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a class="back-link" href="../notes.html">&larr; All notes</a>
+  </header>
+
+  <main>
+    <div class="post-date" id="post-date"></div>
+    <article class="post-body" id="post-body">
+      <div class="empty-state">Loading…</div>
+    </article>
+  </main>
+
+  <footer>
+    <p>Built by <a href="https://github.com/onuresen">Onur Esen</a> · Zero dependencies · Plain HTML</p>
+  </footer>
+
+  <script>
+    const slug = new URLSearchParams(window.location.search).get('slug');
+    const body = document.getElementById('post-body');
+    const dateEl = document.getElementById('post-date');
+
+    if (!slug) {
+      body.innerHTML = '<div class="empty-state">No note specified.</div>';
+    } else {
+      Promise.all([
+        fetch('index.json').then(r => r.json()),
+        fetch(`${slug}.md`).then(r => {
+          if (!r.ok) throw new Error('not found');
+          return r.text();
+        })
+      ])
+        .then(([notes, md]) => {
+          const meta = notes.find(n => n.slug === slug);
+          if (meta) {
+            dateEl.textContent = new Date(meta.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.title = `${meta.title} — Onur Esen`;
+          }
+          body.innerHTML = marked.parse(md);
+        })
+        .catch(() => {
+          body.innerHTML = '<div class="empty-state">Couldn\'t load this note.</div>';
+        });
+    }
+  </script>
+
+</body>
+
+</html>
