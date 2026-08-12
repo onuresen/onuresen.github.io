@@ -9,7 +9,7 @@
 
 A single-file HTML portfolio page served via GitHub Pages. No framework, no build step, no dependencies — open `index.html` and it works.
 
-The page showcases three active open-source projects at the intersection of construction engineering, BIM, and AI tooling.
+The page showcases four active open-source projects spanning construction engineering, graph intelligence, personal knowledge systems, and Japanese learning.
 
 ---
 
@@ -17,8 +17,9 @@ The page showcases three active open-source projects at the intersection of cons
 
 | Project | What it does | Live |
 |---|---|---|
-| [ONEXUS](https://github.com/onuresen/onexus) | Browser graph visualization + MCP server for AI-controlled graph navigation | [onuresen.github.io/onexus](https://onuresen.github.io/onexus/) |
-| [Thinking Hub](https://github.com/onuresen/Thinking-Hub) | 20+ personal productivity tools in one shell HTML file | [onuresen.github.io/Thinking-Hub](https://onuresen.github.io/Thinking-Hub/) |
+| [ONEXUS](https://github.com/onuresen/onexus) | Relationship intelligence graph with grounded provenance and live MCP control | [onuresen.github.io/onexus](https://onuresen.github.io/onexus/) |
+| [Thinking Hub](https://github.com/onuresen/Thinking-Hub) | 23 connected, browser-local productivity and thinking tools in one installable PWA | [onuresen.github.io/Thinking-Hub](https://onuresen.github.io/Thinking-Hub/) |
+| [Kotoba Lab](https://github.com/onuresen/kotoba-lab) | Private Japanese reading, kanji-family study, and spaced-repetition workspace | [onuresen.github.io/kotoba-lab](https://onuresen.github.io/kotoba-lab/) |
 | [Kit of Parts](https://github.com/onuresen/Kit-of-Parts) | 3D modular building configurator with Japanese compliance standards | [onuresen.github.io/Kit-of-Parts](https://onuresen.github.io/Kit-of-Parts/) |
 
 ---

@@ -6,24 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onur Esen — Builder Portfolio</title>
   <meta name="description"
-    content="Open-source tools by Onur Esen — BIM, AI, and graph tooling for the built environment.">
+    content="Open-source tools by Onur Esen — BIM, graph intelligence, personal knowledge systems, and Japanese learning tools.">
 
   <!-- Favicon -->
-  <link rel="icon" href="favicon.png" type="image/png+xml">
+  <link rel="icon" href="favicon.png" type="image/png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://onuresen.github.io/">
   <meta property="og:title" content="Onur Esen — Builder Portfolio">
   <meta property="og:description"
-    content="Open-source tools for the built environment — graph intelligence, BIM tooling, and AI integrations. Builder first.">
+    content="Open-source tools for graph intelligence, BIM, personal knowledge systems, and Japanese learning. Builder first.">
   <meta property="og:image" content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Onur Esen — Builder Portfolio">
   <meta name="twitter:description"
-    content="Open-source tools for the built environment — graph intelligence, BIM tooling, and AI integrations.">
+    content="Open-source tools for graph intelligence, BIM, personal knowledge systems, and Japanese learning.">
   <meta name="twitter:image" content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,6 +64,10 @@
       --amber: #9a6b1f;
       --amber-bg: rgba(154, 107, 31, .08);
       --amber-border: rgba(154, 107, 31, .22);
+
+      --coral: #a34848;
+      --coral-bg: rgba(163, 72, 72, .08);
+      --coral-border: rgba(163, 72, 72, .22);
 
       --blue: var(--accent);
       --green: #3f7d52;
@@ -253,7 +257,7 @@
     /* ── PROJECT GRID ── */
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 20px;
     }
 
@@ -291,6 +295,10 @@
 
     .card.kitofparts::before {
       background: linear-gradient(90deg, var(--accent2), #d6a45a);
+    }
+
+    .card.kotoba::before {
+      background: linear-gradient(90deg, #a34848, #d77a67);
     }
 
     .card:hover {
@@ -332,6 +340,11 @@
     .card.kitofparts .card-icon {
       background: var(--amber-bg);
       border: 1px solid var(--amber-border);
+    }
+
+    .card.kotoba .card-icon {
+      background: var(--coral-bg);
+      border: 1px solid var(--coral-border);
     }
 
     .card-status {
@@ -416,6 +429,16 @@
 
     .card.kitofparts .callout-label {
       color: var(--amber);
+    }
+
+    .card.kotoba .callout {
+      background: var(--coral-bg);
+      border: 1px solid var(--coral-border);
+      color: var(--coral);
+    }
+
+    .card.kotoba .callout-label {
+      color: var(--coral);
     }
 
     /* tech badges */
@@ -663,12 +686,12 @@
       <div class="about-divider"></div>
       <p>Most of what I build starts as personal curiosity and ends up useful at work. That overlap is where the
         interesting tools come from.</p>
-      <p>The common thread: connect things that are currently disconnected — BIM data to AI agents, site capture to
-        model context, personal decisions to project tracking.</p>
+      <p>The common thread: make complex information easier to explore and act on — from BIM relationships and
+        personal decisions to the structure inside Japanese text.</p>
       <p><strong>Based in Tokyo at a Japanese general contractor.</strong></p>
     </div>
 
-    <div class="section-label">Open Source Projects</div>
+    <div class="section-label">Selected Open Source Projects</div>
 
     <div class="project-grid">
 
@@ -676,20 +699,20 @@
       <div class="card onexus">
         <div class="card-header">
           <div class="card-icon">◈</div>
-          <span class="card-status">v1.0</span>
+          <span class="card-status">Active</span>
         </div>
         <div class="card-name">ONEXUS</div>
-        <div class="card-tagline">A graph viewer that Claude can query and control live.</div>
+        <div class="card-tagline">A relationship intelligence layer that AI can query and control live.</div>
         <p class="card-desc">
-          Browser-based graph visualization and composition tool built for the AEC industry.
-          Runs as plain HTML with no build step — load any JSON graph, IFC file, or CSV and
-          explore relationships visually. Connects to Claude via an MCP server so an AI agent
-          can navigate, highlight, and filter the graph in real time.
+          Turn BIM, COBie, Obsidian, and project data into a live knowledge graph. Trace
+          dependencies, change impact, risk, and data-quality gaps while preserving each
+          relationship's source, evidence, confidence, validity, and review state. An MCP server
+          lets AI query and control the same graph you can inspect in the browser.
         </p>
         <div class="callout">
           <div class="callout-label">What's different</div>
-          Ask Claude: "Show me all nodes connected to Room 105" — ONEXUS highlights them live.
-          The same graph you see in the browser is the one the AI is navigating.
+          AI suggestions never become authoritative edges silently. Grounded paths expose their
+          provenance, and inferred relationships require explicit review before promotion.
         </div>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
@@ -721,30 +744,30 @@
       <div class="card thinking">
         <div class="card-header">
           <div class="card-icon">⬡</div>
-          <span class="card-status">v1.0</span>
+          <span class="card-status">v1.2</span>
         </div>
         <div class="card-name">Thinking Hub</div>
-        <div class="card-tagline">20+ tools. One browser tab. No install.</div>
+        <div class="card-tagline">23 connected tools. One browser tab. No server.</div>
         <p class="card-desc">
-          A personal productivity suite — project tracker, decision log, KMQT board,
-          goal planner, Pomodoro timer, risk register, and 15+ more tools — all running
-          inside a single shell HTML file with no server and no build step. Data syncs
-          to the cloud via Supabase or stays local. Connects to an Obsidian vault
-          through the File System Access API.
+          A browser-local workspace for projects, decisions, risks, meetings, learning,
+          time journaling, argument design, dependency mapping, and more. It runs as an
+          installable PWA with no build step, keeps confidential data in your browser,
+          and protects it with export/import plus rolling IndexedDB snapshots.
         </p>
         <div class="callout">
           <div class="callout-label">What's different</div>
-          Every tool shares the same data store and can deep-link to each other.
-          A decision in Decision Hub appears as context in the project tracker.
-          Zero friction — open the file, start working.
+          Machi Hub turns real activity into a living pixel city. The read-only Vault Bridge
+          finds missing daily records and structured Obsidian decisions, then proposes each
+          import for review — nothing is accepted automatically or uploaded.
         </div>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">No build step</span>
-          <span class="tech">Supabase</span>
-          <span class="tech">localStorage</span>
+          <span class="tech">Installable PWA</span>
+          <span class="tech">Browser-local</span>
+          <span class="tech">IndexedDB snapshots</span>
           <span class="tech">File System API</span>
-          <span class="tech">Obsidian sync</span>
+          <span class="tech">Obsidian Vault Bridge</span>
         </div>
         <div class="card-actions">
           <a class="action-btn primary" href="https://onuresen.github.io/Thinking-Hub/" target="_blank" rel="noopener">
@@ -764,11 +787,57 @@
         </div>
       </div>
 
+      <!-- KOTOBA LAB -->
+      <div class="card kotoba">
+        <div class="card-header">
+          <div class="card-icon">語</div>
+          <span class="card-status">v9.3</span>
+        </div>
+        <div class="card-name">Kotoba Lab</div>
+        <div class="card-tagline">Read Japanese, understand the kanji, remember the words.</div>
+        <p class="card-desc">
+          A private, browser-based Japanese reading and kanji study workspace. Paste text or
+          open Aozora Bunko files to analyze readability, add furigana, inspect vocabulary,
+          save unfamiliar words, and review them with built-in spaced repetition. A 6,813-entry
+          kanji library supports search, JLPT and stroke filters, and focused family study.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Radical Tree replays strokes and separates a kanji into its visual components. From
+          there, browse related kanji by stroke count, shared reading, radical, or direct
+          component and turn any filtered family into a keyboard-friendly study session.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">No build step</span>
+          <span class="tech">Browser-local</span>
+          <span class="tech">Kuromoji</span>
+          <span class="tech">KanjiVG</span>
+          <span class="tech">SM-2 review</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/kotoba-lab/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Open Lab
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/kotoba-lab" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
       <!-- KIT OF PARTS -->
       <div class="card kitofparts">
         <div class="card-header">
           <div class="card-icon">⊞</div>
-          <span class="card-status">v1.0</span>
+          <span class="card-status">Active</span>
         </div>
         <div class="card-name">Kit of Parts</div>
         <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
