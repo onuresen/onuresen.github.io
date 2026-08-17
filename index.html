@@ -362,7 +362,8 @@
       background: linear-gradient(90deg, #a34848, #d77a67);
     }
 
-    .card.onebridge::before {
+    .card.onebridge::before,
+    .card.oneplus::before {
       background: linear-gradient(90deg, #52606d, #8492a0);
     }
 
@@ -393,6 +394,12 @@
       transition: transform .3s cubic-bezier(.16, .8, .3, 1);
     }
 
+    .card-icon img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
     .card:hover .card-icon {
       transform: scale(1.08) rotate(-4deg);
     }
@@ -417,7 +424,13 @@
       border: 1px solid var(--coral-border);
     }
 
-    .card.onebridge .card-icon {
+    .card.oneplus .card-icon {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .card.onebridge .card-icon,
+    .card.oneplus .card-icon {
       background: var(--slate-bg);
       border: 1px solid var(--slate-border);
     }
@@ -516,13 +529,15 @@
       color: var(--coral);
     }
 
-    .card.onebridge .callout {
+    .card.onebridge .callout,
+    .card.oneplus .callout {
       background: var(--slate-bg);
       border: 1px solid var(--slate-border);
       color: var(--slate);
     }
 
-    .card.onebridge .callout-label {
+    .card.onebridge .callout-label,
+    .card.oneplus .callout-label {
       color: var(--slate);
     }
 
@@ -824,7 +839,7 @@
       <!-- ONEXUS -->
       <div class="card onexus">
         <div class="card-header">
-          <div class="card-icon">◈</div>
+          <div class="card-icon"><img src="icons/onexus.svg" alt="" loading="lazy"></div>
           <span class="card-status">Active</span>
         </div>
         <div class="card-name">ONEXUS</div>
@@ -866,96 +881,10 @@
         </div>
       </div>
 
-      <!-- ONEBRIDGE -->
-      <div class="card onebridge">
-        <div class="card-header">
-          <div class="card-icon">⇄</div>
-          <span class="card-status">Active</span>
-        </div>
-        <div class="card-name">OneBridge</div>
-        <div class="card-tagline">A live bridge between AI assistants and an open Revit model.</div>
-        <p class="card-desc">
-          An MCP server that connects Claude and Copilot Studio directly to a running Revit
-          session — query elements, inspect relationships and parameters, run model-health
-          checks, and compose live dashboards from the active model. Reads compose freely;
-          graphic overrides and parameter edits stay behind explicit, reviewable actions.
-        </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Nothing writes to the model silently. Parameter edits stay behind a preview step
-          until an explicit execute boundary is confirmed, so AI reasoning and model changes
-          never blur together.
-        </div>
-        <div class="tech-row">
-          <span class="tech">MCP Server</span>
-          <span class="tech">Revit API</span>
-          <span class="tech">C# Add-in</span>
-          <span class="tech">FastAPI</span>
-          <span class="tech">Model Dashboard</span>
-          <span class="tech">Copilot Studio Connector</span>
-        </div>
-        <div class="card-actions">
-          <span class="action-btn disabled">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
-            </svg>
-            Private repository
-          </span>
-        </div>
-      </div>
-
-      <!-- KIT OF PARTS -->
-      <div class="card kitofparts">
-        <div class="card-header">
-          <div class="card-icon">⊞</div>
-          <span class="card-status">Active</span>
-        </div>
-        <div class="card-name">Kit of Parts</div>
-        <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
-        <p class="card-desc">
-          Interactive 3D building configurator for modular and prefabricated systems.
-          Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
-          simulations, fire spread visualizations, crane collision checks, and
-          sustainability metrics — all in the browser. Built against real Japanese
-          standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
-        </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Not a geometry viewer — a decision tool. Every part has variants with
-          trade-off data. The AI carbon optimiser swaps your assembly toward the
-          lowest embodied carbon configuration automatically.
-        </div>
-        <div class="tech-row">
-          <span class="tech">React 19</span>
-          <span class="tech">Three.js</span>
-          <span class="tech">@react-three/fiber</span>
-          <span class="tech">GSAP</span>
-          <span class="tech">Vite</span>
-          <span class="tech">GitHub Pages</span>
-        </div>
-        <div class="card-actions">
-          <a class="action-btn primary" href="https://onuresen.github.io/Kit-of-Parts/" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
-            </svg>
-            Live Demo
-          </a>
-          <a class="action-btn" href="https://github.com/onuresen/Kit-of-Parts" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-            </svg>
-            GitHub
-          </a>
-        </div>
-      </div>
-
       <!-- THINKING HUB -->
       <div class="card thinking">
         <div class="card-header">
-          <div class="card-icon">⬡</div>
+          <div class="card-icon"><img src="icons/thinking-hub.svg" alt="" loading="lazy"></div>
           <span class="card-status">v1.2</span>
         </div>
         <div class="card-name">Thinking Hub</div>
@@ -1002,7 +931,7 @@
       <!-- KOTOBA LAB -->
       <div class="card kotoba">
         <div class="card-header">
-          <div class="card-icon">語</div>
+          <div class="card-icon"><img src="icons/kotoba-lab.png" alt="" loading="lazy"></div>
           <span class="card-status">v9.3</span>
         </div>
         <div class="card-name">Kotoba Lab</div>
@@ -1045,6 +974,129 @@
         </div>
       </div>
 
+      <!-- KIT OF PARTS -->
+      <div class="card kitofparts">
+        <div class="card-header">
+          <div class="card-icon"><img src="icons/kit-of-parts.svg" alt="" loading="lazy"></div>
+          <span class="card-status">Active</span>
+        </div>
+        <div class="card-name">Kit of Parts</div>
+        <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
+        <p class="card-desc">
+          Interactive 3D building configurator for modular and prefabricated systems.
+          Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
+          simulations, fire spread visualizations, crane collision checks, and
+          sustainability metrics — all in the browser. Built against real Japanese
+          standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Not a geometry viewer — a decision tool. Every part has variants with
+          trade-off data. The AI carbon optimiser swaps your assembly toward the
+          lowest embodied carbon configuration automatically.
+        </div>
+        <div class="tech-row">
+          <span class="tech">React 19</span>
+          <span class="tech">Three.js</span>
+          <span class="tech">@react-three/fiber</span>
+          <span class="tech">GSAP</span>
+          <span class="tech">Vite</span>
+          <span class="tech">GitHub Pages</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/Kit-of-Parts/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Live Demo
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/Kit-of-Parts" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- ONE+ -->
+      <div class="card oneplus">
+        <div class="card-header">
+          <div class="card-icon">+</div>
+          <span class="card-status">Prototype</span>
+        </div>
+        <div class="card-name">One+</div>
+        <div class="card-tagline">A public-facing successor to years of internal Revit tooling.</div>
+        <p class="card-desc">
+          Formerly OneKit — a focused rebuild of select tools from a larger internal Revit
+          add-in as standalone WebView2 dashboards. Quantity takeoff and assembly review are
+          the first two working prototypes, with rule checking and view/sheet review next.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          The original WPF tools stay the source of truth throughout. Each dashboard is
+          validated against real project results before any decision to merge, promote, or
+          retire the tool it's replacing.
+        </div>
+        <div class="tech-row">
+          <span class="tech">WebView2</span>
+          <span class="tech">C#</span>
+          <span class="tech">WPF</span>
+          <span class="tech">Revit API</span>
+          <span class="tech">HTML/JS Dashboards</span>
+        </div>
+        <div class="card-actions">
+          <span class="action-btn disabled">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+            </svg>
+            Private repository
+          </span>
+        </div>
+      </div>
+
+      <!-- ONEBRIDGE -->
+      <div class="card onebridge">
+        <div class="card-header">
+          <div class="card-icon">⇄</div>
+          <span class="card-status">Active</span>
+        </div>
+        <div class="card-name">OneBridge</div>
+        <div class="card-tagline">A live bridge between AI assistants and an open Revit model.</div>
+        <p class="card-desc">
+          An MCP server that connects Claude and Copilot Studio directly to a running Revit
+          session — query elements, inspect relationships and parameters, run model-health
+          checks, and compose live dashboards from the active model. Reads compose freely;
+          graphic overrides and parameter edits stay behind explicit, reviewable actions.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Nothing writes to the model silently. Parameter edits stay behind a preview step
+          until an explicit execute boundary is confirmed, so AI reasoning and model changes
+          never blur together.
+        </div>
+        <div class="tech-row">
+          <span class="tech">MCP Server</span>
+          <span class="tech">Revit API</span>
+          <span class="tech">C# Add-in</span>
+          <span class="tech">FastAPI</span>
+          <span class="tech">Model Dashboard</span>
+          <span class="tech">Copilot Studio Connector</span>
+        </div>
+        <div class="card-actions">
+          <span class="action-btn disabled">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+            </svg>
+            Private repository
+          </span>
+        </div>
+      </div>
+
     </div>
 
     <!-- MORE COMING -->
@@ -1074,6 +1126,16 @@
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduceMotion || !('IntersectionObserver' in window)) return;
 
+      var targets = [];
+      var label = document.querySelector('.section-label');
+      if (label) { label.classList.add('reveal'); targets.push(label); }
+
+      document.querySelectorAll('.project-grid .card').forEach(function (card, i) {
+        card.classList.add('reveal');
+        card.style.transitionDelay = (i % 2 === 1 ? 90 : 0) + 'ms';
+        targets.push(card);
+      });
+
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
@@ -1083,18 +1145,31 @@
         });
       }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-      var label = document.querySelector('.section-label');
-      if (label) {
-        label.classList.add('reveal');
-        io.observe(label);
-      }
+      targets.forEach(function (el) { io.observe(el); });
 
-      var cards = document.querySelectorAll('.project-grid .card');
-      cards.forEach(function (card, i) {
-        card.classList.add('reveal');
-        card.style.transitionDelay = (i % 2 === 1 ? 90 : 0) + 'ms';
-        io.observe(card);
-      });
+      // Safety net: an instant/programmatic scroll jump (e.g. the End key)
+      // can skip a target over the viewport entirely, so no frame ever
+      // renders it as intersecting and IntersectionObserver never fires
+      // for it. A scroll event still fires after such a jump, so use it
+      // to reveal anything now fully behind the viewport (skipped past
+      // without ever showing) — targets still on or below the fold are
+      // left to the observer, so the normal staggered reveal is untouched.
+      var pending = false;
+      function sweepVisible() {
+        pending = false;
+        targets.forEach(function (el) {
+          if (el.classList.contains('in-view')) return;
+          if (el.getBoundingClientRect().bottom <= 0) {
+            el.classList.add('in-view');
+            io.unobserve(el);
+          }
+        });
+      }
+      window.addEventListener('scroll', function () {
+        if (pending) return;
+        pending = true;
+        requestAnimationFrame(sweepVisible);
+      }, { passive: true });
     })();
   </script>
 
