@@ -125,7 +125,21 @@
         radial-gradient(ellipse 80% 50% at 50% -10%, rgba(31, 95, 139, .10), transparent),
         radial-gradient(ellipse 60% 40% at 20% 50%, rgba(31, 95, 139, .05), transparent),
         radial-gradient(ellipse 60% 40% at 80% 50%, rgba(176, 125, 43, .05), transparent);
+      background-position: 0 0, 0 0, 0 0;
       pointer-events: none;
+      animation: headerGradientDrift 28s ease-in-out infinite;
+    }
+
+    @keyframes headerGradientDrift {
+
+      0%,
+      100% {
+        background-position: 0% 0%, 0% 0%, 0% 0%;
+      }
+
+      50% {
+        background-position: 3% 4%, -4% 2%, 3% -3%;
+      }
     }
 
     header::after {
@@ -241,6 +255,11 @@
     .link-btn svg {
       width: 15px;
       height: 15px;
+      transition: transform .2s ease;
+    }
+
+    .link-btn:hover svg {
+      transform: translateX(2px);
     }
 
     /* ── MAIN ── */
@@ -267,6 +286,18 @@
       flex: 1;
       height: 1px;
       background: var(--border);
+    }
+
+    /* Draw-in state, applied only by JS — see .card.reveal for the same
+       progressive-enhancement reasoning. Default is a fully drawn line. */
+    .section-label.reveal::after {
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .8s cubic-bezier(.16, .8, .3, 1);
+    }
+
+    .section-label.reveal.in-view::after {
+      transform: scaleX(1);
     }
 
     /* ── PROJECT GRID ── */
@@ -359,6 +390,11 @@
       justify-content: center;
       font-size: 20px;
       flex-shrink: 0;
+      transition: transform .3s cubic-bezier(.16, .8, .3, 1);
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.08) rotate(-4deg);
     }
 
     .card.onexus .card-icon {
@@ -534,12 +570,17 @@
       width: 14px;
       height: 14px;
       flex-shrink: 0;
+      transition: transform .2s ease;
     }
 
     .action-btn:hover {
       color: var(--text);
       border-color: var(--border2);
       background: var(--surface2);
+    }
+
+    .action-btn:not(.disabled):hover svg {
+      transform: translateX(2px);
     }
 
     .action-btn.primary {
@@ -661,12 +702,21 @@
       .header-role,
       .header-chips,
       .header-links,
-      .card.reveal {
+      .card.reveal,
+      header::before,
+      .card-icon,
+      .action-btn svg,
+      .link-btn svg {
         animation: none !important;
         transition: none !important;
         opacity: 1 !important;
         transform: none !important;
         translate: 0 !important;
+      }
+
+      .section-label.reveal::after {
+        transition: none !important;
+        transform: scaleX(1) !important;
       }
     }
 
@@ -1016,18 +1066,13 @@
   </footer>
 
   <script>
-    // Scroll-triggered card entrance. Progressive enhancement only —
-    // cards render fully visible by default; this just adds motion
-    // on top when the browser and user preferences support it.
+    // Scroll-triggered reveal for the section rule and project cards.
+    // Progressive enhancement only — everything renders fully visible
+    // by default; this just adds motion on top when the browser and
+    // user preferences support it.
     (function () {
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (reduceMotion || !('IntersectionObserver' in window)) return;
-
-      var cards = document.querySelectorAll('.project-grid .card');
-      cards.forEach(function (card, i) {
-        card.classList.add('reveal');
-        card.style.transitionDelay = (i % 2 === 1 ? 90 : 0) + 'ms';
-      });
 
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -1038,7 +1083,18 @@
         });
       }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-      cards.forEach(function (card) { io.observe(card); });
+      var label = document.querySelector('.section-label');
+      if (label) {
+        label.classList.add('reveal');
+        io.observe(label);
+      }
+
+      var cards = document.querySelectorAll('.project-grid .card');
+      cards.forEach(function (card, i) {
+        card.classList.add('reveal');
+        card.style.transitionDelay = (i % 2 === 1 ? 90 : 0) + 'ms';
+        io.observe(card);
+      });
     })();
   </script>
 
