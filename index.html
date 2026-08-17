@@ -96,6 +96,19 @@
       text-decoration: none;
     }
 
+    /* ── ENTRANCE MOTION ── */
+    @keyframes fadeRiseIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* ── HEADER ── */
     header {
       position: relative;
@@ -145,6 +158,7 @@
       color: #ffffff;
       letter-spacing: -.5px;
       box-shadow: 0 0 0 4px rgba(31, 95, 139, .15);
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) both;
     }
 
     header h1 {
@@ -157,12 +171,14 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .08s both;
     }
 
     .header-role {
       font-size: 15px;
       color: var(--muted-lt);
       margin-bottom: 8px;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .16s both;
     }
 
     .header-chips {
@@ -171,6 +187,7 @@
       justify-content: center;
       gap: 8px;
       margin-bottom: 32px;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .24s both;
     }
 
     .chip {
@@ -198,6 +215,7 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .32s both;
     }
 
     .link-btn {
@@ -271,6 +289,21 @@
       transition: border-color .2s, box-shadow .2s, transform .2s;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Scroll-reveal state, applied only by JS (progressive enhancement —
+       cards stay visible by default if JS or IntersectionObserver is unavailable).
+       Uses the independent `translate` property so it never fights the
+       hover lift, which animates `transform` on its own, faster timing. */
+    .card.reveal {
+      opacity: 0;
+      translate: 0 24px;
+      transition: opacity .6s cubic-bezier(.16, .8, .3, 1), translate .6s cubic-bezier(.16, .8, .3, 1);
+    }
+
+    .card.reveal.in-view {
+      opacity: 1;
+      translate: 0 0;
     }
 
     .card::before {
@@ -620,6 +653,23 @@
       text-decoration: underline;
     }
 
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+
+      .avatar,
+      header h1,
+      .header-role,
+      .header-chips,
+      .header-links,
+      .card.reveal {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        translate: 0 !important;
+      }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 720px) {
       header {
@@ -964,6 +1014,33 @@
   <footer>
     <p>Built by <a href="https://github.com/onuresen">Onur Esen</a></p>
   </footer>
+
+  <script>
+    // Scroll-triggered card entrance. Progressive enhancement only —
+    // cards render fully visible by default; this just adds motion
+    // on top when the browser and user preferences support it.
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+      var cards = document.querySelectorAll('.project-grid .card');
+      cards.forEach(function (card, i) {
+        card.classList.add('reveal');
+        card.style.transitionDelay = (i % 2 === 1 ? 90 : 0) + 'ms';
+      });
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+      cards.forEach(function (card) { io.observe(card); });
+    })();
+  </script>
 
 </body>
 
