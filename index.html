@@ -72,6 +72,10 @@
       --blue: var(--accent);
       --green: #3f7d52;
 
+      --slate: #52606d;
+      --slate-bg: rgba(82, 96, 109, .08);
+      --slate-border: rgba(82, 96, 109, .22);
+
       --radius: 12px;
       --radius-sm: 8px;
       --shadow: 0 1px 3px rgba(17, 36, 58, .08), 0 1px 2px rgba(17, 36, 58, .06);
@@ -92,6 +96,19 @@
       text-decoration: none;
     }
 
+    /* ── ENTRANCE MOTION ── */
+    @keyframes fadeRiseIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* ── HEADER ── */
     header {
       position: relative;
@@ -108,7 +125,21 @@
         radial-gradient(ellipse 80% 50% at 50% -10%, rgba(31, 95, 139, .10), transparent),
         radial-gradient(ellipse 60% 40% at 20% 50%, rgba(31, 95, 139, .05), transparent),
         radial-gradient(ellipse 60% 40% at 80% 50%, rgba(176, 125, 43, .05), transparent);
+      background-position: 0 0, 0 0, 0 0;
       pointer-events: none;
+      animation: headerGradientDrift 28s ease-in-out infinite;
+    }
+
+    @keyframes headerGradientDrift {
+
+      0%,
+      100% {
+        background-position: 0% 0%, 0% 0%, 0% 0%;
+      }
+
+      50% {
+        background-position: 3% 4%, -4% 2%, 3% -3%;
+      }
     }
 
     header::after {
@@ -141,6 +172,7 @@
       color: #ffffff;
       letter-spacing: -.5px;
       box-shadow: 0 0 0 4px rgba(31, 95, 139, .15);
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) both;
     }
 
     header h1 {
@@ -153,19 +185,14 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .08s both;
     }
 
     .header-role {
       font-size: 15px;
       color: var(--muted-lt);
       margin-bottom: 8px;
-    }
-
-    .header-bio {
-      font-size: 17px;
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 28px;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .16s both;
     }
 
     .header-chips {
@@ -174,6 +201,7 @@
       justify-content: center;
       gap: 8px;
       margin-bottom: 32px;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .24s both;
     }
 
     .chip {
@@ -201,6 +229,7 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
+      animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .32s both;
     }
 
     .link-btn {
@@ -226,6 +255,11 @@
     .link-btn svg {
       width: 15px;
       height: 15px;
+      transition: transform .2s ease;
+    }
+
+    .link-btn:hover svg {
+      transform: translateX(2px);
     }
 
     /* ── MAIN ── */
@@ -254,6 +288,18 @@
       background: var(--border);
     }
 
+    /* Draw-in state, applied only by JS — see .card.reveal for the same
+       progressive-enhancement reasoning. Default is a fully drawn line. */
+    .section-label.reveal::after {
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .8s cubic-bezier(.16, .8, .3, 1);
+    }
+
+    .section-label.reveal.in-view::after {
+      transform: scaleX(1);
+    }
+
     /* ── PROJECT GRID ── */
     .project-grid {
       display: grid;
@@ -274,6 +320,21 @@
       transition: border-color .2s, box-shadow .2s, transform .2s;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Scroll-reveal state, applied only by JS (progressive enhancement —
+       cards stay visible by default if JS or IntersectionObserver is unavailable).
+       Uses the independent `translate` property so it never fights the
+       hover lift, which animates `transform` on its own, faster timing. */
+    .card.reveal {
+      opacity: 0;
+      translate: 0 24px;
+      transition: opacity .6s cubic-bezier(.16, .8, .3, 1), translate .6s cubic-bezier(.16, .8, .3, 1);
+    }
+
+    .card.reveal.in-view {
+      opacity: 1;
+      translate: 0 0;
     }
 
     .card::before {
@@ -301,6 +362,10 @@
       background: linear-gradient(90deg, #a34848, #d77a67);
     }
 
+    .card.onebridge::before {
+      background: linear-gradient(90deg, #52606d, #8492a0);
+    }
+
     .card:hover {
       border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
       box-shadow: var(--shadow-lg);
@@ -325,6 +390,11 @@
       justify-content: center;
       font-size: 20px;
       flex-shrink: 0;
+      transition: transform .3s cubic-bezier(.16, .8, .3, 1);
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.08) rotate(-4deg);
     }
 
     .card.onexus .card-icon {
@@ -345,6 +415,11 @@
     .card.kotoba .card-icon {
       background: var(--coral-bg);
       border: 1px solid var(--coral-border);
+    }
+
+    .card.onebridge .card-icon {
+      background: var(--slate-bg);
+      border: 1px solid var(--slate-border);
     }
 
     .card-status {
@@ -441,6 +516,16 @@
       color: var(--coral);
     }
 
+    .card.onebridge .callout {
+      background: var(--slate-bg);
+      border: 1px solid var(--slate-border);
+      color: var(--slate);
+    }
+
+    .card.onebridge .callout-label {
+      color: var(--slate);
+    }
+
     /* tech badges */
     .tech-row {
       display: flex;
@@ -485,12 +570,17 @@
       width: 14px;
       height: 14px;
       flex-shrink: 0;
+      transition: transform .2s ease;
     }
 
     .action-btn:hover {
       color: var(--text);
       border-color: var(--border2);
       background: var(--surface2);
+    }
+
+    .action-btn:not(.disabled):hover svg {
+      transform: translateX(2px);
     }
 
     .action-btn.primary {
@@ -502,6 +592,17 @@
     .action-btn.primary:hover {
       background: #194e74;
       border-color: #194e74;
+    }
+
+    .action-btn.disabled {
+      cursor: default;
+      opacity: .75;
+    }
+
+    .action-btn.disabled:hover {
+      color: var(--muted-lt);
+      border-color: var(--border);
+      background: transparent;
     }
 
     /* ── ABOUT ── */
@@ -593,6 +694,32 @@
       text-decoration: underline;
     }
 
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+
+      .avatar,
+      header h1,
+      .header-role,
+      .header-chips,
+      .header-links,
+      .card.reveal,
+      header::before,
+      .card-icon,
+      .action-btn svg,
+      .link-btn svg {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        translate: 0 !important;
+      }
+
+      .section-label.reveal::after {
+        transition: none !important;
+        transform: scaleX(1) !important;
+      }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 720px) {
       header {
@@ -630,7 +757,6 @@
       <div class="avatar">OE</div>
       <h1>Onur Esen</h1>
       <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
-      <div class="header-bio">"Builder first. I make tools for the built environment."</div>
       <div class="header-chips">
         <span class="chip">
           <svg viewBox="0 0 16 16" fill="currentColor">
@@ -691,7 +817,7 @@
       <p><strong>Based in Tokyo at a Japanese general contractor.</strong></p>
     </div>
 
-    <div class="section-label">Selected Open Source Projects</div>
+    <div class="section-label">Selected Projects</div>
 
     <div class="project-grid">
 
@@ -731,6 +857,92 @@
             Live Demo
           </a>
           <a class="action-btn" href="https://github.com/onuresen/onexus" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- ONEBRIDGE -->
+      <div class="card onebridge">
+        <div class="card-header">
+          <div class="card-icon">⇄</div>
+          <span class="card-status">Active</span>
+        </div>
+        <div class="card-name">OneBridge</div>
+        <div class="card-tagline">A live bridge between AI assistants and an open Revit model.</div>
+        <p class="card-desc">
+          An MCP server that connects Claude and Copilot Studio directly to a running Revit
+          session — query elements, inspect relationships and parameters, run model-health
+          checks, and compose live dashboards from the active model. Reads compose freely;
+          graphic overrides and parameter edits stay behind explicit, reviewable actions.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Nothing writes to the model silently. Parameter edits stay behind a preview step
+          until an explicit execute boundary is confirmed, so AI reasoning and model changes
+          never blur together.
+        </div>
+        <div class="tech-row">
+          <span class="tech">MCP Server</span>
+          <span class="tech">Revit API</span>
+          <span class="tech">C# Add-in</span>
+          <span class="tech">FastAPI</span>
+          <span class="tech">Model Dashboard</span>
+          <span class="tech">Copilot Studio Connector</span>
+        </div>
+        <div class="card-actions">
+          <span class="action-btn disabled">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+            </svg>
+            Private repository
+          </span>
+        </div>
+      </div>
+
+      <!-- KIT OF PARTS -->
+      <div class="card kitofparts">
+        <div class="card-header">
+          <div class="card-icon">⊞</div>
+          <span class="card-status">Active</span>
+        </div>
+        <div class="card-name">Kit of Parts</div>
+        <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
+        <p class="card-desc">
+          Interactive 3D building configurator for modular and prefabricated systems.
+          Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
+          simulations, fire spread visualizations, crane collision checks, and
+          sustainability metrics — all in the browser. Built against real Japanese
+          standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Not a geometry viewer — a decision tool. Every part has variants with
+          trade-off data. The AI carbon optimiser swaps your assembly toward the
+          lowest embodied carbon configuration automatically.
+        </div>
+        <div class="tech-row">
+          <span class="tech">React 19</span>
+          <span class="tech">Three.js</span>
+          <span class="tech">@react-three/fiber</span>
+          <span class="tech">GSAP</span>
+          <span class="tech">Vite</span>
+          <span class="tech">GitHub Pages</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/Kit-of-Parts/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Live Demo
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/Kit-of-Parts" target="_blank" rel="noopener">
             <svg viewBox="0 0 16 16" fill="currentColor">
               <path
                 d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
@@ -833,74 +1045,58 @@
         </div>
       </div>
 
-      <!-- KIT OF PARTS -->
-      <div class="card kitofparts">
-        <div class="card-header">
-          <div class="card-icon">⊞</div>
-          <span class="card-status">Active</span>
-        </div>
-        <div class="card-name">Kit of Parts</div>
-        <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
-        <p class="card-desc">
-          Interactive 3D building configurator for modular and prefabricated systems.
-          Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
-          simulations, fire spread visualizations, crane collision checks, and
-          sustainability metrics — all in the browser. Built against real Japanese
-          standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
-        </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Not a geometry viewer — a decision tool. Every part has variants with
-          trade-off data. The AI carbon optimiser swaps your assembly toward the
-          lowest embodied carbon configuration automatically.
-        </div>
-        <div class="tech-row">
-          <span class="tech">React 19</span>
-          <span class="tech">Three.js</span>
-          <span class="tech">@react-three/fiber</span>
-          <span class="tech">GSAP</span>
-          <span class="tech">Vite</span>
-          <span class="tech">GitHub Pages</span>
-        </div>
-        <div class="card-actions">
-          <a class="action-btn primary" href="https://onuresen.github.io/Kit-of-Parts/" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
-            </svg>
-            Live Demo
-          </a>
-          <a class="action-btn" href="https://github.com/onuresen/Kit-of-Parts" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-            </svg>
-            GitHub
-          </a>
-        </div>
-      </div>
-
     </div>
 
     <!-- MORE COMING -->
     <div class="more-section">
       <div class="more-text">
         <h3>More in progress</h3>
-        <p>Work tools and exploratory projects — some Obayashi-specific, some purely personal.</p>
+        <p>Work tools and exploratory projects, still taking shape.</p>
       </div>
       <div class="more-projects">
         <span class="more-pill">ONES Revit Plugin</span>
         <span class="more-pill">AI Orchestration</span>
-        <span class="more-pill">Revit Model Dashboard</span>
-        <span class="more-pill">OneBridge MCP</span>
       </div>
     </div>
   </main>
 
   <!-- ── FOOTER ── -->
   <footer>
-    <p>Built by <a href="https://github.com/onuresen">Onur Esen</a> · Zero dependencies · Plain HTML</p>
+    <p>Built by <a href="https://github.com/onuresen">Onur Esen</a></p>
   </footer>
+
+  <script>
+    // Scroll-triggered reveal for the section rule and project cards.
+    // Progressive enhancement only — everything renders fully visible
+    // by default; this just adds motion on top when the browser and
+    // user preferences support it.
+    (function () {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+      var label = document.querySelector('.section-label');
+      if (label) {
+        label.classList.add('reveal');
+        io.observe(label);
+      }
+
+      var cards = document.querySelectorAll('.project-grid .card');
+      cards.forEach(function (card, i) {
+        card.classList.add('reveal');
+        card.style.transitionDelay = (i % 2 === 1 ? 90 : 0) + 'ms';
+        io.observe(card);
+      });
+    })();
+  </script>
 
 </body>
 
