@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onur Esen — Builder Portfolio</title>
   <meta name="description"
-    content="Open-source tools by Onur Esen — BIM, graph intelligence, personal knowledge systems, and Japanese learning tools.">
+    content="Public tools and selected private R&D by Onur Esen — BIM, graph intelligence, local-first software, and construction technology.">
 
   <!-- Favicon -->
   <link rel="icon" href="favicon.png" type="image/png">
@@ -16,14 +16,14 @@
   <meta property="og:url" content="https://onuresen.github.io/">
   <meta property="og:title" content="Onur Esen — Builder Portfolio">
   <meta property="og:description"
-    content="Open-source tools for graph intelligence, BIM, personal knowledge systems, and Japanese learning. Builder first.">
+    content="Public tools and selected private R&D across graph intelligence, BIM, local-first software, and construction technology.">
   <meta property="og:image" content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Onur Esen — Builder Portfolio">
   <meta name="twitter:description"
-    content="Open-source tools for graph intelligence, BIM, personal knowledge systems, and Japanese learning.">
+    content="Public tools and selected private R&D across graph intelligence, BIM, and local-first software.">
   <meta name="twitter:image" content="https://onuresen.github.io/Kit-of-Parts/og-preview.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -300,6 +300,19 @@
       transform: scaleX(1);
     }
 
+    .section-label-secondary {
+      margin-top: 64px;
+      margin-bottom: 14px;
+    }
+
+    .section-intro {
+      max-width: 720px;
+      color: var(--muted-lt);
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
     /* ── PROJECT GRID ── */
     .project-grid {
       display: grid;
@@ -365,6 +378,14 @@
     .card.onebridge::before,
     .card.oneplus::before {
       background: linear-gradient(90deg, #52606d, #8492a0);
+    }
+
+    .card.obdrawing::before {
+      background: linear-gradient(90deg, #1f5f8b, #2e7d6b);
+    }
+
+    .card.joinery::before {
+      background: linear-gradient(90deg, #9a6b1f, #a34848);
     }
 
     .card:hover {
@@ -435,6 +456,18 @@
       border: 1px solid var(--slate-border);
     }
 
+    .card.obdrawing .card-icon {
+      background: var(--purple-bg);
+      border: 1px solid var(--purple-border);
+      color: var(--purple);
+    }
+
+    .card.joinery .card-icon {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+    }
+
     .card-status {
       font-size: 11px;
       font-weight: 600;
@@ -445,6 +478,12 @@
       background: rgba(63, 185, 80, .1);
       border: 1px solid rgba(63, 185, 80, .2);
       color: var(--green);
+    }
+
+    .card-status.private {
+      color: var(--slate);
+      background: var(--slate-bg);
+      border-color: var(--slate-border);
     }
 
     .card-name {
@@ -536,9 +575,29 @@
       color: var(--slate);
     }
 
+    .card.obdrawing .callout {
+      background: var(--purple-bg);
+      border: 1px solid var(--purple-border);
+      color: var(--purple);
+    }
+
+    .card.joinery .callout {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+    }
+
     .card.onebridge .callout-label,
     .card.oneplus .callout-label {
       color: var(--slate);
+    }
+
+    .card.obdrawing .callout-label {
+      color: var(--purple);
+    }
+
+    .card.joinery .callout-label {
+      color: var(--amber);
     }
 
     /* tech badges */
@@ -825,7 +884,7 @@
 
   <!-- ── MAIN ── -->
   <main>
-    <div class="section-label">Selected Projects</div>
+    <div class="section-label">Selected Public Projects</div>
 
     <div class="project-grid">
 
@@ -1014,11 +1073,21 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="section-label section-label-secondary">Selected Private R&amp;D</div>
+    <p class="section-intro">
+      These projects are described at a product level without source links. Their repositories remain private while
+      company-specific workflows, project evidence, and reusable public cores are separated carefully.
+    </p>
+
+    <div class="project-grid">
+
       <!-- ONE+ -->
       <div class="card oneplus">
         <div class="card-header">
           <div class="card-icon">+</div>
-          <span class="card-status">Prototype</span>
+          <span class="card-status private">Prototype</span>
         </div>
         <div class="card-name">One+</div>
         <div class="card-tagline">A public-facing successor to years of internal Revit tooling.</div>
@@ -1055,7 +1124,7 @@
       <div class="card onebridge">
         <div class="card-header">
           <div class="card-icon">⇄</div>
-          <span class="card-status">Active</span>
+          <span class="card-status private">Active</span>
         </div>
         <div class="card-name">OneBridge</div>
         <div class="card-tagline">A live bridge between AI assistants and an open Revit model.</div>
@@ -1090,6 +1159,79 @@
         </div>
       </div>
 
+      <!-- OB DRAWING -->
+      <div class="card obdrawing">
+        <div class="card-header">
+          <div class="card-icon">▱</div>
+          <span class="card-status private">Prototype</span>
+        </div>
+        <div class="card-name">OB Drawing</div>
+        <div class="card-tagline">Navigate a drawing set by object, not only by page.</div>
+        <p class="card-desc">
+          A local-first architectural PDF reader that connects one physical object across plans,
+          elevations, schedules, sections, and details. It adds selectable text, in-document search,
+          explicit cross-page identity, representation boards, drawing-set maps, and portable evidence
+          packages without changing the source PDFs.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Select a marked object once and inspect every linked representation together. The object layer
+          is saved separately as fingerprinted JSON, so project drawings stay untouched and local.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">PDF.js</span>
+          <span class="tech">Local-first</span>
+          <span class="tech">JSON sidecars</span>
+          <span class="tech">Node tests</span>
+        </div>
+        <div class="card-actions">
+          <span class="action-btn disabled">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+            </svg>
+            Private repository
+          </span>
+        </div>
+      </div>
+
+      <!-- JOINERY CONFIGURATOR -->
+      <div class="card joinery">
+        <div class="card-header">
+          <div class="card-icon">▦</div>
+          <span class="card-status private">Active</span>
+        </div>
+        <div class="card-name">Joinery Configurator</div>
+        <div class="card-tagline">Compose doors and windows visually, then carry the intent into BIM.</div>
+        <p class="card-desc">
+          A browser-based door and window configurator built around recursive panel composition,
+          operation symbols, dimensions, materials, performance data, and reviewable JSON. A companion
+          Revit workflow can inspect existing families, export catalogs, and recreate approved types.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          The visual composition model is portable and can be separated from company family names and
+          Revit mappings, which remain environment-specific.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">SVG</span>
+          <span class="tech">Schema validation</span>
+          <span class="tech">C#</span>
+          <span class="tech">Revit API</span>
+        </div>
+        <div class="card-actions">
+          <span class="action-btn disabled">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+            </svg>
+            Private repository
+          </span>
+        </div>
+      </div>
+
     </div>
 
     <!-- MORE COMING -->
@@ -1099,6 +1241,10 @@
         <p>Work tools and exploratory projects, still taking shape.</p>
       </div>
       <div class="more-projects">
+        <span class="more-pill">Construction Decision Intelligence</span>
+        <span class="more-pill">OneRoot</span>
+        <span class="more-pill">Portable Logic</span>
+        <span class="more-pill">API Drift Radar</span>
         <span class="more-pill">ONES Revit Plugin</span>
         <span class="more-pill">AI Orchestration</span>
       </div>
