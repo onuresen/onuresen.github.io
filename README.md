@@ -21,6 +21,7 @@ The page separates public projects with working links from private R&D described
 | [Thinking Hub](https://github.com/onuresen/Thinking-Hub) | 23 connected, browser-local productivity and thinking tools in one installable PWA | [onuresen.github.io/Thinking-Hub](https://onuresen.github.io/Thinking-Hub/) |
 | [Kotoba Lab](https://github.com/onuresen/kotoba-lab) | Private Japanese reading, kanji-family study, and spaced-repetition workspace | [onuresen.github.io/kotoba-lab](https://onuresen.github.io/kotoba-lab/) |
 | [Kit of Parts](https://github.com/onuresen/Kit-of-Parts) | 3D modular building configurator with Japanese compliance standards | [onuresen.github.io/Kit-of-Parts](https://onuresen.github.io/Kit-of-Parts/) |
+| [OB Drawing](https://github.com/onuresen/OB-Drawing) | Local-first architectural PDF navigation with explicit cross-page object identity and portable evidence | [onuresen.github.io/OB-Drawing](https://onuresen.github.io/OB-Drawing/) |
 
 ## Selected private R&D
 
@@ -28,8 +29,7 @@ The page separates public projects with working links from private R&D described
 |---|---|
 | One+ | Public-facing successor experiments for selected internal Revit tools |
 | OneBridge | Reviewable MCP bridge between AI assistants and a running Revit model |
-| OB Drawing | Object-based architectural PDF navigation with a separate local evidence layer |
-| Joinery Configurator | Visual door/window composition with portable JSON and an environment-specific Revit adapter |
+| Joinery Configurator | Governed door, window, curtain-panel, and shutter composition with portable JSON and a separate environment-specific Revit add-in |
 
 Additional work is named without links: Construction Decision Intelligence, OneRoot, Portable Logic, API Drift Radar, ONES Revit Plugin, and AI Orchestration.
 

@@ -1163,7 +1163,7 @@
       <div class="card obdrawing">
         <div class="card-header">
           <div class="card-icon">▱</div>
-          <span class="card-status private">Prototype</span>
+          <span class="card-status">Public prototype</span>
         </div>
         <div class="card-name">OB Drawing</div>
         <div class="card-tagline">Navigate a drawing set by object, not only by page.</div>
@@ -1184,15 +1184,23 @@
           <span class="tech">Local-first</span>
           <span class="tech">JSON sidecars</span>
           <span class="tech">Node tests</span>
+          <span class="tech">GitHub Pages</span>
         </div>
         <div class="card-actions">
-          <span class="action-btn disabled">
+          <a class="action-btn primary" href="https://onuresen.github.io/OB-Drawing/" target="_blank" rel="noopener">
             <svg viewBox="0 0 16 16" fill="currentColor">
               <path
-                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
             </svg>
-            Private repository
-          </span>
+            Open
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/OB-Drawing" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
         </div>
       </div>
 
@@ -1200,19 +1208,19 @@
       <div class="card joinery">
         <div class="card-header">
           <div class="card-icon">▦</div>
-          <span class="card-status private">Active</span>
+          <span class="card-status private">Private prototype</span>
         </div>
         <div class="card-name">Joinery Configurator</div>
-        <div class="card-tagline">Compose doors and windows visually, then carry the intent into BIM.</div>
+        <div class="card-tagline">Compose doors, windows, curtain panels, and shutters as governed data.</div>
         <p class="card-desc">
-          A browser-based door and window configurator built around recursive panel composition,
-          operation symbols, dimensions, materials, performance data, and reviewable JSON. A companion
-          Revit workflow can inspect existing families, export catalogs, and recreate approved types.
+          An experimental browser configurator built around recursive joinery composition, operation
+          symbols, dimensions, materials, performance data, and reviewable JSON. A governed exchange
+          boundary connects approved configurations to a companion Revit add-in.
         </p>
         <div class="callout">
           <div class="callout-label">What's different</div>
-          The visual composition model is portable and can be separated from company family names and
-          Revit mappings, which remain environment-specific.
+          Portable composition and validation stay separate from environment-specific family names,
+          mappings, samples, and Revit workflows.
         </div>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
