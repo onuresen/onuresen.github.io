@@ -943,15 +943,15 @@
         <div class="card-tagline">A personal workspace for projects, decisions, and risk — all offline in your browser.</div>
         <p class="card-desc">
           A browser-local workspace for projects, decisions, risks, meetings, learning,
-          time journaling, argument design, dependency mapping, and more. It runs as an
-          installable PWA with no build step, keeps confidential data in your browser,
-          and protects it with export/import plus rolling IndexedDB snapshots.
+          time journaling, dependency mapping, and visual thinking. The streamlined home
+          keeps daily work focused, while export/import and rolling IndexedDB snapshots
+          protect local data without adding an account or cloud database.
         </p>
         <div class="callout">
           <div class="callout-label">What's different</div>
-          Machi Hub turns real activity into a living pixel city. The read-only Vault Bridge
-          finds missing daily records and structured Obsidian decisions, then proposes each
-          import for review — nothing is accepted automatically or uploaded.
+          Canvas Hub turns tables and outlines into connected boards, groups work by tags,
+          explains each board's color language, and exports to slides, HTML, Markdown, or
+          Obsidian Canvas. Vault proposals remain local, read-only, and individually reviewed.
         </div>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
@@ -1073,6 +1073,52 @@
         </div>
       </div>
 
+      <!-- OBJECT-CENTRIC DRAWING -->
+      <div class="card objdraw">
+        <div class="card-header">
+          <div class="card-icon">▱</div>
+          <span class="card-status">Public prototype</span>
+        </div>
+        <div class="card-name">Object-Centric Drawing</div>
+        <div class="card-tagline">Navigate drawing sets by object — and export them from Revit already linked.</div>
+        <p class="card-desc">
+          A local-first PDF workspace that connects one physical object across plans, elevations,
+          sections, and details. Its object browser, representation board, drawing-set map, search,
+          and portable evidence packages sit beside the unchanged source PDFs. A one-way Revit
+          adapter exports sheets, object geometry, and separate Revit identity data.
+        </p>
+        <div class="callout">
+          <div class="callout-label">What's different</div>
+          Matching labels never merge objects. Revit exports can be filtered by category and Mark,
+          use rectangles or convex outlines, and keep platform IDs outside the neutral project file;
+          nothing writes back to the model.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">PDF.js</span>
+          <span class="tech">Local-first</span>
+          <span class="tech">JSON sidecars</span>
+          <span class="tech">Revit 2026 adapter</span>
+          <span class="tech">GitHub Pages</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/object-centric-drawing/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Open
+          </a>
+          <a class="action-btn" href="https://github.com/onuresen/object-centric-drawing" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+
     </div>
 
     <div class="section-label section-label-secondary">Selected Private R&amp;D</div>
@@ -1090,24 +1136,26 @@
           <span class="card-status private">Prototype</span>
         </div>
         <div class="card-name">One+</div>
-        <div class="card-tagline">A public-facing successor to years of internal Revit tooling.</div>
+        <div class="card-tagline">A stable Revit toolkit, with experiments kept in a separate lab.</div>
         <p class="card-desc">
-          Formerly OneKit — a focused rebuild of select tools from a larger internal Revit
-          add-in as standalone WebView2 dashboards. Quantity takeoff and assembly review are
-          the first two working prototypes, with rule checking and view/sheet review next.
+          One+ brings selection, graphics, model review, quantities, documentation, and generation
+          workflows into one Revit 2026 add-in. OneLab now owns beta tools and simulations such as
+          Work Package Studio, Rain Lens, Print Shell, Block Lab, and Wind Ribbons, so experimental
+          work can be tested without destabilizing the production workspace.
         </p>
         <div class="callout">
           <div class="callout-label">What's different</div>
-          The original WPF tools stay the source of truth throughout. Each dashboard is
-          validated against real project results before any decision to merge, promote, or
-          retire the tool it's replacing.
+          Stable tools graduate deliberately from the lab. MCP contracts can prepare and inspect
+          supported tool state, but the real One+ dialogs remain visible and model-changing actions
+          stay behind the tool's own review and confirmation boundaries.
         </div>
         <div class="tech-row">
-          <span class="tech">WebView2</span>
           <span class="tech">C#</span>
+          <span class="tech">.NET 10</span>
           <span class="tech">WPF</span>
-          <span class="tech">Revit API</span>
-          <span class="tech">HTML/JS Dashboards</span>
+          <span class="tech">WebView2</span>
+          <span class="tech">Revit 2026</span>
+          <span class="tech">MCP tool contracts</span>
         </div>
         <div class="card-actions">
           <span class="action-btn disabled">
@@ -1159,51 +1207,6 @@
         </div>
       </div>
 
-      <!-- OBJECT-CENTRIC DRAWING -->
-      <div class="card objdraw">
-        <div class="card-header">
-          <div class="card-icon">▱</div>
-          <span class="card-status">Public prototype</span>
-        </div>
-        <div class="card-name">Object-Centric Drawing</div>
-        <div class="card-tagline">Navigate a drawing set by object, not only by page.</div>
-        <p class="card-desc">
-          A local-first architectural PDF reader that connects one physical object across plans,
-          elevations, schedules, sections, and details. It adds selectable text, in-document search,
-          explicit cross-page identity, representation boards, drawing-set maps, and portable evidence
-          packages without changing the source PDFs.
-        </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Select a marked object once and inspect every linked representation together. The object layer
-          is saved separately as fingerprinted JSON, so project drawings stay untouched and local.
-        </div>
-        <div class="tech-row">
-          <span class="tech">Vanilla JS</span>
-          <span class="tech">PDF.js</span>
-          <span class="tech">Local-first</span>
-          <span class="tech">JSON sidecars</span>
-          <span class="tech">Node tests</span>
-          <span class="tech">GitHub Pages</span>
-        </div>
-        <div class="card-actions">
-          <a class="action-btn primary" href="https://onuresen.github.io/object-centric-drawing/" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
-            </svg>
-            Open
-          </a>
-          <a class="action-btn" href="https://github.com/onuresen/object-centric-drawing" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-            </svg>
-            GitHub
-          </a>
-        </div>
-      </div>
-
       <!-- JOINERY CONFIGURATOR -->
       <div class="card joinery">
         <div class="card-header">
@@ -1211,23 +1214,26 @@
           <span class="card-status private">Private prototype</span>
         </div>
         <div class="card-name">Joinery Configurator</div>
-        <div class="card-tagline">Compose doors, windows, curtain panels, and shutters as governed data.</div>
+        <div class="card-tagline">Compose and round-trip joinery as governed, reviewable data.</div>
         <p class="card-desc">
-          An experimental browser configurator built around recursive joinery composition, operation
-          symbols, dimensions, materials, performance data, and reviewable JSON. A governed exchange
-          boundary connects approved configurations to a companion Revit add-in.
+          A standalone browser configurator for recursive door, window, curtain-panel, and shutter
+          composition, validation, and portable JSON. Its companion Revit add-in can import or export
+          individual configurations and model-wide catalogs, preview planned changes, load only named
+          family dependencies, and reopen exported results in the browser.
         </p>
         <div class="callout">
           <div class="callout-label">What's different</div>
-          Portable composition and validation stay separate from environment-specific family names,
-          mappings, samples, and Revit workflows.
+          The browser schema remains the governed exchange boundary. Environment-specific family names,
+          mappings, and placement rules stay in the private adapter, whose Joinery panel shares the
+          OneMore ribbon tab with other independently loaded tools.
         </div>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">SVG</span>
           <span class="tech">Schema validation</span>
-          <span class="tech">C#</span>
-          <span class="tech">Revit API</span>
+          <span class="tech">C# / .NET 10</span>
+          <span class="tech">Revit 2026 adapter</span>
+          <span class="tech">Catalog roundtrip</span>
         </div>
         <div class="card-actions">
           <span class="action-btn disabled">
@@ -1251,9 +1257,10 @@
       <div class="more-projects">
         <span class="more-pill">Construction Decision Intelligence</span>
         <span class="more-pill">OneRoot</span>
-        <span class="more-pill">Portable Logic</span>
-        <span class="more-pill">API Drift Radar</span>
-        <span class="more-pill">ONES Revit Plugin</span>
+        <span class="more-pill">Porta Logic</span>
+        <span class="more-pill">API Drift Radar Core</span>
+        <span class="more-pill">OneLab</span>
+        <span class="more-pill">Kit of Parts IFC</span>
         <span class="more-pill">AI Orchestration</span>
       </div>
     </div>
