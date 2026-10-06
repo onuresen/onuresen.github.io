@@ -21,7 +21,7 @@ The page separates public projects with working links from private R&D described
 | [Thinking Hub](https://github.com/onuresen/Thinking-Hub) | 23 connected, browser-local productivity and thinking tools in one installable PWA | [onuresen.github.io/Thinking-Hub](https://onuresen.github.io/Thinking-Hub/) |
 | [Kotoba Lab](https://github.com/onuresen/kotoba-lab) | Private Japanese reading, kanji-family study, and spaced-repetition workspace | [onuresen.github.io/kotoba-lab](https://onuresen.github.io/kotoba-lab/) |
 | [Kit of Parts](https://github.com/onuresen/Kit-of-Parts) | 3D modular building configurator with Japanese compliance standards | [onuresen.github.io/Kit-of-Parts](https://onuresen.github.io/Kit-of-Parts/) |
-| [OB Drawing](https://github.com/onuresen/OB-Drawing) | Local-first architectural PDF navigation with explicit cross-page object identity and portable evidence | [onuresen.github.io/OB-Drawing](https://onuresen.github.io/OB-Drawing/) |
+| [Object-Centric Drawing](https://github.com/onuresen/object-centric-drawing) | Local-first architectural PDF navigation with explicit cross-page object identity and portable evidence | [onuresen.github.io/object-centric-drawing](https://onuresen.github.io/object-centric-drawing/) |
 
 ## Selected private R&D
 
