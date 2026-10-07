@@ -21,6 +21,7 @@ The page separates public projects with working links from private R&D described
 | [Thinking Hub](https://github.com/onuresen/Thinking-Hub) | Browser-local productivity suite with connected projects, decisions, risks, and visual Canvas workflows | [onuresen.github.io/Thinking-Hub](https://onuresen.github.io/Thinking-Hub/) |
 | [Kotoba Lab](https://github.com/onuresen/kotoba-lab) | Private Japanese reading, kanji-family study, and spaced-repetition workspace | [onuresen.github.io/kotoba-lab](https://onuresen.github.io/kotoba-lab/) |
 | [Kit of Parts](https://github.com/onuresen/Kit-of-Parts) | 3D modular building configurator with Japanese compliance standards | [onuresen.github.io/Kit-of-Parts](https://onuresen.github.io/Kit-of-Parts/) |
+| [Genba Lab](https://github.com/onuresen/Genba-Lab) | Local-first IFC simulation playground for construction sequence, crane planning, hazards, and model-derived metrics | [onuresen.github.io/Genba-Lab](https://onuresen.github.io/Genba-Lab/) |
 | [Object-Centric Drawing](https://github.com/onuresen/object-centric-drawing) | Local-first PDF navigation with explicit object identity, portable evidence, and a one-way Revit export adapter | [onuresen.github.io/object-centric-drawing](https://onuresen.github.io/object-centric-drawing/) |
 
 ## Selected private R&D
@@ -31,7 +32,7 @@ The page separates public projects with working links from private R&D described
 | OneBridge | Reviewable MCP bridge between AI assistants and a running Revit model |
 | Joinery Configurator | Governed joinery composition and catalog roundtrips through portable JSON and a separate environment-specific Revit add-in |
 
-Additional work is named without links: Construction Decision Intelligence, OneRoot, Porta Logic, API Drift Radar Core, OneLab, Kit of Parts IFC, and AI Orchestration.
+Additional work is named without links: Construction Decision Intelligence, OneRoot, Porta Logic, API Drift Radar Core, OneLab, and AI Orchestration.
 
 ---
 
