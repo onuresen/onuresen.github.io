@@ -1,5 +1,12 @@
 [
   {
+    "slug": "objects-evidence-decisions",
+    "title": "Objects, Evidence, Decisions",
+    "date": "2026-10-14",
+    "excerpt": "A public roadmap for connecting drawing objects, knowledge graphs, bounded AI, and construction decision context.",
+    "tags": ["roadmap", "BIM", "knowledge graphs", "AI"]
+  },
+  {
     "slug": "welcome",
     "title": "Starting a notes section",
     "date": "2026-06-21",

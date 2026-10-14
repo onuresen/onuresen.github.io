@@ -1,6 +1,6 @@
 # onuresen.github.io — Personal Portfolio
 
-> Public showcase for open-source projects and selected private R&D by Onur Esen.
+> Public projects and field notes on construction objects, evidence, relationships, and decision intelligence by Onur Esen.
 > Live at **[onuresen.github.io](https://onuresen.github.io)**
 
 ---
@@ -9,7 +9,9 @@
 
 A single-file HTML portfolio page served via GitHub Pages. No framework, no build step, no dependencies — open `index.html` and it works.
 
-The page separates public projects with working links from private R&D described at a product level. Private cards intentionally have no repository link.
+The homepage welcomes the **Objects, Evidence, Decisions** roadmap and separates public projects with working links from private R&D described at a product level. Private cards intentionally have no repository link.
+
+The `notes/` section is the durable publication layer. LinkedIn posts can introduce an idea, while the complete explanation and verified public links live here.
 
 ---
 
