@@ -64,3 +64,18 @@ This will be a working notebook rather than a stream of product announcements. I
 
 The ambition is larger than any one application, but the method will stay grounded: start with an object, return to its evidence, preserve its relationships, and make the decision path reviewable.
 
+## Why I am doing this in public
+
+Partly because I want better feedback than I can get by building alone.
+
+I would like to understand which parts are merely interesting and which parts solve a problem that practitioners repeatedly feel. That means the useful signals are not only page views or likes. I am more interested in questions such as:
+
+- Which object is painful to trace across a drawing set?
+- Where does information get recreated instead of reused?
+- What must remain editable when it moves between BIM, PDF, a catalog, and a supplier?
+- What evidence would make an AI proposal worth reviewing?
+
+Object-Centric Drawing is the easiest place to begin because it is public and small enough to try. The larger decision-intelligence direction may eventually lead somewhere else: a better role, a collaboration, an open-source community, a product, perhaps even a company. It is too early to decide that part.
+
+For now the plan is simpler: publish the working pieces, be honest about what failed, and listen carefully when somebody says, “we have this problem too.”
+
