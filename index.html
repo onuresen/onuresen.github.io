@@ -210,8 +210,10 @@
       line-height: 1.5;
     }
 
-    .header-quote blockquote::before { content: '\201C'; }
-    .header-quote blockquote::after { content: '\201D'; }
+    .header-quote .quote-aside {
+      font-style: normal;
+      color: var(--text3);
+    }
 
     .header-quote figcaption {
       margin-top: 8px;
@@ -908,8 +910,8 @@
       <h1>Onur Esen</h1>
       <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
       <figure class="header-quote">
-        <blockquote>To obtain, something of equal value must be lost.</blockquote>
-        <figcaption>Fullmetal Alchemist · <em>usually tokens</em></figcaption>
+        <blockquote>&ldquo;To obtain, something of equal value must be lost.&rdquo; <span class="quote-aside">(Tokens.)</span></blockquote>
+        <figcaption>Fullmetal Alchemist</figcaption>
       </figure>
       <div class="header-chips">
         <span class="chip">
@@ -1339,7 +1341,7 @@
 
     </div>
 
-    <div class="section-label section-label-secondary">Side project</div>
+    <div class="section-label section-label-secondary">Game</div>
     <p class="section-intro">
       Not construction. A game I make after hours with AI coding agents, mostly to see how far good direction can take them.
     </p>
