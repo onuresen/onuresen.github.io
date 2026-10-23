@@ -195,14 +195,33 @@
       animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .16s both;
     }
 
-    .header-thesis {
+    /* one quote under the name, with a small joke in the source line */
+    .header-quote {
       max-width: 620px;
       margin: 0 auto 26px;
-      color: var(--text2);
-      font-size: 17px;
-      line-height: 1.6;
       animation: fadeRiseIn .7s cubic-bezier(.16, .8, .3, 1) .20s both;
     }
+
+    .header-quote blockquote {
+      margin: 0;
+      color: var(--text2);
+      font-size: 19px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .header-quote .quote-aside {
+      font-style: normal;
+      color: var(--text3);
+    }
+
+    .header-quote figcaption {
+      margin-top: 8px;
+      color: var(--text3);
+      font-size: 13px;
+    }
+
+    .header-quote figcaption::before { content: '\2014\00a0'; }
 
     .header-chips {
       display: flex;
@@ -890,7 +909,10 @@
       <div class="avatar">OE</div>
       <h1>Onur Esen</h1>
       <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
-      <p class="header-thesis">Hi, I'm Onur. I work on BIM and AI at a general contractor in Tokyo. This page is where I keep the things I build: tools I use at work, experiments, and one game. Most of them run in your browser, so open one and click around.</p>
+      <figure class="header-quote">
+        <blockquote>&ldquo;To obtain, something of equal value must be lost.&rdquo; <span class="quote-aside">(Tokens.)</span></blockquote>
+        <figcaption>Fullmetal Alchemist</figcaption>
+      </figure>
       <div class="header-chips">
         <span class="chip">
           <svg viewBox="0 0 16 16" fill="currentColor">
@@ -1319,7 +1341,7 @@
 
     </div>
 
-    <div class="section-label section-label-secondary">Side project</div>
+    <div class="section-label section-label-secondary">Game</div>
     <p class="section-intro">
       Not construction. A game I make after hours with AI coding agents, mostly to see how far good direction can take them.
     </p>
@@ -1338,8 +1360,8 @@
           Dig a falling-pixel mine, brew potions, sell to heroes and fix up a small town. Underneath: your teacher went down the mine and never came back. I direct and decide; Claude and Codex write the code, and about 200 tests check every change. It plays in your browser, and saves stay on your device.
         </p>
         <figure class="callout quote">
-          <blockquote>It's dangerous to go alone! Take this.</blockquote>
-          <figcaption>The Legend of Zelda (1986)</figcaption>
+          <blockquote>Fight, explore, melt, burn, freeze and evaporate your way through&hellip;</blockquote>
+          <figcaption>Noita</figcaption>
         </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
