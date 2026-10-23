@@ -273,7 +273,7 @@
 
     /* ── MAIN ── */
     main {
-      max-width: 1160px;
+      max-width: 1320px;
       margin: 0 auto;
       padding: 64px 32px 80px;
     }
@@ -325,7 +325,8 @@
     /* ── PROJECT GRID ── */
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      /* as many columns as fit: three on a desktop, two on a tablet, one on a phone */
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
       gap: 20px;
     }
 
@@ -555,21 +556,32 @@
       line-height: 1.5;
     }
 
-    .callout-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      margin-bottom: 5px;
+    /* a short quote per card, in the card's colour */
+    .callout.quote {
+      margin: 0 0 20px;
     }
+
+    .callout.quote blockquote {
+      margin: 0;
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .callout.quote blockquote::before { content: '\201C'; }
+    .callout.quote blockquote::after { content: '\201D'; }
+
+    .callout.quote figcaption {
+      margin-top: 6px;
+      font-size: 11.5px;
+      opacity: .8;
+    }
+
+    .callout.quote figcaption::before { content: '\2014\00a0'; }
 
     .card.onexus .callout {
       background: var(--purple-bg);
       border: 1px solid var(--purple-border);
-      color: var(--purple);
-    }
-
-    .card.onexus .callout-label {
       color: var(--purple);
     }
 
@@ -579,17 +591,9 @@
       color: var(--teal);
     }
 
-    .card.thinking .callout-label {
-      color: var(--teal);
-    }
-
     .card.kitofparts .callout {
       background: var(--amber-bg);
       border: 1px solid var(--amber-border);
-      color: var(--amber);
-    }
-
-    .card.kitofparts .callout-label {
       color: var(--amber);
     }
 
@@ -599,17 +603,9 @@
       color: var(--purple);
     }
 
-    .card.genba .callout-label {
-      color: var(--purple);
-    }
-
     .card.kotoba .callout {
       background: var(--coral-bg);
       border: 1px solid var(--coral-border);
-      color: var(--coral);
-    }
-
-    .card.kotoba .callout-label {
       color: var(--coral);
     }
 
@@ -632,17 +628,10 @@
       color: var(--amber);
     }
 
-    .card.onebridge .callout-label,
-    .card.oneplus .callout-label {
-      color: var(--slate);
-    }
-
-    .card.objdraw .callout-label {
-      color: var(--purple);
-    }
-
-    .card.joinery .callout-label {
-      color: var(--amber);
+    .card.hollowheart .callout {
+      background: var(--coral-bg);
+      border: 1px solid var(--coral-border);
+      color: var(--coral);
     }
 
     /* tech badges */
@@ -758,6 +747,31 @@
     }
 
     /* ── MORE COMING ── */
+    /* the roadmap banner: one line of intent, one button */
+    .roadmap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px 26px;
+      margin-bottom: 56px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .roadmap .more-text p {
+      max-width: 760px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .roadmap .card-actions {
+      flex-shrink: 0;
+    }
+
     .more-section {
       margin-top: 56px;
       padding-top: 40px;
@@ -855,16 +869,14 @@
         padding: 40px 20px 60px;
       }
 
-      .project-grid {
-        grid-template-columns: 1fr;
-      }
-
       .card {
         padding: 22px 20px 20px;
       }
 
-      .more-section {
+      .more-section,
+      .roadmap {
         flex-direction: column;
+        align-items: flex-start;
       }
     }
   </style>
@@ -878,7 +890,7 @@
       <div class="avatar">OE</div>
       <h1>Onur Esen</h1>
       <div class="header-role">Construction Engineer · BIM, AI &amp; Digital Delivery</div>
-      <p class="header-thesis">I explore how buildings can keep their identity, evidence, relationships, and decisions as information moves between drawings, models, tools, and people.</p>
+      <p class="header-thesis">Hi, I'm Onur. I work on BIM and AI at a general contractor in Tokyo. This page is where I keep the things I build: tools I use at work, experiments, and one game. Most of them run in your browser, so open one and click around.</p>
       <div class="header-chips">
         <span class="chip">
           <svg viewBox="0 0 16 16" fill="currentColor">
@@ -931,10 +943,10 @@
   <!-- ── MAIN ── -->
   <main>
     <div class="section-label">Current Roadmap</div>
-    <div class="more-section">
+    <div class="roadmap">
       <div class="more-text">
-        <h3>From drawing pages to decision context</h3>
-        <p>One public line of inquiry connecting object-centric drawings, knowledge graphs, bounded AI, and reviewable construction decisions.</p>
+        <h3>What I'm working toward</h3>
+        <p>Drawings, models and AI each hold part of the truth about a building. I want them to agree on what is what, and I want a person to stay in charge of the decisions. The roadmap explains how.</p>
       </div>
       <div class="card-actions">
         <a class="action-btn primary" href="notes/post.html?slug=objects-evidence-decisions">
@@ -943,7 +955,7 @@
       </div>
     </div>
 
-    <div class="section-label">Selected Public Projects</div>
+    <div class="section-label">Open in your browser</div>
 
     <div class="project-grid">
 
@@ -954,18 +966,14 @@
           <span class="card-status">Active</span>
         </div>
         <div class="card-name">ONEXUS</div>
-        <div class="card-tagline">A relationship intelligence layer that AI can query and control live.</div>
+        <div class="card-tagline">A map of how project things connect, that AI can read too.</div>
         <p class="card-desc">
-          Turn BIM, COBie, Obsidian, and project data into a live knowledge graph. Trace
-          dependencies, change impact, risk, and data-quality gaps while preserving each
-          relationship's source, evidence, confidence, validity, and review state. An MCP server
-          lets AI query and control the same graph you can inspect in the browser.
+          Feed it BIM, COBie, Obsidian notes or project data, and it draws a live graph of what depends on what. Every link remembers where it came from and how sure we are about it. AI can ask questions through an MCP server, but its guesses wait for a person to approve them.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          AI suggestions never become authoritative edges silently. Grounded paths expose their
-          provenance, and inferred relationships require explicit review before promotion.
-        </div>
+        <figure class="callout quote">
+          <blockquote>No man is an island.</blockquote>
+          <figcaption>John Donne</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">Cytoscape.js</span>
@@ -999,19 +1007,14 @@
           <span class="card-status">v1.2</span>
         </div>
         <div class="card-name">Thinking Hub</div>
-        <div class="card-tagline">A personal workspace for projects, decisions, and risk — all offline in your browser.</div>
+        <div class="card-tagline">My offline notebook for projects, decisions and risks.</div>
         <p class="card-desc">
-          A browser-local workspace for projects, decisions, risks, meetings, learning,
-          time journaling, dependency mapping, and visual thinking. The streamlined home
-          keeps daily work focused, while export/import and rolling IndexedDB snapshots
-          protect local data without adding an account or cloud database.
+          One place for projects, decisions, risks, meetings and learning. No account and no cloud: everything stays in your browser, with export and automatic snapshots. Canvas Hub turns lists into boards you can export to slides, Markdown or Obsidian.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Canvas Hub turns tables and outlines into connected boards, groups work by tags,
-          explains each board's color language, and exports to slides, HTML, Markdown, or
-          Obsidian Canvas. Vault proposals remain local, read-only, and individually reviewed.
-        </div>
+        <figure class="callout quote">
+          <blockquote>Plans are worthless, but planning is everything.</blockquote>
+          <figcaption>Dwight D. Eisenhower</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">No build step</span>
@@ -1048,17 +1051,12 @@
         <div class="card-name">Kotoba Lab</div>
         <div class="card-tagline">Read Japanese, understand the kanji, remember the words.</div>
         <p class="card-desc">
-          A private, browser-based Japanese reading and kanji study workspace. Paste text or
-          open Aozora Bunko files to analyze readability, add furigana, inspect vocabulary,
-          save unfamiliar words, and review them with built-in spaced repetition. A 6,813-entry
-          kanji library supports search, JLPT and stroke filters, and focused family study.
+          Paste some text or open a book from Aozora Bunko. It adds furigana, points out the hard words, and saves new ones for spaced review. The kanji library has 6,813 entries, and Radical Tree splits each kanji into its parts so you can study whole families.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Radical Tree replays strokes and separates a kanji into its visual components. From
-          there, browse related kanji by stroke count, shared reading, radical, or direct
-          component and turn any filtered family into a keyboard-friendly study session.
-        </div>
+        <figure class="callout quote">
+          <blockquote>The limits of my language mean the limits of my world.</blockquote>
+          <figcaption>Ludwig Wittgenstein</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">No build step</span>
@@ -1092,20 +1090,14 @@
           <span class="card-status">Active</span>
         </div>
         <div class="card-name">Kit of Parts</div>
-        <div class="card-tagline">A 3D configurator that takes Industrialized Construction seriously.</div>
+        <div class="card-tagline">Build a modular building like Lego, then shake it.</div>
         <p class="card-desc">
-          Interactive 3D building configurator for modular and prefabricated systems.
-          Parts carry cost, weight, carbon, and compliance data. Run earthquake shake
-          simulations, fire spread visualizations, crane collision checks, and
-          sustainability metrics — all in the browser. Built against real Japanese
-          standards: seismic grades 1/2/3, BSL fire resistance, CASBEE, Ken grid.
+          Snap modular and prefab parts together in 3D. Each part knows its cost, weight, carbon and code limits. Then try an earthquake, a fire or a crane clash, all in the browser. It follows Japanese standards: seismic grades, BSL fire ratings, CASBEE and the ken grid. An AI helper can swap parts for a lower-carbon set.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Not a geometry viewer — a decision tool. Every part has variants with
-          trade-off data. The AI carbon optimiser swaps your assembly toward the
-          lowest embodied carbon configuration automatically.
-        </div>
+        <figure class="callout quote">
+          <blockquote>Less is more.</blockquote>
+          <figcaption>Ludwig Mies van der Rohe</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">React 19</span>
           <span class="tech">Three.js</span>
@@ -1141,17 +1133,12 @@
         <div class="card-name">Genba Lab</div>
         <div class="card-tagline">Real building models, real what-ifs.</div>
         <p class="card-desc">
-          A browser-based BIM simulation playground. Load an IFC model and explore assembly
-          sequence, model-sized tower-crane lifts, earthquake and fire scenarios, wind and rain,
-          thermal and acoustic overlays, cost and carbon metrics, supply risk, factory layout,
-          floor plans, section cuts, and exploded views — without uploading the model.
+          Open a real IFC model and ask it questions. How would it go together? Where can the crane reach? What happens in an earthquake, a fire or heavy rain? It also shows cost, carbon and supply risk. The model never leaves your computer, and every result is a rough picture, not an engineering check.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Kit of Parts explores ideal modular systems; Genba Lab starts from real IFC elements.
-          Every part distinguishes model-derived properties from estimated values, and every
-          simulation is presented as visual and indicative rather than an engineering check.
-        </div>
+        <figure class="callout quote">
+          <blockquote>All models are wrong, but some are useful.</blockquote>
+          <figcaption>George E. P. Box</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">React 19</span>
           <span class="tech">Three.js</span>
@@ -1185,19 +1172,14 @@
           <span class="card-status">Public prototype</span>
         </div>
         <div class="card-name">Object-Centric Drawing</div>
-        <div class="card-tagline">Navigate drawing sets by object — and export them from Revit already linked.</div>
+        <div class="card-tagline">Find a door once, see it on every drawing.</div>
         <p class="card-desc">
-          A local-first PDF workspace that connects one physical object across plans, elevations,
-          sections, and details. Its object browser, representation board, drawing-set map, search,
-          and portable evidence packages sit beside the unchanged source PDFs. A one-way Revit
-          adapter exports sheets, object geometry, and separate Revit identity data.
+          One door shows up on plans, elevations, sections and details. This keeps track of it across all of them, right next to the original PDFs. A one-way Revit export brings the sheets in already linked to their objects. Two things with the same label are never merged by guessing, and nothing writes back to the model.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Matching labels never merge objects. Revit exports can be filtered by category and Mark,
-          use rectangles or convex outlines, and keep platform IDs outside the neutral project file;
-          nothing writes back to the model.
-        </div>
+        <figure class="callout quote">
+          <blockquote>The map is not the territory.</blockquote>
+          <figcaption>Alfred Korzybski</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">PDF.js</span>
@@ -1226,10 +1208,9 @@
 
     </div>
 
-    <div class="section-label section-label-secondary">Selected Private R&amp;D</div>
+    <div class="section-label section-label-secondary">Private work</div>
     <p class="section-intro">
-      These projects are described at a product level without source links. Their repositories remain private while
-      company-specific workflows, project evidence, and reusable public cores are separated carefully.
+      These stay private because they touch company workflows. So here is what they do, without the code.
     </p>
 
     <div class="project-grid">
@@ -1243,17 +1224,12 @@
         <div class="card-name">One+</div>
         <div class="card-tagline">A stable Revit toolkit, with experiments kept in a separate lab.</div>
         <p class="card-desc">
-          One+ brings selection, graphics, model review, quantities, documentation, and generation
-          workflows into one Revit 2026 add-in. OneLab now owns beta tools and simulations such as
-          Work Package Studio, Rain Lens, Print Shell, Block Lab, and Wind Ribbons, so experimental
-          work can be tested without destabilizing the production workspace.
+          My everyday Revit 2026 add-in: selection, graphics, model review, quantities, documents and generation. New tools like Rain Lens or Wind Ribbons start in a separate lab called OneLab. They move into One+ only when they are stable.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Stable tools graduate deliberately from the lab. MCP contracts can prepare and inspect
-          supported tool state, but the real One+ dialogs remain visible and model-changing actions
-          stay behind the tool's own review and confirmation boundaries.
-        </div>
+        <figure class="callout quote">
+          <blockquote>Simplicity is prerequisite for reliability.</blockquote>
+          <figcaption>Edsger W. Dijkstra</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">C#</span>
           <span class="tech">.NET 10</span>
@@ -1282,17 +1258,12 @@
         <div class="card-name">OneBridge</div>
         <div class="card-tagline">A live bridge between AI assistants and an open Revit model.</div>
         <p class="card-desc">
-          An MCP server that connects Claude and Copilot Studio directly to a running Revit
-          session — query elements, inspect relationships and parameters, run model-health
-          checks, and compose live dashboards from the active model. Reads compose freely;
-          graphic overrides and parameter edits stay behind explicit, reviewable actions.
+          An MCP server that lets Claude and Copilot Studio talk to a running Revit model. They can look up elements, check parameters, run health checks and build live dashboards. Reading is free. Every edit is shown first and waits for an explicit OK.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          Nothing writes to the model silently. Parameter edits stay behind a preview step
-          until an explicit execute boundary is confirmed, so AI reasoning and model changes
-          never blur together.
-        </div>
+        <figure class="callout quote">
+          <blockquote>Trust, but verify.</blockquote>
+          <figcaption>Russian proverb</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">MCP Server</span>
           <span class="tech">Revit API</span>
@@ -1319,19 +1290,14 @@
           <span class="card-status private">Private prototype</span>
         </div>
         <div class="card-name">Joinery Configurator</div>
-        <div class="card-tagline">Compose and round-trip joinery as governed, reviewable data.</div>
+        <div class="card-tagline">Design doors and windows as clean, reviewable data.</div>
         <p class="card-desc">
-          A standalone browser configurator for recursive door, window, curtain-panel, and shutter
-          composition, validation, and portable JSON. Its companion Revit add-in can import or export
-          individual configurations and model-wide catalogs, preview planned changes, load only named
-          family dependencies, and reopen exported results in the browser.
+          Compose doors, windows, curtain panels and shutters in the browser and save them as portable JSON. A companion Revit add-in brings designs in and out, previews the changes, and loads only the families it needs. Company-specific names and rules stay in that private add-in.
         </p>
-        <div class="callout">
-          <div class="callout-label">What's different</div>
-          The browser schema remains the governed exchange boundary. Environment-specific family names,
-          mappings, and placement rules stay in the private adapter, whose Joinery panel shares the
-          OneMore ribbon tab with other independently loaded tools.
-        </div>
+        <figure class="callout quote">
+          <blockquote>Measure twice, cut once.</blockquote>
+          <figcaption>Carpenter's proverb</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">SVG</span>
@@ -1353,9 +1319,9 @@
 
     </div>
 
-    <div class="section-label section-label-secondary">Side Project</div>
+    <div class="section-label section-label-secondary">Side project</div>
     <p class="section-intro">
-      Not construction. A game I build after hours with AI coding agents, to learn how far careful direction can take them.
+      Not construction. A game I make after hours with AI coding agents, mostly to see how far good direction can take them.
     </p>
 
     <div class="project-grid">
@@ -1369,15 +1335,12 @@
         <div class="card-name">Hollowheart: Heart of the Mountain</div>
         <div class="card-tagline">A cozy mining-and-alchemy shop game with a story underneath.</div>
         <p class="card-desc">
-          Dig a falling-pixel mine, brew and craft, sell to heroes, and repair a small town while people
-          go about their day. Underneath: your teacher went down the mine and never came back.
-          Plays in the browser; saves stay on your device.
+          Dig a falling-pixel mine, brew potions, sell to heroes and fix up a small town. Underneath: your teacher went down the mine and never came back. I direct and decide; Claude and Codex write the code, and about 200 tests check every change. It plays in your browser, and saves stay on your device.
         </p>
-        <div class="callout">
-          <div class="callout-label">How it is made</div>
-          I direct, review and decide; Claude and Codex write the code. Game data, story text and
-          translations are governed files, and about 200 browser tests plus a balance bot check every change.
-        </div>
+        <figure class="callout quote">
+          <blockquote>It's dangerous to go alone! Take this.</blockquote>
+          <figcaption>The Legend of Zelda (1986)</figcaption>
+        </figure>
         <div class="tech-row">
           <span class="tech">Vanilla JS</span>
           <span class="tech">WebGL2</span>
@@ -1424,9 +1387,8 @@
 
     <div class="about-section">
       <div class="about-divider"></div>
-      <p>Most of what I build starts as personal curiosity and becomes a small, inspectable way to test a larger construction-information question.</p>
-      <p>The current thread is <a href="notes/post.html?slug=objects-evidence-decisions"><strong>Objects, Evidence, Decisions</strong></a>: preserve identity across sources, connect it to evidence, make relationships explicit, and keep AI inside a reviewable decision boundary.</p>
-      <p><strong>Based in Tokyo at a Japanese general contractor.</strong></p>
+      <p>Most of these started as a small &ldquo;what if&rdquo; on an evening and grew from there.</p>
+      <p>For the bigger picture, start with <a href="notes/post.html?slug=objects-evidence-decisions"><strong>Objects, Evidence, Decisions</strong></a>.</p>
     </div>
   </main>
 
