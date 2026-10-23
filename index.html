@@ -401,6 +401,10 @@
       background: linear-gradient(90deg, #9a6b1f, #a34848);
     }
 
+    .card.hollowheart::before {
+      background: linear-gradient(90deg, #c2410c, #2bb3a3);
+    }
+
     .card:hover {
       border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
       box-shadow: var(--shadow-lg);
@@ -486,6 +490,17 @@
       background: var(--amber-bg);
       border: 1px solid var(--amber-border);
       color: var(--amber);
+    }
+
+    .card.hollowheart .card-icon {
+      background: var(--coral-bg);
+      border: 1px solid var(--coral-border);
+    }
+
+    .card.hollowheart .card-icon img {
+      width: 28px;
+      height: 28px;
+      image-rendering: pixelated;
     }
 
     .card-status {
@@ -1332,6 +1347,59 @@
                 d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
             </svg>
             Private repository
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-label section-label-secondary">Side Project</div>
+    <p class="section-intro">
+      Not construction. A game I build after hours with AI coding agents, to learn how far careful direction can take them.
+    </p>
+
+    <div class="project-grid">
+
+      <!-- HOLLOWHEART -->
+      <div class="card hollowheart">
+        <div class="card-header">
+          <div class="card-icon"><img src="icons/hollowheart.png" alt="" loading="lazy"></div>
+          <span class="card-status">Beta · Act I</span>
+        </div>
+        <div class="card-name">Hollowheart: Heart of the Mountain</div>
+        <div class="card-tagline">A cozy mining-and-alchemy shop game with a story underneath.</div>
+        <p class="card-desc">
+          Dig a falling-pixel mine, brew and craft, sell to heroes, and repair a small town while people
+          go about their day. Underneath: your teacher went down the mine and never came back.
+          Plays in the browser; saves stay on your device.
+        </p>
+        <div class="callout">
+          <div class="callout-label">How it is made</div>
+          I direct, review and decide; Claude and Codex write the code. Game data, story text and
+          translations are governed files, and about 200 browser tests plus a balance bot check every change.
+        </div>
+        <div class="tech-row">
+          <span class="tech">Vanilla JS</span>
+          <span class="tech">WebGL2</span>
+          <span class="tech">Pixel simulation</span>
+          <span class="tech">Playwright tests</span>
+          <span class="tech">AI agents</span>
+          <span class="tech">GitHub Pages</span>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn primary" href="https://onuresen.github.io/hollowheart-play/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M10.604 1h4.146a.25.25 0 0 1 .25.25v4.146a.25.25 0 0 1-.427.177L13.03 4.03 9.28 7.78a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042l3.75-3.75-1.543-1.543A.25.25 0 0 1 10.604 1zM3.75 2h3.5a.75.75 0 0 1 0 1.5h-3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-3.5a.75.75 0 0 1 1.5 0v3.5A1.75 1.75 0 0 1 12.25 14h-8.5A1.75 1.75 0 0 1 2 12.25v-8.5C2 2.784 2.784 2 3.75 2z" />
+            </svg>
+            Play
+          </a>
+          <span class="action-btn disabled">
+            <svg viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M4 4a4 4 0 0 1 8 0v2h.25c.966 0 1.75.784 1.75 1.75v5.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25v-5.5C2 6.784 2.784 6 3.75 6H4V4zm8.25 3.5h-8.5a.25.25 0 0 0-.25.25v5.5c0 .138.112.25.25.25h8.5a.25.25 0 0 0 .25-.25v-5.5a.25.25 0 0 0-.25-.25zM10.5 6V4a2.5 2.5 0 1 0-5 0v2h5z" />
+            </svg>
+            Source private
           </span>
         </div>
       </div>

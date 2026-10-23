@@ -26,6 +26,12 @@ The `notes/` section is the durable publication layer. LinkedIn posts can introd
 | [Genba Lab](https://github.com/onuresen/Genba-Lab) | Local-first IFC simulation playground for construction sequence, crane planning, hazards, and model-derived metrics | [onuresen.github.io/Genba-Lab](https://onuresen.github.io/Genba-Lab/) |
 | [Object-Centric Drawing](https://github.com/onuresen/object-centric-drawing) | Local-first PDF navigation with explicit object identity, portable evidence, and a one-way Revit export adapter | [onuresen.github.io/object-centric-drawing](https://onuresen.github.io/object-centric-drawing/) |
 
+## Side project
+
+| Project | What it is | Live |
+|---|---|---|
+| Hollowheart: Heart of the Mountain | A cozy mining-and-alchemy shop game, built by directing AI coding agents. Beta (Act I); source private, the [play repo](https://github.com/onuresen/hollowheart-play) holds only the build | [onuresen.github.io/hollowheart-play](https://onuresen.github.io/hollowheart-play/) |
+
 ## Selected private R&D
 
 | Project | Public description |
