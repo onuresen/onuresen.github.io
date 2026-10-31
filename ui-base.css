@@ -1,6 +1,6 @@
 /* =============================================================================
    ui-base.css — Shared Tier-A base for the maker-layer tools
-   VERSION 1.0.0   ·   CANONICAL SOURCE — edit ONLY here.
+   VERSION 1.2.0   ·   CANONICAL SOURCE — edit ONLY here.
 
    Canonical home:   github.com/onuresen/built-lab › ui-system/ui-base.css
    Design reference: esen-vault › concepts/Shared-UI-System.md
@@ -18,9 +18,14 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
    2. Load this file, THEN a palette block from ui-system/palettes/ that overrides
-      the palette tokens (Lime-Editorial, Layer-Semantic, Executive, Catppuccin,
+      the palette tokens (Lime-Editorial, Layer-Semantic, Executive, Revit, Catppuccin,
       Slate). Skeleton shared, skin per tool.
    3. Style values, keep names. Restyle the skin, never rename the contract.
+   4. Theme-flip rule: any DOM surface that must change between light and dark
+      references a token (var(--surface) / var(--bg-soft) / …), never a hardcoded
+      hex — a literal colour cannot re-theme. This holds for a tool's own runtime
+      dark mode too (e.g. ONEXUS's onexus-style.js native tokens). It's how ONEXUS
+      shipped a white minimap in dark mode; don't repeat it.
    ============================================================================= */
 
 :root {
