@@ -13,6 +13,10 @@ The homepage welcomes the **Objects, Evidence, Decisions** roadmap and separates
 
 The `notes/` section is the durable publication layer. LinkedIn posts can introduce an idea, while the complete explanation and verified public links live here.
 
+**One post, one note.** Each LinkedIn post points to one note here. To add a note: write `notes/<slug>.md`, add one entry to `notes/index.json`, and link the post to `notes/post.html?slug=<slug>`.
+
+**Visitor counter.** The pages load GoatCounter (no cookies, no personal data). It counts page views, and clicks on the Open and GitHub buttons. The site code is set in the `data-goatcounter` attribute at the end of `index.html`, `notes.html` and `notes/post.html`.
+
 ---
 
 ## Public projects featured
