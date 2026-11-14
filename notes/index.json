@@ -1,16 +1,34 @@
 [
   {
+    "slug": "find-the-door-not-the-page",
+    "title": "Find the door, not the page",
+    "date": "2026-11-13",
+    "excerpt": "Drawing sets are organised by page. Buildings are not. A small PDF reader that remembers the objects inside the drawings.",
+    "tags": [
+      "Object-Centric Drawing",
+      "drawings",
+      "BIM"
+    ]
+  },
+  {
     "slug": "objects-evidence-decisions",
     "title": "Objects, Evidence, Decisions",
     "date": "2026-10-14",
     "excerpt": "A public roadmap for connecting drawing objects, knowledge graphs, bounded AI, and construction decision context.",
-    "tags": ["roadmap", "BIM", "knowledge graphs", "AI"]
+    "tags": [
+      "roadmap",
+      "BIM",
+      "knowledge graphs",
+      "AI"
+    ]
   },
   {
     "slug": "welcome",
     "title": "Starting a notes section",
     "date": "2026-06-21",
     "excerpt": "Why I'm adding a lightweight, markdown-based notes log to this site instead of a full blog.",
-    "tags": ["meta"]
+    "tags": [
+      "meta"
+    ]
   }
 ]

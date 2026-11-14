@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>One Sekai — Find a way to take part in Japan</title>
+<meta name="description" content="A small, source-linked guide to volunteering and giving in Japan. Filter by what you can give, your Japanese level and where you are.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="One Sekai — Find a way to take part in Japan">
+<meta property="og:description" content="A small, source-linked guide to volunteering and giving in Japan.">
+<meta name="theme-color" content="#fffdf9">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Shippori+Mincho:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="#/find" aria-label="One Sekai home">
+    <img src="assets/mark.png" alt="" width="40" height="40">
+    <span>ONE <b>SEKAI</b><small lang="ja">ひとつの世界</small></span>
+  </a>
+  <nav aria-label="Main">
+    <a href="#/find" data-nav="find">Find</a>
+    <a href="#/guides" data-nav="guides">Guides</a>
+    <a href="#/about" data-nav="about">About</a>
+  </nav>
+  <a class="saved-link" href="#/find?saved=1" data-nav="saved"><span aria-hidden="true">♥</span> Saved <b id="saved-count">0</b></a>
+</header>
+
+<main id="main">
+<noscript><p class="noscript">One Sekai needs JavaScript to show the list.</p></noscript>
+
+<section class="view" id="view-find" hidden>
+  <div class="hero">
+    <p class="kicker">Volunteering and giving in Japan</p>
+    <h1>Find a way to <em>take part.</em></h1>
+    <p class="lead">Tell us what you can give. See where to start. Every entry links to the organization's own page.</p>
+  </div>
+
+  <form class="finder" id="finder" role="search" aria-label="Find organizations">
+    <label class="search">
+      <span class="sr-only">Search</span>
+      <input id="q" type="search" placeholder="Search a cause, place or name" autocomplete="off">
+    </label>
+    <div class="q-row"><span class="q-label">I can give</span><div class="chips" data-group="give"></div></div>
+    <div class="q-row"><span class="q-label">My Japanese</span><div class="chips" data-group="lang"></div></div>
+    <div class="q-row"><span class="q-label">Where</span><div class="chips" data-group="where"></div></div>
+    <div class="q-row"><span class="q-label">Cause</span><div class="chips" data-group="cause"></div></div>
+  </form>
+
+  <div class="hint" id="hint" hidden></div>
+
+  <div class="results-head">
+    <p id="result-count" aria-live="polite"></p>
+    <button type="button" class="link-button" id="clear" hidden>Clear filters</button>
+  </div>
+  <div class="org-list" id="org-list"></div>
+  <p class="list-note">A short, hand-picked list. Not complete. Each entry shows when it was checked. Always confirm with the organizer.</p>
+</section>
+
+<section class="view" id="view-guides" hidden>
+  <div class="page-title">
+    <p class="kicker">Before you join</p>
+    <h1>Guides</h1>
+    <p class="lead">What newcomers are rarely told about contributing in Japan.</p>
+  </div>
+  <div class="guide-grid" id="guide-grid"></div>
+
+  <section class="tax-guide">
+    <div class="tax-intro">
+      <p class="kicker">Money · Japan tax basics</p>
+      <h2>A donation may reduce your Japanese tax. It is not automatic.</h2>
+      <p>It depends on the recipient's legal status, your tax situation, the donation, and sometimes local rules. A well-known name or an NPO label does not guarantee a deduction.</p>
+      <div class="tax-alert">
+        <b>Keep the official receipt</b>
+        <span lang="ja">領収書 / 寄附金受領証明書</span>
+        <p>It should show your name, the recipient, the amount and the date. Keep any certificate the organization sends.</p>
+      </div>
+    </div>
+    <ol class="tax-steps">
+      <li><b>Check the recipient</b><p>Look for <span lang="ja">認定NPO法人</span>, <span lang="ja">公益社団法人</span> or <span lang="ja">公益財団法人</span>. Confirm that your specific donation qualifies.</p></li>
+      <li><b>Choose the treatment</b><p>For qualifying donations to certified NPOs, individuals may be able to choose an income deduction or a tax credit. The better choice varies.</p></li>
+      <li><b>File if required</b><p>Enter eligible donations in your income-tax return (<span lang="ja">確定申告</span>). Keep or submit the evidence.</p></li>
+      <li><b>Check resident tax too</b><p>Local tax relief can depend on whether your prefecture or city designates the recipient.</p></li>
+    </ol>
+  </section>
+
+  <div class="tax-compare">
+    <article>
+      <span class="kicker">Charitable donation</span>
+      <h3>NGO, certified NPO or public-interest body</h3>
+      <p>Your money supports the organization's work. Tax treatment depends on the recipient and the donation. Ask for the official receipt.</p>
+    </article>
+    <article>
+      <span class="kicker" lang="ja">ふるさと納税</span>
+      <h3>Donation to a municipality</h3>
+      <p>A different system with its own limits and a one-stop procedure. If you later file a tax return, the one-stop applications stop counting. You must then include all furusato donations in the return.</p>
+    </article>
+  </div>
+
+  <div class="dark-box">
+    <b>This is orientation, not tax advice</b>
+    <p>Rules, limits and your residency status matter. Confirm with the organization, the National Tax Agency, your city office or a tax professional.</p>
+    <div class="link-row">
+      <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1150.htm" target="_blank" rel="noopener">NTA: donation deduction ↗</a>
+      <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1263.htm" target="_blank" rel="noopener">NTA: certified NPO donations ↗</a>
+      <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1155.htm" target="_blank" rel="noopener">NTA: furusato nōzei ↗</a>
+    </div>
+  </div>
+
+  <section class="plain-box">
+    <div>
+      <p class="kicker">More places to look</p>
+      <h2>Not on this list?</h2>
+    </div>
+    <ul>
+      <li><a href="https://www.tvac.or.jp/english/getinvolved.html?appsule=37" target="_blank" rel="noopener">Tokyo Voluntary Action Center ↗</a> links English directories, ward volunteer centers and Japanese classes.</li>
+      <li><a href="https://activo.jp/" target="_blank" rel="noopener">activo ↗</a> is a large Japanese listing site for volunteering.</li>
+      <li>Ask locally. Your ward office, social welfare council (<b lang="ja">社会福祉協議会</b>), international association and community center list small activities that never reach national sites.</li>
+    </ul>
+  </section>
+</section>
+
+<section class="view" id="view-about" hidden>
+  <div class="page-title">
+    <p class="kicker">About</p>
+    <h1>What One Sekai is</h1>
+    <p class="lead">A small guide for international residents and visitors who want to contribute in Japan and do not know where to start.</p>
+  </div>
+  <div class="about-grid">
+    <article>
+      <h2>What it does</h2>
+      <ul>
+        <li>Lists a few organizations as starting points.</li>
+        <li>Says what each one asks for: language, time, place.</li>
+        <li>Links to the organization's own pages.</li>
+        <li>Explains the basics newcomers often miss.</li>
+      </ul>
+    </article>
+    <article>
+      <h2>What it is not</h2>
+      <ul>
+        <li>Not an NPO and not a volunteer coordinator.</li>
+        <li>Not a partner of any organization listed.</li>
+        <li>Not an endorsement. Being listed is not a rating.</li>
+        <li>Not tax, visa or legal advice.</li>
+      </ul>
+    </article>
+    <article>
+      <h2>What “checked” means</h2>
+      <ul>
+        <li>We read the organization's official page on the date shown.</li>
+        <li>We wrote down what that page said.</li>
+        <li>We did not assess its safety, finances or operations.</li>
+        <li>Openings and rules change. The organizer decides who can join.</li>
+      </ul>
+    </article>
+    <article>
+      <h2>How entries are written</h2>
+      <ul>
+        <li>Official pages only. No copied application forms.</li>
+        <li>An English page does not mean every role works in English. We say which.</li>
+        <li>We say when an organization mainly takes donations, or when Japanese is needed.</li>
+        <li>Work with children, vulnerable people, animals and disaster survivors stays under the organizer's screening.</li>
+      </ul>
+    </article>
+  </div>
+  <div class="dark-box" id="about-status"></div>
+  <section class="plain-box" id="corrections" hidden>
+    <div>
+      <p class="kicker">Corrections</p>
+      <h2>Found something out of date?</h2>
+    </div>
+    <p>Tell us which entry and what changed. <a id="contact-link" href="#" target="_blank" rel="noopener">Send a correction ↗</a></p>
+  </section>
+</section>
+</main>
+
+<footer>
+  <span>One Sekai · an independent guide</span>
+  <span>Not affiliated with the organizations listed · Confirm details with each organizer</span>
+</footer>
+
+<dialog class="org-dialog" id="org-dialog" aria-labelledby="dialog-title">
+  <button class="dialog-close" type="button" aria-label="Close">×</button>
+  <div id="dialog-content"></div>
+</dialog>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
