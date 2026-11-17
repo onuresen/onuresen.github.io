@@ -1,0 +1,488 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Compare Quiet Towns</title></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
+   ui-base.css — Shared Tier-A base for the maker-layer tools
+   VERSION 1.2.0   ·   CANONICAL SOURCE — edit ONLY here.
+
+   Canonical home:   github.com/onuresen/built-lab › ui-system/ui-base.css
+   Design reference: esen-vault › concepts/Shared-UI-System.md
+
+   ⚠ Do NOT edit downstream copies. This file is the single source of truth;
+     all tools consume this version. Bump VERSION (semver) on any change here.
+
+   WHAT THIS IS
+   The portable skeleton every "Tier A — Full" tool uses: the token contract,
+   the radius/z-index scales, and the shared UI primitives (.btn / .card / .input
+   / .label / .empty-state / .ui-modal / .ui-section / .ui-row hover-bar).
+
+   HOW TO USE
+   1. Load fonts in the host page (do NOT @import here — it blocks render):
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+   2. Load this file, THEN a palette block from ui-system/palettes/ that overrides
+      the palette tokens (Lime-Editorial, Layer-Semantic, Executive, Revit, Catppuccin,
+      Slate). Skeleton shared, skin per tool.
+   3. Style values, keep names. Restyle the skin, never rename the contract.
+   4. Theme-flip rule: any DOM surface that must change between light and dark
+      references a token (var(--surface) / var(--bg-soft) / …), never a hardcoded
+      hex — a literal colour cannot re-theme. This holds for a tool's own runtime
+      dark mode too (e.g. ONEXUS's onexus-style.js native tokens). It's how ONEXUS
+      shipped a white minimap in dark mode; don't repeat it.
+   ============================================================================= */
+
+:root {
+  /* ---- Palette (SKIN — override via a ui-system/palettes/*.css block) ---- */
+  --bg:        #f6f7f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #14181f;   /* primary content */
+  --text2:     #44505f;   /* meaningful secondary */
+  --text3:     #7c8aa0;   /* metadata / hints ONLY — never status or instructions */
+
+  --accent:    #2563eb;   /* the one color a tool must set */
+  --on-accent: #ffffff;   /* text/icons on accent fills */
+
+  --accent2:      #b07d2b;   /* optional warm/secondary signal — use sparingly */
+  --accent2-dim:  #f3e9d6;
+  --accent2-text: #7a5519;
+
+  /* ---- Accent tints (DERIVED — set --accent and these follow) ---- */
+  --accent-dim:  color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 24%, transparent);
+
+  /* ---- Fonts (pool defaults — override --font-display per tool) ---- */
+  --font-display: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-body:    'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Radius scale (SKELETON — shared) ---- */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-pill: 999px;
+
+  /* ---- Spacing / shadow / motion ---- */
+  --gap: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Z-index scale (SKELETON — shared; replaces raw ints) ---- */
+  --z-base:    1;
+  --z-sticky:  100;
+  --z-popover: 500;
+  --z-overlay: 800;
+  --z-modal:   900;
+  --z-tooltip: 950;
+  --z-toast:   9999;
+}
+
+/* =============================================================================
+   Reset
+   ============================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* =============================================================================
+   Buttons — .btn / .btn-primary / .btn-ghost / .btn-danger
+   ============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease),
+              box-shadow 0.2s var(--ease), transform 0.12s var(--ease);
+}
+.btn:hover  { border-color: var(--accent); background: var(--accent-dim); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.btn-primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent); filter: brightness(0.94); }
+
+.btn-ghost {
+  color: var(--text2);
+  background: transparent;
+  border-color: var(--border2);
+}
+.btn-ghost:hover { background: var(--surface2); border-color: var(--accent); }
+
+.btn-danger {
+  color: #b3261e;
+  background: color-mix(in srgb, #e8455a 12%, transparent);
+  border-color: color-mix(in srgb, #e8455a 32%, transparent);
+}
+
+/* =============================================================================
+   Card
+   ============================================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+
+/* =============================================================================
+   Form fields — .input / .select / .textarea + .label
+   ============================================================================= */
+.input, .select, .textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.textarea { resize: vertical; min-height: 72px; }
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* =============================================================================
+   Section header — .ui-section-header / -title / -line / -action
+   ============================================================================= */
+.ui-section-header { display: flex; align-items: center; gap: 10px; }
+.ui-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.ui-section-line { flex: 1; height: 1px; background: var(--border); }
+.ui-section-action {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+.ui-section-action:hover { color: var(--accent); background: var(--accent-dim); }
+
+/* =============================================================================
+   Empty state
+   ============================================================================= */
+.empty-state { text-align: center; color: var(--text3); padding: 40px 20px; }
+.empty-state .e-icon  { display: block; font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state .e-title { font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.empty-state .e-sub   { font-size: 12px; color: var(--text3); }
+
+/* =============================================================================
+   Modal — .ui-modal-overlay / .ui-modal
+   ============================================================================= */
+.ui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open { opacity: 1; pointer-events: auto; }
+.ui-modal {
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open .ui-modal { transform: translateY(0) scale(1); }
+
+/* =============================================================================
+   Signature — left accent-bar reveal on row hover. Opt in with class .ui-row.
+   ============================================================================= */
+.ui-row { position: relative; }
+.ui-row::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 9px; bottom: 9px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;   /* single-sided: only the open edge is rounded */
+  background: var(--accent);
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  pointer-events: none;
+}
+.ui-row:hover::after { opacity: 1; transform: translateX(0); }
+
+/* =============================================================================
+   Toast — .ui-toast (+ .is-visible, --success / --error)
+   ============================================================================= */
+.ui-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: var(--z-toast);
+  padding: 9px 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.ui-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+.ui-toast--success { border-color: var(--accent-glow); color: var(--accent); }
+.ui-toast--error   { border-color: color-mix(in srgb, #e8455a 40%, transparent); color: #e8455a; }
+
+/* =============================================================================
+   Scrollbar + focus ring
+   ============================================================================= */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* =============================================================================
+   Micro-motion — opt-in classes
+   ============================================================================= */
+@keyframes ui-card-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.card-enter { animation: ui-card-enter 0.22s var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter, .ui-row::after, .ui-modal, .ui-toast { animation: none !important; transition: none !important; }
+}
+/* =============================================================================
+   Executive palette — "Boardroom"  ·  ui-system v1.2.0
+   Light, professional / leadership-facing. Cool navy authority + bronze signal.
+   Used by: onuresen.github.io, OneBridge, ROD, BIM Modelling Guide.
+   Load AFTER ui-base.css.   See esen-vault › concepts/Shared-UI-System.md
+   ============================================================================= */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #11243a;   /* deep navy ink */
+  --text2:     #3d5066;
+  --text3:     #7c8aa0;
+
+  --accent:        #1f5f8b;   /* brand blue — dim/glow derive from this in ui-base */
+  --on-accent:     #ffffff;
+
+  --accent2:       #b07d2b;   /* bronze — signal color, use sparingly (never a 2nd primary) */
+  --accent2-dim:   #f3e9d6;
+  --accent2-text:  #7a5519;
+
+  --font-display: 'Archivo', 'DM Sans', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+/* =============================================================================
+   town.css — Town Reboot's own layer on top of the Built Lab UI system.
+   Load after ui-base.css (v1.2.0) and palettes/executive.css, both copied from
+   built-lab/ui-system. This file only adds data colours and the map-app layout.
+   Every colour that changes the page is a token.
+   ============================================================================= */
+:root {
+  /* Data colours: map classes. Not brand colours. */
+  --clear: #d9621f; --part: #e8b04a; --hidden: #8e9bb0;
+  --n0: #2f7d5b; --n1: #9cc27a; --n2: #b9a6c9; --n3: #7a5a9c;
+  --r1: #5b2a86; --r2: #9a6cc4; --r3: #d4c3e6;
+  --haz: #c22f3d; --ok: #2f7d5b; --miss: #c22f3d;
+  --sea: #8fb8d6; --s0: #c9d2dc; --s1: #e9d39a; --s2: #e8a64a; --s3: #d9621f; --s4: #9c3d12;
+  --l1: #7fa7c4; --l2: #1f5f8b; --l3: #b07d2b;
+  --land: #dfe5ec; --ink: #11243a;
+  --signal: var(--accent2);
+  --bar: var(--accent); --bar-bg: var(--surface3);
+  --panel-w: 400px;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+/* Pressed state for .btn used as a toggle or tab */
+.btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- Map app: map fills the screen, panel on the right (bottom on phones) ---- */
+.tr-app { display: grid; grid-template-columns: minmax(0, 1fr) var(--panel-w); grid-template-rows: auto minmax(0, 1fr); height: 100vh; height: 100dvh; }
+.tr-top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px max(16px, env(safe-area-inset-left, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--surface); border-bottom: 1px solid var(--border); }
+.tr-top h1 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
+.tr-top .sub { color: var(--text2); font-size: 13px; }
+.tr-top .back { font-size: 13px; text-decoration: none; margin-right: 4px; }
+.tr-map { position: relative; min-height: 0; overflow: hidden; background: var(--surface2); }
+.tr-map canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline: none; }
+.tr-map canvas.dragging { cursor: grabbing; }
+.tr-map canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.tr-legend { position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--border); border-radius: var(--r-md); padding: 8px 12px;
+  font-size: 12.5px; color: var(--text2); box-shadow: var(--shadow-sm); pointer-events: none; }
+.tr-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.tr-tools .btn { background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: var(--shadow-sm); }
+.tr-hint { position: absolute; right: 12px; bottom: 12px; font-size: 12px; color: var(--text3); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 3px 8px; border-radius: var(--r-sm); pointer-events: none; }
+.sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.tr-panel { min-height: 0; overflow: auto; background: var(--surface); border-left: 1px solid var(--border); padding: 14px 16px 28px; display: flex; flex-direction: column; gap: 16px; }
+.tr-block { display: flex; flex-direction: column; gap: 8px; }
+.tr-block > .label, .tr-label { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin: 0; }
+.tr-note { font-size: 13px; color: var(--text2); margin: 0; }
+.tr-spot { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.tr-spot h2 { font-size: 17px; margin: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 3px 16px; color: var(--text2); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tr-panel details { border-top: 1px solid var(--border); padding-top: 10px; font-size: 13px; color: var(--text2); }
+.tr-panel summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.tr-panel details ul { padding-left: 18px; margin: 8px 0; } .tr-panel details li { margin-bottom: 4px; }
+@media (max-width: 900px) {
+  .tr-app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 62vh auto; grid-template-rows: auto 62dvh auto; height: auto; }
+  .tr-panel { border-left: 0; border-top: 1px solid var(--border); overflow: visible; }
+  .tr-hint { display: none; }
+}
+
+/* ---- Reading pages (home, compare): full width with a sensible line length ---- */
+.tr-page { padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.tr-wide { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.tr-lede { color: var(--text2); margin: 6px 0 0; max-width: 70ch; font-size: 15.5px; }
+</style>
+<style>
+/* Page layer: condition chips and the town table. Tokens come from the UI system and town.css. */
+h1{font-family:var(--font-display);font-size:28px;line-height:1.15;margin:0;letter-spacing:-.3px}
+.lede{color:var(--text2);margin:6px 0 0;max-width:64ch}
+.card{padding:0;overflow:hidden}
+.pick{padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.pick h2{font-size:14px;margin:0;color:var(--text2);font-weight:600}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+.tbl{overflow-x:auto;border-top:1px solid var(--border)}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+th{font-size:12.5px;color:var(--text3);font-weight:600}
+th button{all:unset;cursor:pointer;color:inherit}
+th button[aria-sort=descending]::after{content:" ↓"}th button[aria-sort=ascending]::after{content:" ↑"}
+td.n,th.n{text-align:right}
+th:first-child,td:first-child{position:sticky;left:0;background:var(--surface);z-index:1;box-shadow:1px 0 0 var(--border)}
+td a{font-weight:600;text-decoration:none}
+.tr-wide>a.back{font-size:13px;text-decoration:none}
+td .sub{display:block;font-size:12px;color:var(--text3);font-weight:400}
+.share{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.mini{width:70px;height:8px;background:var(--bar-bg);border-radius:2px;position:relative;flex:none}
+.mini i{position:absolute;left:0;top:0;bottom:0;background:var(--bar);border-radius:2px}
+.unk{color:var(--text3);font-size:12.5px;white-space:normal;min-width:9em}
+.notes{color:var(--text2);font-size:13.5px;max-width:90ch}
+.notes h2{font-family:var(--font-display);font-size:16px;color:var(--text);margin:0 0 6px}
+.notes ul{margin:0;padding-left:18px}.notes li{margin-bottom:4px}
+</style>
+<div class="tr-page"><div class="tr-wide">
+  <a class="back" href="./">← Town Reboot</a>
+  <header>
+    <h1>Compare Quiet Towns</h1>
+    <p class="tr-lede">The quiet towns with a 3D city model, within about 2 hours of Kawasaki. Pick what the land must have. Each town shows how much of its land you could live on has all of it.</p>
+  </header>
+  <section class="card">
+    <div class="pick"><h2>The land must have</h2><div class="btns" id="conds"></div></div>
+    <div class="tbl"><table id="t"></table></div>
+  </section>
+  <section class="notes">
+    <h2>How to read it</h2>
+    <ul>
+      <li>Every 31 m square is tested. The table adds up the squares that pass every condition you picked.</li>
+      <li>Land you could live on: slope under 15°, not forest, water or road. Where a town's 3D model has no land-use record, only slope and lakes are used, so more land counts.</li>
+      <li>"Not known" means the town's 3D model does not have that layer. It is never counted as a pass.</li>
+      <li>Clear view of Mt. Fuji: nothing hides the mountain, past land, forest and buildings. From far towns the mountain is small even when clear.</li>
+      <li>From your home: straight-line km, and drive time without traffic where the page can reach the OpenStreetMap routing server (the public site). Set your home on a town map or the finder; it is saved only in this browser.</li>
+      <li>These are areas, not a ranking of towns. Open a town's map to see where the land is.</li>
+    </ul>
+    <p>出典：3D都市モデル（Project PLATEAU、国土交通省、著作権は各市町村）、地理院タイル（国土地理院）、国土数値情報（行政区域、国土交通省）、令和2年国勢調査（e-Stat）を加工して作成。Drive times © OpenStreetMap contributors (OSRM). Sources: PLATEAU 3D city models (each town's year in the table). Geospatial Information Authority of Japan elevation tiles. National Land Numerical Information boundaries and lakes. 2020 Census. OpenStreetMap routing, without traffic.</p>
+  </section>
+</div></div>
+<script>
+const C={"conds":[{"id":"fuji","text":"Clear view of Mt. Fuji"},{"id":"quiet","text":"No building within 100 m"},{"id":"flat","text":"Flat: under 8°"},{"id":"safe","text":"Outside landslide zones"},{"id":"build","text":"Not in the urbanisation control area"},{"id":"housing","text":"Already housing land"},{"id":"farm","text":"Farmland"}],"towns":[{"code":"08220","name":"つくば市","pref":"茨城県","drive_min":86,"density":852,"pop_change":6.47374,"sea":0.0,"relief":151,"model_year":2023,"fuji_km":146.9,"lo":140.07964,"la":36.09266,"cell_ha":0.0955,"live_cells":220081,"known":[true,true,true,true,true,true,true],"counts":{"0":62,"1":437,"2":6,"3":55,"4":143,"5":301,"6":19,"7":25,"8":271,"9":368,"10":197,"11":227,"12":26294,"13":5920,"14":6147,"15":2463,"20":4,"24":19,"25":8,"26":2,"27":2,"28":25270,"29":5388,"30":2157,"31":487,"32":29,"33":191,"36":178,"37":425,"40":118,"41":134,"44":20176,"45":4150,"46":3,"47":2,"52":2,"56":6,"57":6,"60":10900,"61":1317,"64":35,"65":48,"66":4,"68":409,"69":361,"70":183,"71":52,"72":95,"73":79,"74":20,"75":6,"76":57585,"77":11052,"78":29227,"79":5862,"88":2,"89":3,"92":882,"93":125,"94":122,"95":20},"empty_houses":null,"repair":false},{"code":"11211","name":"本庄市","pref":"埼玉県","drive_min":96,"density":876,"pop_change":0.8834,"sea":0.0,"relief":309,"model_year":2025,"fuji_km":99.8,"lo":139.13322,"la":36.19716,"cell_ha":0.0949,"live_cells":55792,"known":[true,true,true,true,true,true,true],"counts":{"0":44,"2":3,"4":64,"8":754,"10":823,"12":9044,"14":3994,"16":48,"20":73,"22":1,"24":94,"26":77,"28":4224,"30":194,"32":21,"36":62,"40":113,"44":7109,"46":1,"48":85,"52":122,"56":33,"60":4957,"64":31,"66":4,"68":112,"70":9,"72":224,"74":28,"76":17238,"78":4850,"80":85,"82":4,"84":150,"86":7,"88":83,"90":5,"92":1009,"94":13},"empty_houses":null,"repair":false},{"code":"11341","name":"滑川町","pref":"埼玉県","drive_min":78,"density":665,"pop_change":8.34615,"sea":0.0,"relief":36,"model_year":2025,"fuji_km":96.8,"lo":139.35406,"la":36.07432,"cell_ha":0.0955,"live_cells":20378,"known":[true,true,true,true,true,true,true],"counts":{"0":3,"8":872,"10":739,"12":4492,"14":1682,"24":4,"26":1,"28":1110,"30":6,"32":8,"36":12,"40":233,"44":2126,"60":715,"64":6,"66":1,"68":16,"70":5,"72":441,"74":31,"76":6894,"78":928,"92":52,"94":1},"empty_houses":null,"repair":false},{"code":"11342","name":"嵐山町","pref":"埼玉県","drive_min":82,"density":598,"pop_change":-2.46442,"sea":0.0,"relief":52,"model_year":2025,"fuji_km":93.7,"lo":139.31728,"la":36.05649,"cell_ha":0.0955,"live_cells":15747,"known":[true,true,true,true,true,true,true],"counts":{"0":3,"4":2,"8":319,"10":233,"12":2464,"14":835,"24":69,"26":25,"28":1308,"30":13,"32":6,"36":5,"40":206,"44":1627,"46":2,"56":4,"60":1188,"64":8,"66":3,"68":19,"70":4,"72":332,"74":66,"76":5682,"78":1174,"92":145,"94":5},"empty_houses":null,"repair":false},{"code":"11343","name":"小川町","pref":"埼玉県","drive_min":86,"density":473,"pop_change":-8.51241,"sea":0.0,"relief":390,"model_year":2025,"fuji_km":90.5,"lo":139.25759,"la":36.04343,"cell_ha":0.0955,"live_cells":19368,"known":[true,true,true,true,true,true,true],"counts":{"0":38,"2":2,"4":123,"6":2,"8":604,"10":668,"12":1875,"14":649,"16":9,"20":60,"24":35,"26":5,"28":1488,"30":37,"32":160,"36":311,"38":1,"40":338,"42":3,"44":2362,"46":26,"48":10,"52":83,"56":81,"58":2,"60":2053,"62":5,"64":198,"66":20,"68":585,"70":19,"72":562,"74":92,"76":5896,"78":430,"80":2,"84":36,"88":25,"90":1,"92":472},"empty_houses":null,"repair":false},{"code":"11347","name":"吉見町","pref":"埼玉県","drive_min":81,"density":471,"pop_change":-7.33024,"sea":0.0,"relief":36,"model_year":2025,"fuji_km":100.3,"lo":139.45498,"la":36.042,"cell_ha":0.0955,"live_cells":32594,"known":[true,true,true,true,true,true,true],"counts":{"0":25,"4":23,"6":1,"8":346,"10":90,"12":5268,"13":164,"14":3764,"15":69,"16":8,"20":15,"24":11,"28":937,"29":6,"30":26,"31":6,"32":9,"36":14,"40":159,"44":3721,"45":95,"60":444,"61":2,"64":7,"66":1,"68":15,"70":4,"72":40,"74":1,"76":11943,"77":531,"78":4474,"79":153,"92":205,"93":8,"94":7,"95":2},"empty_houses":null,"repair":false},{"code":"11348","name":"鳩山町","pref":"埼玉県","drive_min":74,"density":527,"pop_change":-5.42614,"sea":0.0,"relief":67,"model_year":2025,"fuji_km":88.4,"lo":139.3347,"la":35.98827,"cell_ha":0.0955,"live_cells":13142,"known":[true,true,true,true,true,true,true],"counts":{"0":3,"8":613,"10":303,"12":2829,"14":1596,"24":46,"28":365,"30":9,"32":14,"36":6,"40":169,"44":1145,"56":50,"60":879,"64":1,"68":6,"72":261,"74":25,"76":4502,"78":260,"88":6,"92":53,"94":1},"empty_houses":null,"repair":false},{"code":"11408","name":"寄居町","pref":"埼玉県","drive_min":96,"density":504,"pop_change":-5.00866,"sea":0.0,"relief":258,"model_year":2025,"fuji_km":93.5,"lo":139.18033,"la":36.12346,"cell_ha":0.0955,"live_cells":30944,"known":[true,true,true,true,false,true,true],"counts":{"0":100,"2":2,"4":213,"6":6,"8":1182,"10":585,"12":6457,"14":1594,"32":123,"36":254,"40":378,"44":5905,"64":205,"66":17,"68":625,"70":38,"72":635,"74":79,"76":11518,"78":1028},"empty_houses":null,"repair":false},{"code":"12206","name":"木更津市","pref":"千葉県","drive_min":36,"density":980,"pop_change":1.50961,"sea":0.2,"relief":115,"model_year":2024,"fuji_km":113.1,"lo":139.95635,"la":35.38034,"cell_ha":0.0973,"live_cells":80235,"known":[true,true,true,true,true,true,true],"counts":{"0":61,"1":4,"2":11,"3":1,"4":83,"5":3,"6":13,"8":1109,"9":212,"10":1302,"11":339,"12":6997,"13":4379,"14":3124,"15":3495,"16":6,"17":10,"18":1,"20":17,"21":6,"24":292,"25":127,"26":48,"27":1,"28":8008,"29":5349,"30":260,"31":477,"32":150,"33":3,"36":128,"37":6,"40":369,"41":27,"44":3470,"45":1747,"48":27,"49":6,"52":30,"53":8,"56":164,"57":68,"60":8388,"61":2062,"64":129,"65":2,"66":7,"68":275,"69":3,"70":18,"72":977,"73":106,"74":332,"75":12,"76":12038,"77":6837,"78":3320,"79":2861,"80":4,"81":5,"84":7,"85":5,"88":39,"89":19,"90":9,"92":628,"93":198,"94":10,"95":6},"empty_houses":null,"repair":false},{"code":"12210","name":"茂原市","pref":"千葉県","drive_min":69,"density":868,"pop_change":-3.24012,"sea":0.0,"relief":62,"model_year":2022,"fuji_km":142.9,"lo":140.29443,"la":35.44042,"cell_ha":0.0967,"live_cells":43327,"known":[true,true,true,true,false,true,true],"counts":{"0":45,"4":26,"6":3,"8":665,"9":35,"10":452,"11":27,"12":6727,"13":106,"14":1989,"15":235,"32":207,"36":114,"40":392,"41":7,"44":5065,"45":17,"64":65,"66":3,"68":87,"70":10,"72":1226,"73":3,"74":574,"75":25,"76":20658,"77":43,"78":4460,"79":61},"empty_houses":null,"repair":false},{"code":"12347","name":"多古町","pref":"千葉県","drive_min":87,"density":189,"pop_change":-6.71692,"sea":0.0,"relief":36,"model_year":2025,"fuji_km":163.2,"lo":140.46782,"la":35.74518,"cell_ha":0.0961,"live_cells":51910,"known":[true,true,true,true,false,true,true],"counts":{"0":24,"2":35,"4":28,"6":10,"8":440,"9":5,"10":859,"12":3397,"13":50,"14":4498,"15":33,"32":144,"34":144,"36":90,"38":105,"40":222,"42":377,"44":1768,"45":7,"46":2461,"64":19,"66":34,"68":26,"70":60,"72":412,"73":6,"74":1270,"75":3,"76":7512,"77":34,"78":27780,"79":57},"empty_houses":null,"repair":false},{"code":"13305","name":"日の出町","pref":"東京都","drive_min":89,"density":604,"pop_change":-2.7972,"sea":0.0,"relief":469,"model_year":2025,"fuji_km":63.1,"lo":139.22565,"la":35.76018,"cell_ha":0.0961,"live_cells":5899,"known":[true,true,true,true,false,true,true],"counts":{"0":229,"2":8,"4":454,"6":3,"8":340,"10":98,"12":1760,"14":125,"32":138,"36":352,"40":98,"44":1070,"64":158,"66":1,"68":274,"70":1,"72":69,"76":721},"empty_houses":null,"repair":false},{"code":"22215","name":"御殿場市","pref":"静岡県","drive_min":93,"density":444,"pop_change":-1.66216,"sea":0.0,"relief":1463,"model_year":2023,"fuji_km":16.1,"lo":138.89441,"la":35.28802,"cell_ha":0.0973,"live_cells":62070,"known":[true,true,true,true,true,true,true],"counts":{"0":24,"1":28,"3":4,"4":88,"5":86,"6":9,"7":39,"8":369,"9":618,"10":501,"11":746,"12":4824,"13":5059,"14":2316,"15":6324,"24":17,"25":14,"26":5,"27":4,"28":1653,"29":3037,"30":93,"31":189,"32":12,"33":10,"36":53,"37":48,"40":55,"41":57,"44":3969,"45":4764,"46":1,"47":2,"56":3,"57":2,"60":1732,"61":2771,"64":7,"65":12,"66":2,"67":1,"68":39,"69":63,"70":6,"71":4,"72":126,"73":107,"74":56,"75":22,"76":6773,"77":10440,"78":1387,"79":2774,"90":2,"92":258,"93":454,"94":8,"95":3},"empty_houses":179,"repair":false},{"code":"22220","name":"裾野市","pref":"静岡県","drive_min":100,"density":369,"pop_change":-3.46246,"sea":0.0,"relief":1133,"model_year":2023,"fuji_km":20.8,"lo":138.84383,"la":35.24176,"cell_ha":0.0973,"live_cells":32181,"known":[true,true,true,true,true,true,true],"counts":{"0":78,"1":3,"4":131,"5":4,"6":3,"8":740,"9":104,"10":1718,"11":148,"12":2337,"13":1426,"14":1994,"15":321,"16":1,"20":1,"24":96,"25":65,"26":83,"27":47,"28":1790,"29":2321,"30":355,"31":596,"32":64,"33":5,"36":158,"37":23,"40":412,"41":38,"44":2901,"45":1256,"48":17,"52":16,"56":90,"57":10,"60":2039,"61":1132,"64":85,"65":2,"66":12,"67":1,"68":161,"69":25,"70":16,"71":1,"72":330,"73":102,"74":276,"75":71,"76":3363,"77":2689,"78":1151,"79":756,"84":1,"88":3,"89":2,"90":1,"92":408,"93":197,"94":4,"95":1},"empty_houses":null,"repair":false},{"code":"22344","name":"小山町","pref":"静岡県","drive_min":90,"density":137,"pop_change":-4.76484,"sea":0.0,"relief":1458,"model_year":2023,"fuji_km":19.0,"lo":138.96263,"la":35.34456,"cell_ha":0.0973,"live_cells":28176,"known":[true,true,true,true,true,true,true],"counts":{"0":39,"1":14,"2":9,"4":18,"5":14,"6":2,"8":682,"9":319,"10":1486,"11":1348,"12":2546,"13":2000,"14":4344,"15":2789,"16":38,"17":9,"20":49,"21":53,"24":119,"25":44,"26":9,"27":1,"28":908,"29":584,"30":47,"31":22,"32":79,"33":9,"36":47,"37":1,"38":1,"40":217,"41":19,"44":741,"45":602,"48":120,"49":24,"52":82,"53":10,"56":191,"57":18,"60":988,"61":229,"64":125,"65":7,"66":18,"67":2,"68":140,"69":10,"70":32,"71":6,"72":479,"73":92,"74":259,"75":66,"76":2001,"77":2124,"78":635,"79":729,"80":22,"81":4,"84":16,"85":3,"88":78,"89":5,"92":286,"93":155,"95":11},"empty_houses":60,"repair":false}]};
+const $=id=>document.getElementById(id);
+const st={sel:new Set(['fuji','quiet']),sort:'match',dir:-1};
+const fmt=n=>n>=100?Math.round(n).toLocaleString('en-US'):n>=10?n.toFixed(0):n.toFixed(1);
+function calc(t){const bits=[...st.sel].map(id=>C.conds.findIndex(c=>c.id===id));
+  const unknown=bits.filter(b=>!t.known[b]).map(b=>C.conds[b].text.toLowerCase());
+  let n=0;const want=bits.reduce((a,b)=>a|(1<<b),0);for(const k in t.counts){if((+k&want)===want)n+=t.counts[k]}
+  return{unknown,live:t.live_cells*t.cell_ha,match:unknown.length?null:n*t.cell_ha,share:unknown.length||!t.live_cells?null:n/t.live_cells}}
+const COLS=[['name','Town',0],['drive_min','Drive from Kawasaki Station',1],['home','From your home',1],['density','People per km²',1],['live','Land you could live on',1],['match','Has all of it',1],['share','Share',1]];
+function render(){
+  $('conds').innerHTML=C.conds.map(c=>`<button type="button" class="btn" data-c="${c.id}" aria-pressed="${st.sel.has(c.id)}">${c.text}</button>`).join('');
+  const rows=C.towns.map(t=>({t,...calc(t)}));
+  const key=r=>st.sort==='name'?r.t.name:st.sort==='drive_min'||st.sort==='density'?r.t[st.sort]:st.sort==='home'?(r.t.hd??(MY?r.t.hkm:null)):r[st.sort];
+  rows.sort((a,b)=>{const x=key(a),y=key(b);if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return-1;return(x<y?-1:x>y?1:0)*st.dir});
+  $('t').innerHTML=`<thead><tr>${COLS.map(([k,n,num])=>`<th class="${num?'n':''}"><button type="button" data-s="${k}" aria-sort="${st.sort===k?(st.dir>0?'ascending':'descending'):'none'}">${n}</button></th>`).join('')}</tr></thead><tbody>`+
+    rows.map(r=>`<tr><td><a href="view-${r.t.code}.html">${r.t.name}</a><span class="sub">3D model ${r.t.model_year}${r.t.repair?` · <a href="repair-${r.t.code}.html">repair ranges</a>`:''}</span></td>
+      <td class="n">${r.t.drive_min} min</td><td class="n">${MY?`${r.t.hd!=null?r.t.hd+' min · ':''}${Math.round(r.t.hkm)} km`:'<span class="unk">Set your home</span>'}</td><td class="n">${r.t.density.toLocaleString('en-US')}</td><td class="n">${fmt(r.live)} ha</td>
+      ${r.unknown.length?`<td class="unk" colspan="2">Not known: ${r.unknown.join(', ')} ${r.unknown.length>1?'are':'is'} not in this town's 3D model</td>`
+        :`<td class="n">${fmt(r.match)} ha</td><td class="n"><span class="share">${(r.share*100).toFixed(r.share<0.1?1:0)}%<span class="mini"><i style="width:${Math.min(100,r.share*100)}%"></i></span></span></td>`}</tr>`).join('')+'</tbody>'}
+/* Your home, shared with the other pages; kept only in this browser. */
+let MY=null;try{MY=JSON.parse(localStorage.getItem('trHome')||'null')}catch(e){}
+async function homeCols(){if(!MY)return;const p=Math.PI/180;C.towns.forEach(t=>{t.hkm=6371*Math.hypot((t.lo-MY.lon)*p*Math.cos((t.la+MY.lat)/2*p),(t.la-MY.lat)*p)});render();
+  try{const ac=new AbortController(),to=setTimeout(()=>ac.abort(),8000);const co=[MY.lon+','+MY.lat].concat(C.towns.map(t=>t.lo+','+t.la)).join(';');
+    const j=await (await fetch(`https://router.project-osrm.org/table/v1/driving/${co}?sources=0&annotations=duration`,{signal:ac.signal})).json();clearTimeout(to);
+    C.towns.forEach((t,k)=>{const d=j.durations[0][k+1];t.hd=d==null?null:Math.round(d/60)});render()}catch(e){}}
+document.addEventListener('click',e=>{const c=e.target.closest('[data-c]'),s=e.target.closest('[data-s]');
+  if(c){st.sel.has(c.dataset.c)?st.sel.delete(c.dataset.c):st.sel.add(c.dataset.c);render()}
+  if(s){const k=s.dataset.s;st.dir=st.sort===k?-st.dir:(k==='name'||k==='drive_min'||k==='density'?1:-1);st.sort=k;render()}});
+render();homeCols();
+</script>
+</body></html>
