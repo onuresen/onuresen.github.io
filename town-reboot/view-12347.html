@@ -474,10 +474,11 @@ a { color: var(--accent); }
     <div class="tr-block" id="credits"><h2 style="margin-top:14px">Credits</h2>
       <ul>
         <li>出典：3D都市モデル（Project PLATEAU）多古町（2025年度）、国土交通省。<a href="https://www.geospatial.jp/ckan/dataset/plateau-12347-tako-machi-2025">G空間情報センター</a>。著作権は多古町に帰属。3D都市モデル（Project PLATEAU）を加工して作成。</li>
-        <li>出典：<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>（国土地理院）。地理院タイル（標高タイル）を加工して作成。</li>
+        <li>出典：<a href="https://maps.gsi.go.jp/development/ichiran.html">地理院タイル</a>（国土地理院）。地理院タイル（標高タイル、全国最新写真（シームレス））を加工して作成。3D view: elevation and aerial photo tiles load from GSI when opened.</li>
         <li>出典：国土交通省<a href="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-N03-2021.html">国土数値情報ダウンロードサイト（行政区域データ）</a>。<a href="https://github.com/smartnews-smri/japan-topography">SmartNews Media Research Institute</a> の簡素化版を加工して作成。</li>
         <li>Everything on this page is processed from these open data. The land ministry, the Geospatial Information Authority and 多古町 did not make or check it. It is not an official map, a survey or legal advice.</li>
-        <li>Street-view and satellite links open Google Maps.</li>
+        <li>Textured buildings in the 3D view stream from PLATEAU's hosted 3D Tiles. Drive times: OpenStreetMap routing (OSRM), © OpenStreetMap contributors.</li>
+      <li>Street-view and satellite links open Google Maps.</li>
       </ul>
       <p>Part of Town Reboot, a personal study of what places are really like, from open data. <a href="https://onuresen.github.io/">onuresen.github.io</a></p></div>
   </aside>
@@ -746,8 +747,12 @@ async function open3d(lon,lat){
   $('v3d').hidden=false;$('m3d').textContent='Loading the 3D city model…';
   try{await load3d()}catch(e){$('m3d').textContent=e.message+' Open it from the Town Reboot site.';return}
   const T=T3,m=T.meta,sx=(lon-m.origin[0])*m.kx,sy=(lat-m.origin[1])*m.ky;
-  const H=(x,y)=>{const v=hAt(m.near,T.near,x,y);return v==null?(hAt(m.far,T.far,x,y)||0):v};
-  const h0=H(sx,sy),R=600,RE=m.r_eff;
+  const Hc=(x,y)=>{const v=hAt(m.near,T.near,x,y);return v==null?(hAt(m.far,T.far,x,y)||0):v};
+  const R=600,RE=m.r_eff;
+  $('m3d').textContent='Loading the ground: GSI elevation and aerial photos…';
+  let fine=null;try{fine=await Promise.race([loadGround(m,lon,lat,R+90),new Promise(ok=>setTimeout(()=>ok(null),12000))])}catch(e){fine=null}
+  const H=fine?(x,y)=>{const v=fine.h(x,y);return v==null?Hc(x,y):v}:Hc;
+  const h0=H(sx,sy);
   if(G3){G3.dispose();}
   const host=$('v3dc');host.innerHTML='';
   const renderer=new THREE.WebGLRenderer({antialias:true,logarithmicDepthBuffer:true});renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));host.appendChild(renderer.domElement);
@@ -761,8 +766,8 @@ async function open3d(lon,lat){
     for(let j=0;j<hgt-1;j++)for(let i=0;i<w-1;i++){const a=j*w+i;idx.push(a,a+1,a+w,a+1,a+w+1,a+w)}
     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setIndex(idx);geo.computeVertexNormals();
     return new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color,side:THREE.DoubleSide}))}
-  scene.add(gridMesh(g,T.near,i0,i1,j0,j1,()=>0,0xc9d3bf));
-  const fg=m.far;scene.add(gridMesh(fg,T.far,0,fg.nx-1,0,fg.ny-1,d=>d<R+400?60:0,0xb9c4b0));
+  if(fine)scene.add(fineMesh(fine,m,sx,sy,R+90,P,H));else scene.add(gridMesh(g,T.near,i0,i1,j0,j1,()=>0,0xc9d3bf));
+  const fg=m.far;scene.add(gridMesh(fg,T.far,0,fg.nx-1,0,fg.ny-1,d=>d<R+60?80:0,0xb9c4b0));
   // buildings
   const pos=[],col=[],cNear=new THREE.Color(tok('--n3')),cFar=new THREE.Color('#f1f2f4');let nbN=0;
   for(let b=0;b<T.nv.length;b++){const o0=T.off[b],nv=T.nv[b],cx=T.xy[o0*2],cy=T.xy[o0*2+1];if(Math.abs(cx-sx)>R||Math.abs(cy-sy)>R||Math.hypot(cx-sx,cy-sy)>R)continue;
@@ -774,6 +779,14 @@ async function open3d(lon,lat){
     for(let v=0;v<nv;v++){const a=pts[v],bb=pts[(v+1)%nv];add(a.x,a.y,base);add(bb.x,bb.y,base);add(bb.x,bb.y,top);add(a.x,a.y,base);add(bb.x,bb.y,top);add(a.x,a.y,top)}}
   const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));bg.setAttribute('color',new THREE.Float32BufferAttribute(col,3));bg.computeVertexNormals();
   scene.add(new THREE.Mesh(bg,new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide})));
+  // trees: forest squares of the land-use layer, a few crowns each, about 15 m tall
+  let nTrees=0;if(L.landuse){const crowns=[],my=t=>Math.log(Math.tan(Math.PI/4+t*Math.PI/360)),yn=my(M.north),ys=my(M.south);let seed=1;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+    const cx0=Math.floor((lon-M.west)/(M.east-M.west)*M.w),cy0=Math.floor((yn-my(lat))/(yn-ys)*M.h),rc=Math.ceil(R/M.px_m)+1;
+    for(let y=Math.max(0,cy0-rc);y<=Math.min(M.h-1,cy0+rc);y++)for(let x=Math.max(0,cx0-rc);x<=Math.min(M.w-1,cx0+rc);x++){if(B[(y*M.w+x)*4]!==6)continue;
+      for(let t=0;t<6;t++){const tl=M.west+(x+rnd())/M.w*(M.east-M.west),ta=Math.atan(Math.sinh(yn+(y+rnd())/M.h*(ys-yn)))*180/Math.PI,tx=(tl-m.origin[0])*m.kx,ty=(ta-m.origin[1])*m.ky;
+        if(Math.hypot(tx-sx,ty-sy)>R)continue;crowns.push([tx,ty,12+rnd()*6])}}
+    if(crowns.length){const cg=new THREE.ConeGeometry(1,1,7);cg.translate(0,0.5,0);const im=new THREE.InstancedMesh(cg,new THREE.MeshLambertMaterial({color:'#4f6e3a'}),crowns.length),mt=new THREE.Matrix4(),q=new THREE.Quaternion(),sc=new THREE.Vector3(),ps=new THREE.Vector3();
+      crowns.forEach(([tx,ty,th],i)=>{const p=P(tx,ty,H(tx,ty)+th*0.25);ps.set(...p);sc.set(th*0.32,th*0.75,th*0.32);mt.compose(ps,q,sc);im.setMatrixAt(i,mt)});scene.add(im);nTrees=crowns.length}}
   // the spot and the line to Mt. Fuji
   const pin=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,12,12),new THREE.MeshLambertMaterial({color:tok('--haz')}));pin.position.set(0,6,0);scene.add(pin);
   const [fx,fy,fz]=m.fuji,fd=Math.hypot(fx-sx,fy-sy),fp=P(fx,fy,fz-fd*fd/(2*RE));
@@ -797,8 +810,31 @@ async function open3d(lon,lat){
     try{const k=await loadLod2(m,lon,lat,R,h0,tex);texLoaded=true;texOn=k>0;tex.visible=texOn;lod1Mesh.visible=!texOn;$('b3Tex').setAttribute('aria-pressed',texOn);
       $('m3d').textContent=k?`Textured buildings (PLATEAU LOD2, streamed from PLATEAU): ${k} tile${k>1?'s':''} around the spot. Tap the button again for the plain shapes.`:'No textured buildings near this spot.'}
     catch(e){$('m3d').textContent='Textured buildings could not load here. They stream from PLATEAU and work on the public site (onuresen.github.io/town-reboot).'}};
-  $('m3d').textContent=`3D city model (PLATEAU LOD1) within ${R} m: ${nbN} building${nbN===1?'':'s'} within 100 m in purple. The orange line points to Mt. Fuji, ${(fd/1000).toFixed(1)} km away. Terrain at about 30 m, far land coarser. Trees are not drawn. Drag to look around.`;
+  $('m3d').textContent=`3D city model (PLATEAU LOD1) within ${R} m: ${nbN} building${nbN===1?'':'s'} within 100 m in purple. The orange line points to Mt. Fuji, ${(fd/1000).toFixed(1)} km away. ${fine?'Ground: GSI aerial photos on '+fine.res+' m elevation.':'Terrain at about 30 m.'} ${nTrees?nTrees+' trees on forest land, about 15 m tall.':''} Far land coarser. Drag to look around.`;
   G3={dispose(){run=false;ro.disconnect();renderer.dispose();bg.dispose()}}}
+/* Ground from GSI tiles (CORS open): 5 m elevation (dem5a, zoom 15) where it exists, else 10 m (zoom 14), and aerial photos (zoom 17). */
+async function decodeTile(url){const r=await fetch(url);if(!r.ok)return null;const bmp=await createImageBitmap(await r.blob(),{colorSpaceConversion:'none',premultiplyAlpha:'none'});
+  const c=document.createElement('canvas');c.width=bmp.width;c.height=bmp.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0);return x.getImageData(0,0,bmp.width,bmp.height).data}
+const gpx=(lon,lat,z)=>[(lon+180)/360*256*2**z,(1-Math.asinh(Math.tan(lat*Math.PI/180))/Math.PI)/2*256*2**z];
+async function loadGround(m,lon,lat,rad){
+  const dLa=rad/110574,dLo=rad/(111320*Math.cos(lat*Math.PI/180)),w=lon-dLo,e=lon+dLo,n=lat+dLa,so=lat-dLa;
+  async function demAt(z,layer){const [x0,y0]=gpx(w,n,z).map(v=>Math.floor(v/256)),[x1,y1]=gpx(e,so,z).map(v=>Math.floor(v/256)),tiles={},jobs=[];let miss=0;
+    for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)jobs.push(decodeTile(`https://cyberjapandata.gsi.go.jp/xyz/${layer}/${z}/${tx}/${ty}.png`).then(d=>{if(d)tiles[tx+'_'+ty]=d;else miss++}).catch(()=>miss++));
+    await Promise.all(jobs);return{z,tiles,miss,total:jobs.length}}
+  let dem=await demAt(15,'dem5a_png'),res=5;if(dem.miss){const d10=await demAt(14,'dem_png');if(d10.miss<d10.total){dem=d10;res=10}}
+  if(!Object.keys(dem.tiles).length)return null;
+  function h(x,y){const lo=m.origin[0]+x/m.kx,la=m.origin[1]+y/m.ky,[gx,gy]=gpx(lo,la,dem.z),tx=Math.floor(gx/256),ty=Math.floor(gy/256),t=dem.tiles[tx+'_'+ty];if(!t)return null;
+    const px=Math.min(255,Math.floor(gx-tx*256)),py=Math.min(255,Math.floor(gy-ty*256)),k=(py*256+px)*4,v=t[k]*65536+t[k+1]*256+t[k+2];if(v===8388608)return null;return(v<8388608?v:v-16777216)*0.01}
+  // aerial photo, zoom 17, drawn into one canvas
+  const Z=17,[X0,Y0]=gpx(w,n,Z).map(v=>Math.floor(v/256)),[X1,Y1]=gpx(e,so,Z).map(v=>Math.floor(v/256)),cv=document.createElement('canvas');cv.width=(X1-X0+1)*256;cv.height=(Y1-Y0+1)*256;const cx=cv.getContext('2d');cx.fillStyle='#c9d3bf';cx.fillRect(0,0,cv.width,cv.height);
+  const jobs=[];for(let ty=Y0;ty<=Y1;ty++)for(let tx=X0;tx<=X1;tx++)jobs.push(fetch(`https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/${Z}/${tx}/${ty}.jpg`).then(r=>r.ok?r.blob():null).then(b=>b&&createImageBitmap(b)).then(bm=>{if(bm)cx.drawImage(bm,(tx-X0)*256,(ty-Y0)*256)}).catch(()=>{}));
+  await Promise.all(jobs);const tex=new THREE.CanvasTexture(cv);tex.anisotropy=4;
+  return{h,res,tex,uv:(lo,la)=>{const [gx,gy]=gpx(lo,la,Z);return[(gx-X0*256)/cv.width,1-(gy-Y0*256)/cv.height]}}}
+function fineMesh(f,m,sx,sy,rad,P,H){const step=f.res<=5?6:10,n=Math.floor(2*rad/step)+1,pos=new Float32Array(n*n*3),uv=new Float32Array(n*n*2),idx=[];
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const x=sx-rad+i*step,y=sy-rad+j*step,k=j*n+i,p=P(x,y,H(x,y));pos.set(p,k*3);uv.set(f.uv(m.origin[0]+x/m.kx,m.origin[1]+y/m.ky),k*2)}
+  for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){const a=j*n+i;idx.push(a,a+n,a+1,a+1,a+n,a+n+1)}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
+  return new THREE.Mesh(g,new THREE.MeshLambertMaterial({map:f.tex,side:THREE.DoubleSide}))}
 /* Textured LOD2 tiles straight from PLATEAU's hosted 3D Tiles (CORS open). Tiles near the spot only. */
 function ecef(lon,lat,h){const a=6378137,e2=6.69437999014e-3,p=Math.PI/180,sl=Math.sin(lat*p),cl=Math.cos(lat*p),N=a/Math.sqrt(1-e2*sl*sl);
   return new THREE.Vector3((N+h)*cl*Math.cos(lon*p),(N+h)*cl*Math.sin(lon*p),(N*(1-e2)+h)*sl)}
