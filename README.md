@@ -28,7 +28,7 @@ The `notes/` section is the durable publication layer. LinkedIn posts can introd
 | [Kotoba Lab](https://github.com/onuresen/kotoba-lab) | Private Japanese reading, kanji-family study, and spaced-repetition workspace | [onuresen.github.io/kotoba-lab](https://onuresen.github.io/kotoba-lab/) |
 | [Assembly Lab](https://github.com/onuresen/Assembly-Lab) | 3D modular building configurator with Japanese compliance standards | [onuresen.github.io/Assembly-Lab](https://onuresen.github.io/Assembly-Lab/) |
 | [Genba Lab](https://github.com/onuresen/Genba-Lab) | Local-first IFC simulation playground for construction sequence, crane planning, hazards, and model-derived metrics | [onuresen.github.io/Genba-Lab](https://onuresen.github.io/Genba-Lab/) |
-| Town Reboot (code private) | Where Mt. Fuji is in view in 小山町, how close the neighbours are, which spots are rare, and which uses could fit. From PLATEAU and other open data | [onuresen.github.io/town-reboot](https://onuresen.github.io/town-reboot/) |
+| Town Reboot (code private) | What quiet towns around Tokyo are really like, from PLATEAU and other open data: Fuji views, neighbours, rare spots, uses, and a 3D view with textured buildings | [onuresen.github.io/town-reboot](https://onuresen.github.io/town-reboot/) |
 | [Object-Centric Drawing](https://github.com/onuresen/object-centric-drawing) | Local-first PDF navigation with explicit object identity, portable evidence, and a one-way Revit export adapter | [onuresen.github.io/object-centric-drawing](https://onuresen.github.io/object-centric-drawing/) |
 
 ## Side project
