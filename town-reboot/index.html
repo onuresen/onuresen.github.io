@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="What a place is really like, from open data: Fuji views, neighbours, rare spots and uses for quiet towns around Tokyo, with 3D city models.">
+<meta name="description" content="Explore towns around Kawasaki on one map, compare land conditions, and open detailed PLATEAU town maps.">
 <title>Town Reboot</title><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
    ui-base.css — Shared Tier-A base for the maker-layer tools
    VERSION 1.2.0   ·   CANONICAL SOURCE — edit ONLY here.
@@ -404,56 +404,25 @@ a { color: var(--accent); }
 .tr-wide { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
 .tr-lede { color: var(--text2); margin: 6px 0 0; max-width: 70ch; font-size: 15.5px; }
 </style><style>
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px}
-.card{display:flex;flex-direction:column;gap:6px}.card h3{font-size:17px;margin:0}.card .meta{color:var(--text3);font-size:13px;margin:0}
-.links a{font-weight:600;font-size:14px}h1{font-size:32px;margin:0}h2{font-size:18px;margin:0}.foot{color:var(--text3);font-size:13px;max-width:80ch}
+.home-shell{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:32px}
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.8fr);gap:28px;align-items:center;padding:32px;border:1px solid var(--border);border-radius:18px;background:var(--surface)}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.02;margin:0;letter-spacing:-1px}.lede{font-size:18px;line-height:1.55;color:var(--text2);max-width:60ch;margin:14px 0 22px}
+.actions{display:flex;flex-wrap:wrap;gap:10px}.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:9px;font-weight:700;text-decoration:none}
+.primary{background:var(--accent);color:var(--surface)}.secondary{border:1px solid var(--border2);color:var(--accent);background:var(--surface)}
+.scope{padding:20px;border-radius:12px;background:var(--bg);border:1px solid var(--border)}.scope strong{font-size:30px;display:block;color:var(--accent)}.scope p{margin:6px 0 0;color:var(--text2);font-size:15px}
+.journey h2{font-size:22px;margin:0 0 14px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.step{padding:18px;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0}.step h3{font-size:17px;margin:0 0 6px}.step p{font-size:15px;line-height:1.5;color:var(--text2);margin:0}
+.note{padding:18px 20px;border:1px solid var(--border);border-radius:12px}.note h2{font-size:18px;margin:0 0 6px}.note p{margin:0;color:var(--text2);font-size:15px;line-height:1.5}.foot{color:var(--text3);font-size:13px;max-width:80ch;margin:0}
+@media(max-width:700px){.home-shell{gap:22px}.hero{grid-template-columns:1fr;padding:22px}.steps{grid-template-columns:1fr}.actions a{width:100%}}
 </style></head><body><div class="tr-page"><div class="tr-wide">
-<a class="back" href="https://onuresen.github.io/">onuresen.github.io</a>
-<header><h1>Town Reboot</h1><p class="tr-lede">What a place is really like, from open data, before you choose a house anywhere else. Quiet towns within about 2 hours of Kawasaki, every 31 m square: where Mt. Fuji is in view, how close the neighbours are, which spots are rare, which uses could fit, and the 3D city model around any spot.</p></header>
-<section><h2>Compare towns</h2><div class="grid">
-  <article class="card"><h3>Weekend Base Finder</h3><p class="meta">Every town within about 2 hours of Kawasaki: drive or train time, crowding, sea and hills. Ranks towns from your home.</p><p class="links"><a href="finder.html">Open the map</a></p></article>
-  <article class="card"><h3>Compare Quiet Towns</h3><p class="meta">Pick what the land must have: a Fuji view, no close neighbours, flat, safe from landslides. See how much land in each town has all of it, and how far it is from your home.</p><p class="links"><a href="compare.html">Open the table</a></p></article>
+<div class="home-shell"><a class="back" href="https://onuresen.github.io/">onuresen.github.io</a>
+<header class="hero"><div><h1>Town Reboot</h1><p class="lede">Explore what a place is really like before you choose a house. Start with every reachable town on one map, then move into detailed open data without leaving the same journey.</p>
+<div class="actions"><a class="primary" href="finder.html">Explore towns</a><a class="secondary" href="compare.html">Compare land conditions</a></div></div>
+<aside class="scope"><strong>408 towns</strong><p>Reach, crowding, scenery and past price ranges.</p><strong>20 detailed maps</strong><p>PLATEAU buildings, views, neighbours, land use, risk and 3D.</p></aside></header>
+<section class="journey"><h2>One tool, from town to spot</h2><div class="steps">
+<article class="step"><h3>Explore towns</h3><p>Set your travel, crowding, scenery and budget limits. Towns with detailed maps are marked.</p></article>
+<article class="step"><h3>Compare the land</h3><p>Cross conditions such as view, slope, neighbours and landslide zones across the detailed towns.</p></article>
+<article class="step"><h3>Look inside a town</h3><p>Select a marked town on the Finder and open its detailed map down to each 31 m square.</p></article>
 </div></section>
-<section><h2>Towns</h2><div class="grid">
-  <article class="card"><h3>つくば市</h3><p class="meta">3D city model 2023 · textured buildings in 3D</p>
-  <p class="links"><a href="view-08220.html">Open the map</a></p></article>
-  <article class="card"><h3>加須市</h3><p class="meta">3D city model 2023 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11210.html">Open the map</a></p></article>
-  <article class="card"><h3>吉見町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11347.html">Open the map</a></p></article>
-  <article class="card"><h3>境町</h3><p class="meta">3D city model 2023 · textured buildings in 3D</p>
-  <p class="links"><a href="view-08546.html">Open the map</a></p></article>
-  <article class="card"><h3>多古町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-12347.html">Open the map</a></p></article>
-  <article class="card"><h3>寄居町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11408.html">Open the map</a></p></article>
-  <article class="card"><h3>小山町</h3><p class="meta">3D city model 2023</p>
-  <p class="links"><a href="view-22344.html">Open the map</a></p></article>
-  <article class="card"><h3>小川町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11343.html">Open the map</a></p></article>
-  <article class="card"><h3>嵐山町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11342.html">Open the map</a></p></article>
-  <article class="card"><h3>川島町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11346.html">Open the map</a></p></article>
-  <article class="card"><h3>御殿場市</h3><p class="meta">3D city model 2023</p>
-  <p class="links"><a href="view-22215.html">Open the map</a></p></article>
-  <article class="card"><h3>日の出町</h3><p class="meta">3D city model 2025</p>
-  <p class="links"><a href="view-13305.html">Open the map</a></p></article>
-  <article class="card"><h3>木更津市</h3><p class="meta">3D city model 2024 · textured buildings in 3D</p>
-  <p class="links"><a href="view-12206.html">Open the map</a></p></article>
-  <article class="card"><h3>本庄市</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11211.html">Open the map</a></p></article>
-  <article class="card"><h3>滑川町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11341.html">Open the map</a></p></article>
-  <article class="card"><h3>箱根町</h3><p class="meta">3D city model 2020 · textured buildings in 3D</p>
-  <p class="links"><a href="view-14382.html">Open the map</a></p></article>
-  <article class="card"><h3>羽生市</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11216.html">Open the map</a></p></article>
-  <article class="card"><h3>茂原市</h3><p class="meta">3D city model 2022 · textured buildings in 3D</p>
-  <p class="links"><a href="view-12210.html">Open the map</a></p></article>
-  <article class="card"><h3>裾野市</h3><p class="meta">3D city model 2023</p>
-  <p class="links"><a href="view-22220.html">Open the map</a></p></article>
-  <article class="card"><h3>鳩山町</h3><p class="meta">3D city model 2025 · textured buildings in 3D</p>
-  <p class="links"><a href="view-11348.html">Open the map</a></p></article></div></section>
-<p class="foot">Made from open data: PLATEAU 3D city models (国土交通省, each town holds the copyright), 地理院タイル (国土地理院), 国土数値情報 (国土交通省). Each map lists its sources in full. Processed by Town Reboot; not official maps, surveys or legal advice. No empty-house data is published.</p>
-</div></div></body></html>
+<section class="note"><h2>Why the map is the main doorway</h2><p>The town pages are no longer a separate directory. Open them from the place you are already comparing, so location, reach and detailed PLATEAU evidence stay connected.</p></section>
+<p class="foot">Made from open data: PLATEAU 3D city models (国土交通省, each town holds the copyright), 地理院タイル (国土地理院), 国土数値情報 (国土交通省), the 2020 Census and the Real Estate Information Library. Each map lists its sources in full. Processed by Town Reboot; not official maps, surveys or legal advice. No empty-house data is published.</p>
+</div></div></div></body></html>

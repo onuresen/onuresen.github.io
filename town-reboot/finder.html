@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Quiet towns within about 2 hours of Kawasaki: drive time, crowding, sea and hills. Rank them from your own home."><title>Weekend Base Finder</title></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Quiet towns within about 2 hours of Kawasaki: drive time, crowding, sea and hills. Rank them from your own home."><title>Town Finder</title></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
    ui-base.css — Shared Tier-A base for the maker-layer tools
@@ -438,9 +438,11 @@ h2{font-family:var(--font-display);font-size:17px;margin:0}
 
 .notes h2{margin-bottom:6px}.notes ul{margin:0;padding-left:18px}.notes li{margin-bottom:4px}
 .tr-panel h2{font-size:16px;margin:0}
+.list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.compare-link{color:var(--accent);font-size:14px;font-weight:700}
 </style>
 <div class="tr-app">
-  <header class="tr-top"><a class="back" href="./">← Town Reboot</a><h1>Weekend Base Finder</h1><span class="sub">Quiet towns you can reach from Kawasaki, with sea or hills. Set the limits, then tap a town.</span></header>
+  <header class="tr-top"><a class="back" href="./">← Town Reboot</a><h1>Town Finder</h1><span class="sub">Explore reachable towns, compare the land, then open a detailed map.</span></header>
   <section class="tr-map" id="wrap">
     <svg id="svg" role="img" aria-label="Map of towns around Tokyo Bay. Scroll or pinch to zoom, drag to move, tap a town."></svg>
     <div class="tr-legend" style="pointer-events:auto"><span><i class="sw" style="background:var(--accent)"></i>Fits the limits</span><span><i class="sw" style="background:var(--land);border:2px solid var(--signal)"></i>Detailed town map</span><span><i class="sw" style="background:var(--signal)"></i>Selected, and <span id="homeLeg">Kawasaki Station</span> (dot)</span><span><i class="sw" style="background:var(--land)"></i>Does not fit</span><span class="chips" style="margin:0"><button type="button" class="btn" id="cRivers">Rivers</button></span></div>
@@ -471,7 +473,7 @@ h2{font-family:var(--font-display);font-size:17px;margin:0}
       </div></div>
   </section>
 
-    <section class="tr-block"><h2 id="hList">Towns that fit</h2><div class="list" id="list"></div></section>
+    <section class="tr-block"><div class="list-head"><h2 id="hList">Towns that fit</h2><a class="compare-link" href="compare.html">Compare detailed towns</a></div><div class="list" id="list"></div></section>
     <div class="tr-block"><p class="tr-label">Credits</p><ul class="tr-note" style="padding-left:18px;margin:0">
       <li>出典：政府統計の総合窓口（e-Stat）、令和2年国勢調査（総務省統計局）を加工して作成。</li>
       <li>出典：国土交通省国土数値情報ダウンロードサイト（行政区域データ）を加工して作成。</li>
