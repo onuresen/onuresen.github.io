@@ -440,9 +440,12 @@ h2{font-family:var(--font-display);font-size:17px;margin:0}
 .tr-panel h2{font-size:16px;margin:0}
 .list-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .compare-link{color:var(--accent);font-size:14px;font-weight:700}
+.workspace-nav{display:flex;gap:5px;margin-left:auto}.workspace-nav a{padding:5px 9px;border-radius:7px;color:var(--text2);font-size:14px;font-weight:600;text-decoration:none}.workspace-nav a[aria-current="page"]{background:var(--surface2);color:var(--text)}
+.selected-note{font-size:13px;color:var(--text2);margin:0}
+@media(max-width:700px){.workspace-nav{width:100%;margin-left:0}.workspace-nav a{flex:1;text-align:center}}
 </style>
 <div class="tr-app">
-  <header class="tr-top"><a class="back" href="./">← Town Reboot</a><h1>Town Finder</h1><span class="sub">Explore reachable towns, compare the land, then open a detailed map.</span></header>
+  <header class="tr-top"><a class="back" href="./">Town Reboot</a><h1>Town Finder</h1><span class="sub">Explore reachable towns, compare the land, then open a detailed map.</span><nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html" aria-current="page">Explore</a><a href="compare.html">Compare</a></nav></header>
   <section class="tr-map" id="wrap">
     <svg id="svg" role="img" aria-label="Map of towns around Tokyo Bay. Scroll or pinch to zoom, drag to move, tap a town."></svg>
     <div class="tr-legend" style="pointer-events:auto"><span><i class="sw" style="background:var(--accent)"></i>Fits the limits</span><span><i class="sw" style="background:var(--land);border:2px solid var(--signal)"></i>Detailed town map</span><span><i class="sw" style="background:var(--signal)"></i>Selected, and <span id="homeLeg">Kawasaki Station</span> (dot)</span><span><i class="sw" style="background:var(--land)"></i>Does not fit</span><span class="chips" style="margin:0"><button type="button" class="btn" id="cRivers">Rivers</button></span></div>
@@ -473,7 +476,7 @@ h2{font-family:var(--font-display);font-size:17px;margin:0}
       </div></div>
   </section>
 
-    <section class="tr-block"><div class="list-head"><h2 id="hList">Towns that fit</h2><a class="compare-link" href="compare.html">Compare detailed towns</a></div><div class="list" id="list"></div></section>
+    <section class="tr-block"><div class="list-head"><h2 id="hList">Towns that fit</h2><a class="compare-link" href="compare.html">Compare detailed towns</a></div><p class="selected-note" id="selectedNote" hidden>The selected town stays first. Choose it again to close the details.</p><div class="list" id="list"></div></section>
     <div class="tr-block"><p class="tr-label">Credits</p><ul class="tr-note" style="padding-left:18px;margin:0">
       <li>出典：政府統計の総合窓口（e-Stat）、令和2年国勢調査（総務省統計局）を加工して作成。</li>
       <li>出典：国土交通省国土数値情報ダウンロードサイト（行政区域データ）を加工して作成。</li>
@@ -649,8 +652,10 @@ function paint(){
   $('lDrive').textContent=tr?'Train from '+who:(MY&&TOWNS.some(t=>t.hd!=null)?'Drive from your home':'Drive from Kawasaki Station');
   $('sDrive').textContent=tr?'Local trains, estimated from track length and stops. Waits for a connection are not counted.':'Without traffic. Add about a quarter on a weekend.';
   document.querySelectorAll('[data-by]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.by===st.by));
-  const ms=TOWNS.filter(fits).sort((a,b)=>tim(a)-tim(b));
+  let ms=TOWNS.filter(fits).sort((a,b)=>tim(a)-tim(b));
   if(st.sel&&!ms.some(t=>t.c===st.sel))st.sel=null;
+  if(st.sel)ms.sort((a,b)=>(b.c===st.sel)-(a.c===st.sel)||tim(a)-tim(b));
+  $('hList').textContent=st.sel?'Selected town · others that fit':'Towns that fit';$('selectedNote').hidden=!st.sel;
   rv.style.display=st.rivers?'':'none';$('cRivers').setAttribute('aria-pressed',!!st.rivers);
   TOWNS.forEach(t=>els[t.c].setAttribute('class',[(fits(t)?'m':''),(t.pl?'detail':''),(t.c===st.sel?'sel':'')].filter(Boolean).join(' ')));
   const key=ms.map(t=>t.c).join();if(key!==lastKey||!VB){lastKey=key;view(ms)}

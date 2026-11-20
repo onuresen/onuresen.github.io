@@ -426,9 +426,13 @@ a { color: var(--accent); }
 #credits h2{font-size:14px;margin:0}#credits ul{padding-left:18px;margin:6px 0;font-size:12.5px;color:var(--text2)}#credits p{font-size:12.5px;color:var(--text2);margin:0}
 .price-main{display:grid;gap:7px}.price-row{display:grid;grid-template-columns:minmax(7em,1fr) auto;gap:8px;font-size:13px}.price-row strong{font-weight:650}.price-row span{text-align:right;color:var(--text2)}
 .price-districts{margin-top:8px}.price-districts summary{font-size:12.5px}.price-districts ul{list-style:none;padding:0;margin:7px 0 0;display:grid;gap:6px}.price-districts li{font-size:12px;color:var(--text2);border-top:1px solid var(--border);padding-top:5px}.price-districts b{color:var(--text);font-weight:600}
+.workspace-nav{display:flex;gap:5px;margin-left:auto}.workspace-nav a{padding:5px 9px;border-radius:7px;color:var(--text2);font-size:14px;font-weight:600;text-decoration:none}.workspace-nav a[aria-current="page"]{background:var(--surface2);color:var(--text)}
+.map-task{padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:14px}.map-task h2{font-size:16px;margin:0}.map-task .task-copy{color:var(--text2);font-size:14px;margin:-8px 0 0}
+.tr-reference{margin-top:0!important;padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface2)}.tr-reference>summary{font-size:14px}.tr-reference>.tr-block{margin-top:14px}.tr-reference>details{margin-top:12px}.tr-reference #credits{padding-top:12px;border-top:1px solid var(--border)}
+@media(max-width:700px){.workspace-nav{width:100%;margin-left:0}.workspace-nav a{flex:1;text-align:center}}
 </style>
 <div class="tr-app">
-  <header class="tr-top"><a class="back" href="finder.html">← Finder map</a><h1>多古町 Fuji View Map</h1><span class="sub">多古町, Chiba. Where Mt. Fuji is in view, how close the neighbours are, which spots are rare, and which uses could fit.</span></header>
+  <header class="tr-top"><a class="back" href="./">Town Reboot</a><h1>多古町 detailed map</h1><span class="sub">Chiba · PLATEAU town model</span><nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html">Explore</a><a href="compare.html">Compare</a><a href="#" aria-current="page">Inspect</a></nav></header>
   <section class="tr-map" id="wrap">
     <canvas id="cv" aria-label="Map of where Mt. Fuji can be seen in 多古町. Scroll or pinch to zoom, drag to move, tap a spot."></canvas>
     <div class="tr-legend" id="legend"></div>
@@ -442,6 +446,7 @@ a { color: var(--accent); }
     </div>
   </section>
   <aside class="tr-panel">
+    <section class="map-task"><h2>Inspect the town</h2><p class="task-copy">Choose what the map shows, then tap a spot for its evidence.</p>
     <div class="tr-block"><p class="tr-label">Show</p>
       <div class="btn-row"><button type="button" class="btn" id="mView">Fuji view</button><button type="button" class="btn" id="mNb">Neighbours</button><button type="button" class="btn" id="mRare">Rare spots</button><button type="button" class="btn" id="mUse">Uses</button></div></div>
     <div class="tr-block" id="ubar" hidden><p class="tr-label">Use</p><div class="btn-row" id="ubtn"></div><div class="tr-set" id="uset"></div></div>
@@ -451,10 +456,11 @@ a { color: var(--accent); }
       <div class="btn-row"><button type="button" class="btn" id="bLive" aria-pressed="true">Only land you could live on</button><button type="button" class="btn" id="bHaz">Landslide zones</button><button type="button" class="btn" id="bVac" hidden>Empty houses</button></div></div>
     <div class="tr-block"><p class="tr-label">Your home</p>
       <div class="tr-set"><input class="input" id="homeIn" style="flex:1;min-width:0" placeholder="Paste a Google Maps link, or 35.53, 139.70" aria-label="Your home: a Google Maps link or coordinates"><button type="button" class="btn" id="homeSet">Set</button></div>
-      <p class="tr-note" id="homeNote">Set your home to see the distance to every spot. It is saved only in this browser.</p></div>
-    <div class="tr-block" id="prices" hidden></div>
+      <p class="tr-note" id="homeNote">Set your home to see the distance to every spot. It is saved only in this browser.</p></div></section>
     <div class="tr-spot" id="spot"><h2>Tap a spot on the map</h2><div class="facts">You get the view, the neighbours, the rules, what is rare here, and which uses could fit.</div></div>
-    <details><summary>How to read it</summary>
+    <details class="tr-reference"><summary>Town context, method and sources</summary>
+    <div class="tr-block" id="prices" hidden></div>
+    <details><summary>How to read the map</summary>
     <ul>
       <li><b>Fuji view</b>: clear means nothing hides the mountain. Partly hidden means the lower part is covered. Hidden means only the tip, or nothing.</li>
       <li id="nTrees">The view check uses the land, the forests and the buildings. Forest is counted as 15 m tall. Single trees and hedges are not in it.</li>
@@ -487,6 +493,7 @@ a { color: var(--accent); }
       <li>Street-view and satellite links open Google Maps.</li>
       </ul>
       <p>Part of Town Reboot, a personal study of what places are really like, from open data. <a href="https://onuresen.github.io/">onuresen.github.io</a></p></div>
+    </details>
   </aside>
 </div>
 <script>

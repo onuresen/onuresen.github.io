@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Compare Quiet Towns</title></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Compare detailed towns</title></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
    ui-base.css — Shared Tier-A base for the maker-layer tools
@@ -438,12 +438,15 @@ td .sub{display:block;font-size:12px;color:var(--text3);font-weight:400}
 .notes{color:var(--text2);font-size:13.5px;max-width:90ch}
 .notes h2{font-family:var(--font-display);font-size:16px;color:var(--text);margin:0 0 6px}
 .notes ul{margin:0;padding-left:18px}.notes li{margin-bottom:4px}
+.compare-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.workspace-nav{display:flex;gap:5px;flex:none}.workspace-nav a{padding:5px 9px;border-radius:7px;color:var(--text2);font-size:14px;font-weight:600;text-decoration:none}.workspace-nav a[aria-current="page"]{background:var(--surface2);color:var(--text)}
+@media(max-width:640px){.compare-head{flex-direction:column}.workspace-nav{width:100%}.workspace-nav a{flex:1;text-align:center}}
 </style>
 <div class="tr-page"><div class="tr-wide">
-  <a class="back" href="finder.html">← Finder map</a>
-  <header>
-    <h1>Compare Quiet Towns</h1>
-    <p class="tr-lede">Start with what you want the place to make possible. Every need stays visible and editable. Each town then shows what fits, what fails and what is not known.</p>
+  <a class="back" href="./">Town Reboot</a>
+  <header class="compare-head"><div>
+    <h1>Compare detailed towns</h1>
+    <p class="tr-lede">Start with what you want the place to make possible. Every need stays visible and editable. Each town then shows what fits, what fails and what is not known.</p></div>
+    <nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html">Explore</a><a href="compare.html" aria-current="page">Compare</a></nav>
   </header>
   <section class="card">
     <div class="pick"><h2>What should this place make possible?</h2><div class="purpose-grid" id="purposes"></div><p class="purpose-copy" id="purposeCopy"></p><p class="purpose-check" id="purposeCheck"></p></div>
