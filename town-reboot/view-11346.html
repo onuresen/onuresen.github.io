@@ -440,7 +440,7 @@ a { color: var(--accent); }
     <div class="tr-hint">Scroll or pinch to zoom · drag to move · tap a spot</div>
     <div class="tr-3d" id="v3d" hidden>
       <div id="v3dc" style="position:absolute;inset:0"></div>
-      <div class="bar3"><button type="button" class="btn" id="b3Eye" aria-pressed="true">Eye level</button><button type="button" class="btn" id="b3Top">From above</button><button type="button" class="btn" id="b3Tex" hidden>Textured buildings</button><button type="button" class="btn" id="b3Close">Back to the map</button></div>
+      <div class="bar3"><button type="button" class="btn" id="b3Eye" aria-pressed="true">Eye level</button><button type="button" class="btn" id="b3Top">From above</button><button type="button" class="btn" id="b3Wide" aria-pressed="false">Show 1.2 km</button><button type="button" class="btn" id="b3Tex" hidden>Textured buildings</button><button type="button" class="btn" id="b3Close">Back to the map</button></div>
       <div class="lbl" id="lFuji" hidden>Mt. Fuji</div>
       <div class="msg" id="m3d">Loading the 3D city model…</div>
     </div>
@@ -840,12 +840,12 @@ async function load3d(){if(T3)return T3;
 function hAt(g,arr,x,y){const fx=(x-g.x0)/g.step,fy=(y-g.y0)/g.step;if(fx<0||fy<0||fx>g.nx-1||fy>g.ny-1)return null;
   const i=Math.min(g.nx-2,Math.floor(fx)),j=Math.min(g.ny-2,Math.floor(fy)),a=fx-i,b=fy-j,q=(jj,ii)=>arr[jj*g.nx+ii]/10;
   return q(j,i)*(1-a)*(1-b)+q(j,i+1)*a*(1-b)+q(j+1,i)*(1-a)*b+q(j+1,i+1)*a*b}
-async function open3d(lon,lat){
+async function open3d(lon,lat,R=600){
   $('v3d').hidden=false;$('m3d').textContent='Loading the 3D city model…';
   try{await load3d()}catch(e){$('m3d').textContent=e.message+' Open it from the Town Reboot site.';return}
   const T=T3,m=T.meta,sx=(lon-m.origin[0])*m.kx,sy=(lat-m.origin[1])*m.ky;
   const Hc=(x,y)=>{const v=hAt(m.near,T.near,x,y);return v==null?(hAt(m.far,T.far,x,y)||0):v};
-  const R=600,RE=m.r_eff;
+  const RE=m.r_eff,WIDE=R>600;
   $('m3d').textContent='Loading the ground: GSI elevation and aerial photos…';
   let fine=null;try{fine=await Promise.race([loadGround(m,lon,lat,R+90),new Promise(ok=>setTimeout(()=>ok(null),12000))])}catch(e){fine=null}
   const H=fine?(x,y)=>{const v=fine.h(x,y);return v==null?Hc(x,y):v}:Hc;
@@ -866,10 +866,10 @@ async function open3d(lon,lat){
   if(fine)scene.add(fineMesh(fine,m,sx,sy,R+90,P,H));else scene.add(gridMesh(g,T.near,i0,i1,j0,j1,()=>0,0xc9d3bf));
   const fg=m.far;scene.add(gridMesh(fg,T.far,0,fg.nx-1,0,fg.ny-1,d=>d<R+60?80:0,0xb9c4b0));
   // buildings
-  const pos=[],col=[],cNear=new THREE.Color(tok('--n3')),cFar=new THREE.Color('#f1f2f4');let nbN=0;
+  const pos=[],col=[],cNear=new THREE.Color(tok('--n3')),cFar=new THREE.Color('#f1f2f4'),cContext=new THREE.Color('#d6dce2');let nbN=0,buildingN=0;
   for(let b=0;b<T.nv.length;b++){const o0=T.off[b],nv=T.nv[b],cx=T.xy[o0*2],cy=T.xy[o0*2+1];if(Math.abs(cx-sx)>R||Math.abs(cy-sy)>R||Math.hypot(cx-sx,cy-sy)>R)continue;
     const pts=[];let base=1e9,mx=0,my=0;for(let v=0;v<nv;v++){const x=T.xy[(o0+v)*2],y=T.xy[(o0+v)*2+1];pts.push(new THREE.Vector2(x,y));mx+=x;my+=y;base=Math.min(base,H(x,y))}
-    mx/=nv;my/=nv;const top=base+T.hd[b]/10,isN=Math.hypot(mx-sx,my-sy)<=100;if(isN)nbN++;const c=isN?cNear:cFar;
+    mx/=nv;my/=nv;const dist=Math.hypot(mx-sx,my-sy),top=base+T.hd[b]/10,isN=dist<=100;if(isN)nbN++;buildingN++;const c=isN?cNear:dist>600?cContext:cFar;
     const tris=THREE.ShapeUtils.triangulateShape(pts,[]);
     const add=(x,y,h)=>{const p=P(x,y,h);pos.push(...p);col.push(c.r,c.g,c.b)};
     tris.forEach(t=>{for(const q of t)add(pts[q].x,pts[q].y,top)});
@@ -886,13 +886,17 @@ async function open3d(lon,lat){
       crowns.forEach(([tx,ty,th],i)=>{const p=P(tx,ty,H(tx,ty)+th*0.25);ps.set(...p);sc.set(th*0.32,th*0.75,th*0.32);mt.compose(ps,q,sc);im.setMatrixAt(i,mt)});scene.add(im);nTrees=crowns.length}}
   // the spot and the line to Mt. Fuji
   const pin=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,12,12),new THREE.MeshLambertMaterial({color:tok('--haz')}));pin.position.set(0,6,0);scene.add(pin);
+  // distance rings make the wider overview legible without adding another map control
+  const rings=new THREE.Group(),ringMat=new THREE.LineBasicMaterial({color:0x6f7f91,transparent:true,opacity:.58});
+  [100,500,1000].filter(d=>d<=R).forEach(d=>{const pts=[];for(let i=0;i<96;i++){const a=i/96*Math.PI*2;pts.push(new THREE.Vector3(Math.cos(a)*d,2,-Math.sin(a)*d))}const geo=new THREE.BufferGeometry().setFromPoints(pts);rings.add(new THREE.LineLoop(geo,ringMat))});rings.visible=false;scene.add(rings);
   const [fx,fy,fz]=m.fuji,fd=Math.hypot(fx-sx,fy-sy),fp=P(fx,fy,fz-fd*fd/(2*RE));
   const lg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,1.6,0),new THREE.Vector3(...fp)]);scene.add(new THREE.Line(lg,new THREE.LineBasicMaterial({color:tok('--clear')})));
   const cam=new THREE.PerspectiveCamera(55,1,0.5,300000),ctl=new THREE.OrbitControls(cam,renderer.domElement);ctl.enableDamping=true;
   const dir=new THREE.Vector3(fp[0],0,fp[2]).normalize();
-  function eye(){cam.position.set(0,1.6,0);ctl.target.set(dir.x*2,1.6+0.25,dir.z*2);ctl.enableZoom=false;ctl.enablePan=false;ctl.minDistance=0;ctl.maxDistance=3;cam.fov=50;cam.updateProjectionMatrix();ctl.update();$('b3Eye').setAttribute('aria-pressed',true);$('b3Top').setAttribute('aria-pressed',false)}
-  function above(){cam.position.set(-dir.x*650,420,-dir.z*650);ctl.target.set(0,0,0);ctl.enableZoom=true;ctl.enablePan=true;ctl.minDistance=20;ctl.maxDistance=6000;ctl.maxPolarAngle=Math.PI*0.49;cam.fov=55;cam.updateProjectionMatrix();ctl.update();$('b3Eye').setAttribute('aria-pressed',false);$('b3Top').setAttribute('aria-pressed',true)}
+  function eye(){rings.visible=false;cam.position.set(0,1.6,0);ctl.target.set(dir.x*2,1.6+0.25,dir.z*2);ctl.enableZoom=false;ctl.enablePan=false;ctl.minDistance=0;ctl.maxDistance=3;cam.fov=50;cam.updateProjectionMatrix();ctl.update();$('b3Eye').setAttribute('aria-pressed',true);$('b3Top').setAttribute('aria-pressed',false)}
+  function above(){rings.visible=true;const d=WIDE?1250:650,h=WIDE?760:420;cam.position.set(-dir.x*d,h,-dir.z*d);ctl.target.set(0,0,0);ctl.enableZoom=true;ctl.enablePan=true;ctl.minDistance=20;ctl.maxDistance=WIDE?9000:6000;ctl.maxPolarAngle=Math.PI*0.49;cam.fov=55;cam.updateProjectionMatrix();ctl.update();$('b3Eye').setAttribute('aria-pressed',false);$('b3Top').setAttribute('aria-pressed',true)}
   $('b3Eye').onclick=eye;$('b3Top').onclick=above;
+  $('b3Wide').textContent=WIDE?'Show 600 m':'Show 1.2 km';$('b3Wide').setAttribute('aria-pressed',WIDE);$('b3Wide').onclick=()=>open3d(lon,lat,WIDE?600:1200);
   const size=()=>{const r=$('wrap').getBoundingClientRect();renderer.setSize(r.width,r.height,false);renderer.domElement.style.width='100%';renderer.domElement.style.height='100%';cam.aspect=r.width/Math.max(1,r.height);cam.updateProjectionMatrix()};
   const ro=new ResizeObserver(size);ro.observe($('wrap'));size();eye();
   const fv=new THREE.Vector3(...fp),lab=$('lFuji');let run=true;
@@ -904,11 +908,11 @@ async function open3d(lon,lat){
   $('b3Tex').hidden=!m.lod2;$('b3Tex').setAttribute('aria-pressed',false);
   $('b3Tex').onclick=async()=>{if(texLoaded){texOn=!texOn;tex.visible=texOn;lod1Mesh.visible=!texOn;$('b3Tex').setAttribute('aria-pressed',texOn);return}
     $('m3d').textContent='Loading textured buildings from PLATEAU…';
-    try{const k=await loadLod2(m,lon,lat,R,h0,tex);texLoaded=true;texOn=k>0;tex.visible=texOn;lod1Mesh.visible=!texOn;$('b3Tex').setAttribute('aria-pressed',texOn);
-      $('m3d').textContent=k?`Textured buildings (PLATEAU LOD2, streamed from PLATEAU): ${k} tile${k>1?'s':''} around the spot. Tap the button again for the plain shapes.`:'No textured buildings near this spot.'}
+    try{const textureR=Math.min(R,650),k=await loadLod2(m,lon,lat,textureR,h0,tex);texLoaded=true;texOn=k>0;tex.visible=texOn;lod1Mesh.visible=!texOn;$('b3Tex').setAttribute('aria-pressed',texOn);
+      $('m3d').textContent=k?`Textured buildings (PLATEAU LOD2, streamed from PLATEAU): ${k} tile${k>1?'s':''} near the spot. The wider context stays as light PLATEAU shapes to keep loading bounded.`:'No textured buildings near this spot.'}
     catch(e){$('m3d').textContent='Textured buildings could not load here. They stream from PLATEAU and work on the public site (onuresen.github.io/town-reboot).'}};
-  $('m3d').textContent=`3D city model (PLATEAU LOD1) within ${R} m: ${nbN} building${nbN===1?'':'s'} within 100 m in purple. The orange line points to Mt. Fuji, ${(fd/1000).toFixed(1)} km away. ${fine?'Ground: GSI aerial photos on '+fine.res+' m elevation.':'Terrain at about 30 m.'} ${nTrees?nTrees+' trees on forest land, about 15 m tall.':''} Far land coarser. Drag to look around.`;
-  G3={dispose(){run=false;ro.disconnect();renderer.dispose();bg.dispose()}}}
+  $('m3d').textContent=`PLATEAU LOD1 within ${(R/1000).toFixed(1)} km: ${buildingN.toLocaleString('en-US')} building shapes. ${nbN} building${nbN===1?'':'s'} within 100 m in purple${WIDE?'; buildings beyond 600 m are lighter':''}. Overview rings: 100 m, 500 m${WIDE?', 1 km':''}. The orange line points to Mt. Fuji, ${(fd/1000).toFixed(1)} km away. ${fine?'Ground: GSI aerial photos on '+fine.res+' m elevation.':'Terrain at about 30 m.'} ${nTrees?nTrees+' trees on forest land, about 15 m tall.':''} Far land coarser. Drag to look around.`;
+  G3={dispose(){run=false;ro.disconnect();renderer.dispose();bg.dispose();rings.traverse(o=>{if(o.geometry)o.geometry.dispose()})}}}
 /* Ground from GSI tiles (CORS open): 5 m elevation (dem5a, zoom 15) where it exists, else 10 m (zoom 14), and aerial photos (zoom 17). */
 async function decodeTile(url){const r=await fetch(url);if(!r.ok)return null;const bmp=await createImageBitmap(await r.blob(),{colorSpaceConversion:'none',premultiplyAlpha:'none'});
   const c=document.createElement('canvas');c.width=bmp.width;c.height=bmp.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0);return x.getImageData(0,0,bmp.width,bmp.height).data}
