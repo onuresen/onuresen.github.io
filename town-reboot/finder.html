@@ -445,7 +445,7 @@ h2{font-family:var(--font-display);font-size:17px;margin:0}
 @media(max-width:700px){.workspace-nav{width:100%;margin-left:0}.workspace-nav a{flex:1;text-align:center}}
 </style>
 <div class="tr-app">
-  <header class="tr-top"><a class="back" href="./">Town Reboot</a><h1>Town Finder</h1><span class="sub">Explore reachable towns, compare the land, then open a detailed map.</span><nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html" aria-current="page">Explore</a><a href="compare.html">Compare</a></nav></header>
+  <header class="tr-top"><a class="back" href="./">Town Reboot</a><h1>Town Finder</h1><span class="sub">Explore reachable towns, compare the land, then open a detailed map.</span><nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html" aria-current="page">Explore</a><a href="compare.html">Compare</a><a href="deals.html">Special places</a></nav></header>
   <section class="tr-map" id="wrap">
     <svg id="svg" role="img" aria-label="Map of towns around Tokyo Bay. Scroll or pinch to zoom, drag to move, tap a town."></svg>
     <div class="tr-legend" style="pointer-events:auto"><span><i class="sw" style="background:var(--accent)"></i>Fits the limits</span><span><i class="sw" style="background:var(--land);border:2px solid var(--signal)"></i>Detailed town map</span><span><i class="sw" style="background:var(--signal)"></i>Selected, and <span id="homeLeg">Kawasaki Station</span> (dot)</span><span><i class="sw" style="background:var(--land)"></i>Does not fit</span><span class="chips" style="margin:0"><button type="button" class="btn" id="cRivers">Rivers</button></span></div>
@@ -476,7 +476,7 @@ h2{font-family:var(--font-display);font-size:17px;margin:0}
       </div></div>
   </section>
 
-    <section class="tr-block"><div class="list-head"><h2 id="hList">Towns that fit</h2><a class="compare-link" href="compare.html">Compare detailed towns</a></div><p class="selected-note" id="selectedNote" hidden>The selected town stays first. Choose it again to close the details.</p><div class="list" id="list"></div></section>
+    <section class="tr-block"><div class="list-head"><h2 id="hList">Towns that fit</h2><div><a class="compare-link" href="compare.html">Compare detailed towns</a> · <a class="compare-link" href="deals.html">See special places</a></div></div><p class="selected-note" id="selectedNote" hidden>The selected town stays first. Choose it again to close the details.</p><div class="list" id="list"></div></section>
     <div class="tr-block"><p class="tr-label">Credits</p><ul class="tr-note" style="padding-left:18px;margin:0">
       <li>出典：政府統計の総合窓口（e-Stat）、令和2年国勢調査（総務省統計局）を加工して作成。</li>
       <li>出典：国土交通省国土数値情報ダウンロードサイト（行政区域データ）を加工して作成。</li>
