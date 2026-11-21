@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PLATEAU streamed preview · Town Reboot</title>
+<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.127/Build/Cesium/Widgets/widgets.css">
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#11243a;background:#dfe8f0}*{box-sizing:border-box}html,body,#viewer{width:100%;height:100%;margin:0;overflow:hidden}#viewer{position:absolute;inset:0}.hud{position:absolute;z-index:2;left:12px;top:12px;max-width:min(430px,calc(100% - 24px));padding:11px 13px;border:1px solid #ccd7e2;border-radius:10px;background:rgba(255,255,255,.94);box-shadow:0 4px 16px rgba(17,36,58,.15)}.hud h1{margin:0 0 3px;font-size:17px}.hud p{margin:3px 0;color:#42566c;font-size:12.5px;line-height:1.4}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.tag{padding:2px 7px;border:1px solid #bdcad6;border-radius:999px;background:#f5f8fa;font-size:11px}.state{font-weight:700;color:#1e6592}.error{color:#a33b3b}.credits{position:absolute;z-index:2;right:8px;bottom:8px;max-width:min(520px,calc(100% - 16px));padding:5px 8px;border-radius:7px;background:rgba(17,36,58,.82);color:#fff;font-size:10.5px}.credits a{color:#fff}.fallback{position:absolute;z-index:3;inset:0;display:grid;place-items:center;padding:24px;background:#e8eef4}.fallback div{max-width:520px;padding:20px;border:1px solid #ccd7e2;border-radius:12px;background:#fff}.fallback h2{margin:0 0 7px;font-size:20px}.fallback p{color:#42566c;line-height:1.5}@media(max-width:700px){.hud{top:8px;left:8px;right:8px;max-width:none}.hud p.secondary{display:none}.credits{font-size:9.5px}}
+</style>
+</head>
+<body>
+<div id="viewer" aria-label="Official PLATEAU building model streamed for the selected municipality"></div>
+<section class="hud"><h1 id="title">Loading municipality…</h1><p class="state" id="state">Reading coverage metadata…</p><p class="secondary">This is an official 3D-model preview with no Town Reboot evidence. Scenery, risk, price and feasibility have not been processed here.</p><div class="tags" id="tags"></div></section>
+<div class="credits">3D buildings: <a href="https://www.mlit.go.jp/plateau/" target="_blank" rel="noopener">Project PLATEAU, MLIT</a>. Base map: <a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noopener">GSI Tiles</a>. Streamed on demand; no city model is stored by Town Reboot.</div>
+<section class="fallback" id="fallback" hidden><div><h2>3D preview unavailable</h2><p id="fallbackText">The official stream could not be opened. Return to the Japan coverage map; its availability metadata still works.</p></div></section>
+<script>window.CESIUM_BASE_URL='https://cesium.com/downloads/cesiumjs/releases/1.127/Build/Cesium/';</script>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.127/Build/Cesium/Cesium.js"></script>
+<script>
+const $=id=>document.getElementById(id),params=new URLSearchParams(location.search),code=params.get('code')||'',LOW=params.get('quality')==='low'||(navigator.deviceMemory||8)<=4||(navigator.hardwareConcurrency||8)<=4,REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let viewer=null,tileset=null,alive=true,loaded=0,unloaded=0;
+function tell(state,extra={}){if(parent!==window)parent.postMessage({type:'town-reboot-plateau-preview',state,code,...extra},location.origin)}
+function fail(message){$('state').textContent='Preview unavailable';$('state').className='state error';$('fallbackText').textContent=message+' Return to the Japan coverage map; its availability metadata still works.';$('fallback').hidden=false;tell('error',{message})}
+function cleanup(){alive=false;try{if(viewer&&!viewer.isDestroyed()){if(tileset&&!tileset.isDestroyed())viewer.scene.primitives.remove(tileset);viewer.destroy()}}catch(e){}viewer=null;tileset=null}
+addEventListener('pagehide',cleanup,{once:true});
+(async()=>{try{
+  const doc=await (await fetch('plateau-registry.json',{cache:'force-cache'})).json(),town=doc.municipalities.find(x=>x.code===code);if(!town)throw Error('This municipality is not in the current PLATEAU catalogue.');
+  const place=town.city&&town.city!==town.name?town.city+' '+town.name:town.name;$('title').textContent=place;$('tags').innerHTML=`<span class="tag">${town.pref}</span><span class="tag">${town.lod2?'LOD2':'LOD1'}</span>${town.texture?'<span class="tag">Textures available</span>':''}<span class="tag">${town.year||'latest'} model</span><span class="tag">${LOW?'Low-device':'Desktop'} stream</span>`;
+  $('state').textContent='Opening one official municipality stream…';
+  Cesium.RequestScheduler.requestsByServer['api.plateauview.mlit.go.jp:443']=LOW?4:8;
+  const imagery=new Cesium.UrlTemplateImageryProvider({url:'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png',credit:'地理院タイル'});
+  viewer=new Cesium.Viewer('viewer',{animation:false,timeline:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,navigationHelpButton:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,imageryProvider:imagery,terrainProvider:new Cesium.EllipsoidTerrainProvider(),requestRenderMode:true,maximumRenderTimeChange:Infinity});
+  viewer.scene.globe.depthTestAgainstTerrain=false;viewer.scene.fog.enabled=!LOW;viewer.scene.highDynamicRange=false;viewer.resolutionScale=Math.min(devicePixelRatio||1,LOW?1:1.5);
+  tileset=await Cesium.Cesium3DTileset.fromUrl(town.url,{maximumScreenSpaceError:LOW?40:20,cacheBytes:(LOW?48:128)*1024*1024,maximumCacheOverflowBytes:(LOW?16:48)*1024*1024,dynamicScreenSpaceError:true,skipLevelOfDetail:true,loadSiblings:false});if(!alive){tileset.destroy();return}
+  viewer.scene.primitives.add(tileset);tileset.tileLoad.addEventListener(()=>{loaded++;$('state').textContent=`Streaming visible tiles · ${loaded} loaded${unloaded?' · '+unloaded+' released':''}`;viewer.scene.requestRender()});tileset.tileUnload.addEventListener(()=>{unloaded++});
+  REDUCED?await viewer.zoomTo(tileset):await viewer.flyTo(tileset,{duration:1.2});if(!alive)return;$('state').textContent='Official buildings are streaming for this view';tell('ready',{name:place,lod:town.lod2?'LOD2':'LOD1',low:LOW});
+}catch(error){cleanup();fail(error&&error.message?error.message:'The official 3D stream could not be opened.')}})();
+</script>
+</body>
+</html>
