@@ -425,6 +425,7 @@ a { color: var(--accent); }
 .tr-3d .bar3 .btn[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
 .tr-3d .msg{position:absolute;left:12px;bottom:12px;max-width:min(620px,calc(100% - 24px));background:color-mix(in srgb,var(--surface) 92%,transparent);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 12px;font-size:12.5px;color:var(--text2)}.tr-3d .msg[data-state="loading"]:before{content:'';display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:var(--signal);animation:tr-pulse 1s ease-in-out infinite}.tr-3d .msg[data-state="error"]{border-color:var(--haz);color:var(--haz);font-weight:600}@keyframes tr-pulse{50%{opacity:.25}}
 .tr-3d .lbl{position:absolute;transform:translate(-50%,-120%);font-size:12px;font-weight:600;color:var(--ink);background:color-mix(in srgb,var(--surface) 90%,transparent);padding:2px 6px;border-radius:var(--r-sm);pointer-events:none;white-space:nowrap}
+.tr-3d .perf{position:absolute;right:12px;bottom:12px;max-width:250px;padding:7px 9px;border-radius:7px;background:rgba(17,36,58,.82);color:#fff;font:11px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre-line;pointer-events:none}
 .town-play{padding:12px;border:1px solid var(--signal);border-radius:10px;background:var(--signal-dim)}.town-play h2{font-size:16px;margin:0 0 3px}.town-play p{font-size:13px;line-height:1.4;color:var(--text2);margin:0}.town-play .play-state{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;font-weight:650}.town-play .play-state:before{content:'';width:7px;height:7px;border-radius:50%;background:var(--ok)}
 #credits h2{font-size:14px;margin:0}#credits ul{padding-left:18px;margin:6px 0;font-size:12.5px;color:var(--text2)}#credits p{font-size:12.5px;color:var(--text2);margin:0}
 .price-main{display:grid;gap:7px}.price-row{display:grid;grid-template-columns:minmax(7em,1fr) auto;gap:8px;font-size:13px}.price-row strong{font-weight:650}.price-row span{text-align:right;color:var(--text2)}
@@ -447,6 +448,7 @@ a { color: var(--accent); }
       <div class="bar3"><button type="button" class="btn" id="b3Eye" aria-pressed="false">Eye level</button><button type="button" class="btn" id="b3Top" aria-pressed="true">From above</button><button type="button" class="btn" id="b3Reset">Reset view</button><button type="button" class="btn" id="b3Wide" aria-pressed="false">Show 1.2 km</button><button type="button" class="btn" id="b3Tex" hidden>Textured buildings</button><button type="button" class="btn" id="b3Close">Analysis map</button></div>
       <div class="lbl" id="lFuji" hidden>Mt. Fuji</div>
       <div class="msg" id="m3d" role="status" data-state="loading">Loading the 3D town…</div>
+      <output class="perf" id="perf3d" hidden aria-label="3D performance"></output>
     </div>
   </section>
   <aside class="tr-panel">
@@ -832,7 +834,7 @@ function trainText(lat,lon){
     `<span>An estimate from track length and stops, without waits for a connection. <a href="${tt}" target="_blank" rel="noopener">Check the timetable</a></span>`}
 function esc3(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 /* 3D view: PLATEAU LOD1 buildings and terrain around the tapped spot, and the far land out to Mt. Fuji. */
-let T3=null,G3=null;
+let T3=null,G3=null,G3_TOKEN=0;const TILE_CACHE=new Map(),PERF3={low:(navigator.deviceMemory||8)<=4||(navigator.hardwareConcurrency||8)<=4,dpr:Math.min((navigator.deviceMemory||8)<=4?1:1.75,devicePixelRatio||1),show:new URLSearchParams(location.search).has('perf')};
 function script(src){return new Promise((ok,no)=>{const e=document.createElement('script');e.src=src;e.onload=ok;e.onerror=()=>no(new Error('Could not load '+src));document.head.appendChild(e)})}
 async function load3d(){if(T3)return T3;
   if(!window.THREE){await script('https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js');await script('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js')}
@@ -852,6 +854,7 @@ function hAt(g,arr,x,y){const fx=(x-g.x0)/g.step,fy=(y-g.y0)/g.step;if(fx<0||fy<
   const i=Math.min(g.nx-2,Math.floor(fx)),j=Math.min(g.ny-2,Math.floor(fy)),a=fx-i,b=fy-j,q=(jj,ii)=>arr[jj*g.nx+ii]/10;
   return q(j,i)*(1-a)*(1-b)+q(j,i+1)*a*(1-b)+q(j+1,i)*(1-a)*b+q(j+1,i+1)*a*b}
 async function open3d(lon,lat,R=600){
+  const token=++G3_TOKEN;
   $('v3d').hidden=false;$('m3d').dataset.state='loading';$('m3d').textContent='Loading the PLATEAU town model…';
   try{await load3d()}catch(e){$('m3d').dataset.state='error';$('m3d').textContent=e.message+' Use Analysis map for the available evidence.';$('playState').textContent='3D unavailable · analysis map still works';return}
   const T=T3,m=T.meta,sx=(lon-m.origin[0])*m.kx,sy=(lat-m.origin[1])*m.ky;
@@ -861,9 +864,9 @@ async function open3d(lon,lat,R=600){
   let fine=null;try{fine=await Promise.race([loadGround(m,lon,lat,R+90),new Promise(ok=>setTimeout(()=>ok(null),12000))])}catch(e){fine=null}
   const H=fine?(x,y)=>{const v=fine.h(x,y);return v==null?Hc(x,y):v}:Hc;
   const h0=H(sx,sy);
-  if(G3){G3.dispose();}
+  if(G3){G3.dispose();G3=null}
   const host=$('v3dc');host.innerHTML='';
-  let renderer;try{renderer=new THREE.WebGLRenderer({antialias:true,logarithmicDepthBuffer:true})}catch(e){$('m3d').dataset.state='error';$('m3d').textContent='3D could not start on this device. Use Analysis map for the same town evidence.';$('playState').textContent='3D unavailable · analysis map still works';return}renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));host.appendChild(renderer.domElement);
+  let renderer;try{renderer=new THREE.WebGLRenderer({antialias:!PERF3.low,logarithmicDepthBuffer:true,powerPreference:'high-performance'})}catch(e){$('m3d').dataset.state='error';$('m3d').textContent='3D could not start on this device. Use Analysis map for the same town evidence.';$('playState').textContent='3D unavailable · analysis map still works';return}renderer.setPixelRatio(PERF3.dpr);host.appendChild(renderer.domElement);
   const scene=new THREE.Scene();scene.background=new THREE.Color('#dfe9f3');scene.fog=new THREE.Fog('#dfe9f3',4000,160000);
   scene.add(new THREE.HemisphereLight(0xffffff,0x8a8f80,0.75));const sun=new THREE.DirectionalLight(0xffffff,0.65);sun.position.set(-400,900,600);scene.add(sun);
   const P=(x,y,h)=>[x-sx,h-h0,-(y-sy)];   // three.js: x east, y up, z south
@@ -876,25 +879,26 @@ async function open3d(lon,lat,R=600){
     return new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color,side:THREE.DoubleSide}))}
   const nearGround=fine?fineMesh(fine,m,sx,sy,R+90,P,H):gridMesh(g,T.near,i0,i1,j0,j1,()=>0,0xc9d3bf);scene.add(nearGround);terrain.push(nearGround);
   const fg=m.far;scene.add(gridMesh(fg,T.far,0,fg.nx-1,0,fg.ny-1,d=>d<R+60?80:0,0xb9c4b0));
-  // buildings
-  const pos=[],col=[],cNear=new THREE.Color(tok('--n3')),cFar=new THREE.Color('#f1f2f4'),cContext=new THREE.Color('#d6dce2');let nbN=0,buildingN=0;
+  // buildings: full nearby outlines, simplified mid-distance blocks, and cheap far/all point clouds
+  const dPos=[],dCol=[],mPos=[],mCol=[],allPts=[],allCols=[],ctxPts=[],ctxCols=[],cNear=new THREE.Color(tok('--n3')),cFar=new THREE.Color('#f1f2f4'),cContext=new THREE.Color('#91a0b2');let nbN=0,buildingN=0,detailN=0,midN=0,contextN=0;
   for(let b=0;b<T.nv.length;b++){const o0=T.off[b],nv=T.nv[b],cx=T.xy[o0*2],cy=T.xy[o0*2+1];if(Math.abs(cx-sx)>R||Math.abs(cy-sy)>R||Math.hypot(cx-sx,cy-sy)>R)continue;
-    const pts=[];let base=1e9,mx=0,my=0;for(let v=0;v<nv;v++){const x=T.xy[(o0+v)*2],y=T.xy[(o0+v)*2+1];pts.push(new THREE.Vector2(x,y));mx+=x;my+=y;base=Math.min(base,H(x,y))}
-    mx/=nv;my/=nv;const dist=Math.hypot(mx-sx,my-sy),top=base+T.hd[b]/10,isN=dist<=100;if(isN)nbN++;buildingN++;const c=isN?cNear:dist>600?cContext:cFar;
-    const tris=THREE.ShapeUtils.triangulateShape(pts,[]);
-    const add=(x,y,h)=>{const p=P(x,y,h);pos.push(...p);col.push(c.r,c.g,c.b)};
-    tris.forEach(t=>{for(const q of t)add(pts[q].x,pts[q].y,top)});
-    for(let v=0;v<nv;v++){const a=pts[v],bb=pts[(v+1)%nv];add(a.x,a.y,base);add(bb.x,bb.y,base);add(bb.x,bb.y,top);add(a.x,a.y,base);add(bb.x,bb.y,top);add(a.x,a.y,top)}}
-  const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));bg.setAttribute('color',new THREE.Float32BufferAttribute(col,3));bg.computeVertexNormals();
-  scene.add(new THREE.Mesh(bg,new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide})));
+    const pts=[];let base=1e9,mx=0,my=0,x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;for(let v=0;v<nv;v++){const x=T.xy[(o0+v)*2],y=T.xy[(o0+v)*2+1];pts.push(new THREE.Vector2(x,y));mx+=x;my+=y;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);base=Math.min(base,H(x,y))}
+    mx/=nv;my/=nv;const dist=Math.hypot(mx-sx,my-sy),top=base+T.hd[b]/10,isN=dist<=100,c=isN?cNear:(dist>550?cContext:cFar),cp=P(mx,my,top);if(isN)nbN++;buildingN++;allPts.push(...cp);allCols.push(c.r,c.g,c.b);
+    if(dist>550){contextN++;ctxPts.push(...cp);ctxCols.push(c.r,c.g,c.b);continue}
+    const pos=dist<=180?dPos:mPos,col=dist<=180?dCol:mCol,add=(x,y,h)=>{const p=P(x,y,h);pos.push(...p);col.push(c.r,c.g,c.b)};
+    if(dist<=180){detailN++;const tris=THREE.ShapeUtils.triangulateShape(pts,[]);tris.forEach(t=>{for(const q of t)add(pts[q].x,pts[q].y,top)});for(let v=0;v<nv;v++){const a=pts[v],bb=pts[(v+1)%nv];add(a.x,a.y,base);add(bb.x,bb.y,base);add(bb.x,bb.y,top);add(a.x,a.y,base);add(bb.x,bb.y,top);add(a.x,a.y,top)}}
+    else{midN++;const q=[new THREE.Vector2(x0,y0),new THREE.Vector2(x1,y0),new THREE.Vector2(x1,y1),new THREE.Vector2(x0,y1)];add(x0,y0,top);add(x1,y0,top);add(x1,y1,top);add(x0,y0,top);add(x1,y1,top);add(x0,y1,top);for(let v=0;v<4;v++){const a=q[v],bb=q[(v+1)%4];add(a.x,a.y,base);add(bb.x,bb.y,base);add(bb.x,bb.y,top);add(a.x,a.y,base);add(bb.x,bb.y,top);add(a.x,a.y,top)}}}
+  function buildingMesh(pos,col){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();return new THREE.Mesh(g,new THREE.MeshLambertMaterial({vertexColors:true,side:THREE.DoubleSide}))}
+  function buildingPoints(pos,col,size){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));return new THREE.Points(g,new THREE.PointsMaterial({size,vertexColors:true,sizeAttenuation:true}))}
+  const detailMesh=buildingMesh(dPos,dCol),midMesh=buildingMesh(mPos,mCol),allPointMesh=buildingPoints(allPts,allCols,5),contextPointMesh=buildingPoints(ctxPts,ctxCols,4);scene.add(detailMesh,midMesh,allPointMesh,contextPointMesh);allPointMesh.visible=false;
   // trees: forest squares of the land-use layer, a few crowns each, about 15 m tall
-  let nTrees=0;if(L.landuse){const crowns=[],my=t=>Math.log(Math.tan(Math.PI/4+t*Math.PI/360)),yn=my(M.north),ys=my(M.south);let seed=1;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+  let nTrees=0,treeMesh=null;if(L.landuse){const crowns=[],my=t=>Math.log(Math.tan(Math.PI/4+t*Math.PI/360)),yn=my(M.north),ys=my(M.south);let seed=1;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
     const cx0=Math.floor((lon-M.west)/(M.east-M.west)*M.w),cy0=Math.floor((yn-my(lat))/(yn-ys)*M.h),rc=Math.ceil(R/M.px_m)+1;
     for(let y=Math.max(0,cy0-rc);y<=Math.min(M.h-1,cy0+rc);y++)for(let x=Math.max(0,cx0-rc);x<=Math.min(M.w-1,cx0+rc);x++){if(B[(y*M.w+x)*4]!==6)continue;
       for(let t=0;t<6;t++){const tl=M.west+(x+rnd())/M.w*(M.east-M.west),ta=Math.atan(Math.sinh(yn+(y+rnd())/M.h*(ys-yn)))*180/Math.PI,tx=(tl-m.origin[0])*m.kx,ty=(ta-m.origin[1])*m.ky;
         if(Math.hypot(tx-sx,ty-sy)>R)continue;crowns.push([tx,ty,12+rnd()*6])}}
-    if(crowns.length){const cg=new THREE.ConeGeometry(1,1,7);cg.translate(0,0.5,0);const im=new THREE.InstancedMesh(cg,new THREE.MeshLambertMaterial({color:'#4f6e3a'}),crowns.length),mt=new THREE.Matrix4(),q=new THREE.Quaternion(),sc=new THREE.Vector3(),ps=new THREE.Vector3();
-      crowns.forEach(([tx,ty,th],i)=>{const p=P(tx,ty,H(tx,ty)+th*0.25);ps.set(...p);sc.set(th*0.32,th*0.75,th*0.32);mt.compose(ps,q,sc);im.setMatrixAt(i,mt)});scene.add(im);nTrees=crowns.length}}
+    if(crowns.length){const cg=new THREE.ConeGeometry(1,1,7);cg.translate(0,0.5,0);treeMesh=new THREE.InstancedMesh(cg,new THREE.MeshLambertMaterial({color:'#4f6e3a'}),crowns.length);const mt=new THREE.Matrix4(),q=new THREE.Quaternion(),sc=new THREE.Vector3(),ps=new THREE.Vector3();
+      crowns.forEach(([tx,ty,th],i)=>{const p=P(tx,ty,H(tx,ty)+th*0.25);ps.set(...p);sc.set(th*0.32,th*0.75,th*0.32);mt.compose(ps,q,sc);treeMesh.setMatrixAt(i,mt)});scene.add(treeMesh);nTrees=crowns.length}}
   // the spot and the line to Mt. Fuji
   const pin=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,12,12),new THREE.MeshLambertMaterial({color:tok('--haz')}));pin.position.set(0,6,0);scene.add(pin);
   // distance rings make the wider overview legible without adding another map control
@@ -903,6 +907,7 @@ async function open3d(lon,lat,R=600){
   const [fx,fy,fz]=m.fuji,fd=Math.hypot(fx-sx,fy-sy),fp=P(fx,fy,fz-fd*fd/(2*RE));
   const lg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,1.6,0),new THREE.Vector3(...fp)]),sightLine=new THREE.Line(lg,new THREE.LineBasicMaterial({color:tok('--clear')}));scene.add(sightLine);
   const cam=new THREE.PerspectiveCamera(55,1,0.5,300000),ctl=new THREE.OrbitControls(cam,renderer.domElement);ctl.enableDamping=true;
+  const tex=new THREE.Group();scene.add(tex);let texOn=false,texLoaded=false,lod2Tiles=0,settleTimer=null,lodMode='near';
   const dir=new THREE.Vector3(fp[0],0,fp[2]).normalize();
   function eye(){rings.visible=false;cam.position.set(0,1.6,0);ctl.target.set(dir.x*2,1.6+0.25,dir.z*2);ctl.enableZoom=false;ctl.enablePan=false;ctl.minDistance=0;ctl.maxDistance=3;cam.fov=50;cam.updateProjectionMatrix();ctl.update();$('b3Eye').setAttribute('aria-pressed',true);$('b3Top').setAttribute('aria-pressed',false)}
   function above(){rings.visible=true;const d=WIDE?1250:650,h=WIDE?760:420;cam.position.set(-dir.x*d,h,-dir.z*d);ctl.target.set(0,0,0);ctl.enableZoom=true;ctl.enablePan=true;ctl.minDistance=20;ctl.maxDistance=WIDE?9000:6000;ctl.maxPolarAngle=Math.PI*0.49;cam.fov=55;cam.updateProjectionMatrix();ctl.update();$('b3Eye').setAttribute('aria-pressed',false);$('b3Top').setAttribute('aria-pressed',true)}
@@ -911,24 +916,24 @@ async function open3d(lon,lat,R=600){
   $('b3Wide').textContent=WIDE?'Show 600 m':'Show 1.2 km';$('b3Wide').setAttribute('aria-pressed',WIDE);$('b3Wide').onclick=()=>open3d(lon,lat,WIDE?600:1200);
   const size=()=>{const r=$('wrap').getBoundingClientRect();renderer.setSize(r.width,r.height,false);renderer.domElement.style.width='100%';renderer.domElement.style.height='100%';cam.aspect=r.width/Math.max(1,r.height);cam.updateProjectionMatrix()};
   const ro=new ResizeObserver(size);ro.observe($('wrap'));size();above();
+  function updateLod(){const far=cam.position.distanceTo(ctl.target)>1100;lodMode=far?'far points':(texOn?'LOD2 textures':'LOD1 near + blocks');detailMesh.visible=!far&&!texOn;midMesh.visible=!far&&!texOn;allPointMesh.visible=far;contextPointMesh.visible=!far;tex.visible=texOn&&!far;if(treeMesh)treeMesh.visible=!far}
   const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();renderer.domElement.ondblclick=e=>{const r=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-((e.clientY-r.top)/r.height*2-1));ray.setFromCamera(mouse,cam);const hit=ray.intersectObjects(terrain,false)[0];if(!hit)return;const tx=sx+hit.point.x,ty=sy-hit.point.z,lo=m.origin[0]+tx/m.kx,la=m.origin[1]+ty/m.ky,q=gridForLonLat(lo,la);pin.position.copy(hit.point);pin.position.y+=6;sightLine.geometry.dispose();sightLine.geometry=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(hit.point.x,hit.point.y+1.6,hit.point.z),new THREE.Vector3(...fp)]);tap(q.x,q.y);$('playState').textContent='Selected another place in 3D';$('m3d').dataset.state='ready';$('m3d').textContent='Place selected. Its decision summary and evidence are open in the side panel.'};
-  const fv=new THREE.Vector3(...fp),lab=$('lFuji');let run=true;
-  (function loop(){if(!run)return;ctl.update();renderer.render(scene,cam);
+  const fv=new THREE.Vector3(...fp),lab=$('lFuji'),perf=$('perf3d');let run=true,frames=0,lastPerf=performance.now();perf.hidden=!PERF3.show;
+  (function loop(now=performance.now()){if(!run)return;ctl.update();updateLod();renderer.render(scene,cam);frames++;if(PERF3.show&&now-lastPerf>=1000){const fps=Math.round(frames*1000/(now-lastPerf)),mem=((T.near.byteLength+T.far.byteLength+T.nv.byteLength+T.hd.byteLength+T.xy.byteLength)/1048576).toFixed(1);perf.value=`${fps} fps · ${lodMode}\n${renderer.info.render.calls} draws · ${renderer.info.render.triangles.toLocaleString('en-US')} triangles\n${buildingN.toLocaleString('en-US')} buildings · ${lod2Tiles} LOD2 tiles · ${mem} MB model`;frames=0;lastPerf=now}
     const q=fv.clone().project(cam),r=$('wrap').getBoundingClientRect();lab.hidden=!(q.z<1&&Math.abs(q.x)<1.05&&Math.abs(q.y)<1.05);if(!lab.hidden){lab.style.left=((q.x+1)/2*r.width)+'px';lab.style.top=((1-q.y)/2*r.height)+'px'}
     requestAnimationFrame(loop)})();
-  let lod1Mesh=null;scene.traverse(o=>{if(o.isMesh&&o.geometry===bg)lod1Mesh=o});
-  const tex=new THREE.Group();scene.add(tex);let texOn=false,texLoaded=false;
-  $('b3Tex').hidden=!m.lod2;$('b3Tex').setAttribute('aria-pressed',false);
-  $('b3Tex').onclick=async()=>{if(texLoaded){texOn=!texOn;tex.visible=texOn;lod1Mesh.visible=!texOn;$('b3Tex').setAttribute('aria-pressed',texOn);return}
-    $('m3d').textContent='Loading textured buildings from PLATEAU…';
-    try{const textureR=Math.min(R,650),k=await loadLod2(m,lon,lat,textureR,h0,tex);texLoaded=true;texOn=k>0;tex.visible=texOn;lod1Mesh.visible=!texOn;$('b3Tex').setAttribute('aria-pressed',texOn);
-      $('m3d').textContent=k?`Textured buildings (PLATEAU LOD2, streamed from PLATEAU): ${k} tile${k>1?'s':''} near the spot. The wider context stays as light PLATEAU shapes to keep loading bounded.`:'No textured buildings near this spot.'}
-    catch(e){$('m3d').textContent='Textured buildings could not load here. They stream from PLATEAU and work on the public site (onuresen.github.io/town-reboot).'}};
-  $('m3d').dataset.state='ready';$('playState').textContent='3D ready · double-click the ground to inspect';$('m3d').textContent=`Drag to orbit. Double-click the ground to inspect another place. PLATEAU LOD1 within ${(R/1000).toFixed(1)} km: ${buildingN.toLocaleString('en-US')} building shapes. ${nbN} building${nbN===1?'':'s'} within 100 m in purple. ${fine?'Ground uses GSI aerial photos and '+fine.res+' m elevation.':'Terrain is about 30 m.'}`;
-  G3={dispose(){run=false;ro.disconnect();renderer.dispose();bg.dispose();rings.traverse(o=>{if(o.geometry)o.geometry.dispose()})}}}
+  $('b3Tex').hidden=!m.lod2||PERF3.low;$('b3Tex').setAttribute('aria-pressed',false);
+  async function ensureTextures(){if(texLoaded||!m.lod2||token!==G3_TOKEN||cam.position.distanceTo(ctl.target)>950||PERF3.low)return;$('m3d').dataset.state='loading';$('m3d').textContent='Camera settled nearby · streaming bounded PLATEAU LOD2…';
+    try{const k=await loadLod2(m,lon,lat,Math.min(R,500),h0,tex,token);if(token!==G3_TOKEN||k<0)return;lod2Tiles=k;texLoaded=true;texOn=k>0;tex.visible=texOn;$('b3Tex').setAttribute('aria-pressed',texOn);$('m3d').dataset.state='ready';$('m3d').textContent=k?`Nearby textured buildings loaded automatically (${k} tile${k===1?'':'s'}). Move farther away and simplified PLATEAU context takes over.`:'No textured buildings cover this spot.'}
+    catch(e){if(token!==G3_TOKEN)return;$('m3d').dataset.state='ready';$('m3d').textContent='Textured buildings could not load. Simplified PLATEAU buildings remain available.'}}
+  function scheduleTextures(){clearTimeout(settleTimer);settleTimer=setTimeout(ensureTextures,700)}ctl.addEventListener('end',scheduleTextures);scheduleTextures();
+  $('b3Tex').onclick=()=>{if(!texLoaded){ensureTextures();return}texOn=!texOn;tex.visible=texOn;$('b3Tex').setAttribute('aria-pressed',texOn);updateLod()};
+  $('m3d').dataset.state='ready';$('playState').textContent=`3D ready · automatic detail${PERF3.low?' · light device mode':''}`;$('m3d').textContent=`Drag to orbit. Double-click the ground to inspect. Nearby: ${detailN.toLocaleString('en-US')} full buildings. Mid-distance: ${midN.toLocaleString('en-US')} simplified blocks. Far context: ${contextN.toLocaleString('en-US')} points.${PERF3.low?' Textures and high pixel density are off for this device.':''}`;
+  function disposeScene(){scene.traverse(o=>{if(o.geometry)o.geometry.dispose();const ms=Array.isArray(o.material)?o.material:[o.material];ms.filter(Boolean).forEach(x=>{for(const k of Object.keys(x))if(x[k]&&x[k].isTexture)x[k].dispose();x.dispose()})})}
+  G3={dispose(){run=false;clearTimeout(settleTimer);ro.disconnect();ctl.dispose();renderer.domElement.ondblclick=null;disposeScene();renderer.dispose();host.innerHTML=''}}}
 /* Ground from GSI tiles (CORS open): 5 m elevation (dem5a, zoom 15) where it exists, else 10 m (zoom 14), and aerial photos (zoom 17). */
-async function decodeTile(url){const r=await fetch(url);if(!r.ok)return null;const bmp=await createImageBitmap(await r.blob(),{colorSpaceConversion:'none',premultiplyAlpha:'none'});
-  const c=document.createElement('canvas');c.width=bmp.width;c.height=bmp.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0);return x.getImageData(0,0,bmp.width,bmp.height).data}
+async function decodeTile(url){if(TILE_CACHE.has(url))return TILE_CACHE.get(url);const job=(async()=>{const r=await fetch(url);if(!r.ok)return null;const bmp=await createImageBitmap(await r.blob(),{colorSpaceConversion:'none',premultiplyAlpha:'none'});
+  const c=document.createElement('canvas');c.width=bmp.width;c.height=bmp.height;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(bmp,0,0);return x.getImageData(0,0,bmp.width,bmp.height).data})();TILE_CACHE.set(url,job);if(TILE_CACHE.size>96)TILE_CACHE.delete(TILE_CACHE.keys().next().value);return job}
 const gpx=(lon,lat,z)=>[(lon+180)/360*256*2**z,(1-Math.asinh(Math.tan(lat*Math.PI/180))/Math.PI)/2*256*2**z];
 async function loadGround(m,lon,lat,rad){
   const dLa=rad/110574,dLo=rad/(111320*Math.cos(lat*Math.PI/180)),w=lon-dLo,e=lon+dLo,n=lat+dLa,so=lat-dLa;
@@ -952,7 +957,7 @@ function fineMesh(f,m,sx,sy,rad,P,H){const step=f.res<=5?6:10,n=Math.floor(2*rad
 /* Textured LOD2 tiles straight from PLATEAU's hosted 3D Tiles (CORS open). Tiles near the spot only. */
 function ecef(lon,lat,h){const a=6378137,e2=6.69437999014e-3,p=Math.PI/180,sl=Math.sin(lat*p),cl=Math.cos(lat*p),N=a/Math.sqrt(1-e2*sl*sl);
   return new THREE.Vector3((N+h)*cl*Math.cos(lon*p),(N+h)*cl*Math.sin(lon*p),(N*(1-e2)+h)*sl)}
-async function loadLod2(m,lon,lat,R,h0,group){
+async function loadLod2(m,lon,lat,R,h0,group,token){
   if(!THREE.GLTFLoader){await script('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js');await script('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js')}
   const dl=new THREE.DRACOLoader();dl.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');const gl=new THREE.GLTFLoader();gl.setDRACOLoader(dl);
   const p=Math.PI/180,lr=lon*p,la=lat*p,dLa=(R+80)/6371000,dLo=dLa/Math.cos(la),want=[];
@@ -966,7 +971,7 @@ async function loadLod2(m,lon,lat,R,h0,group){
   const A=new THREE.Matrix4().set(E.x,E.y,E.z,0, U.x,U.y,U.z,0, -Nn.x,-Nn.y,-Nn.z,0, 0,0,0,1);
   const Y2Z=new THREE.Matrix4().set(1,0,0,0, 0,0,-1,0, 0,1,0,0, 0,0,0,1);
   let n=0;
-  for(const u of want.slice(0,24)){const buf=await (await fetch(u)).arrayBuffer();const dv=new DataView(buf);let glb=buf,rtc=null;
+  for(const u of want.slice(0,12)){if(token!==G3_TOKEN)return-1;const buf=await (await fetch(u)).arrayBuffer();if(token!==G3_TOKEN)return-1;const dv=new DataView(buf);let glb=buf,rtc=null;
     if(dv.getUint32(0,true)===0x6d643362){const ftj=dv.getUint32(12,true),ftb=dv.getUint32(16,true),btj=dv.getUint32(20,true),btb=dv.getUint32(24,true);
       const ft=JSON.parse(new TextDecoder().decode(new Uint8Array(buf,28,ftj))||'{}');if(Array.isArray(ft.RTC_CENTER))rtc=ft.RTC_CENTER;glb=buf.slice(28+ftj+ftb+btj+btb)}
     // drop CESIUM_RTC from the glTF JSON (three.js does not know it) and keep its centre
