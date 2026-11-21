@@ -1,0 +1,460 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Decision dossier for Fujimigaoka villa plot No. 1, with dated public evidence and private browser notes."><title>Fujimigaoka villa plot No. 1 · Town Reboot</title></head><body>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
+   ui-base.css — Shared Tier-A base for the maker-layer tools
+   VERSION 1.2.0   ·   CANONICAL SOURCE — edit ONLY here.
+
+   Canonical home:   github.com/onuresen/built-lab › ui-system/ui-base.css
+   Design reference: esen-vault › concepts/Shared-UI-System.md
+
+   ⚠ Do NOT edit downstream copies. This file is the single source of truth;
+     all tools consume this version. Bump VERSION (semver) on any change here.
+
+   WHAT THIS IS
+   The portable skeleton every "Tier A — Full" tool uses: the token contract,
+   the radius/z-index scales, and the shared UI primitives (.btn / .card / .input
+   / .label / .empty-state / .ui-modal / .ui-section / .ui-row hover-bar).
+
+   HOW TO USE
+   1. Load fonts in the host page (do NOT @import here — it blocks render):
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+   2. Load this file, THEN a palette block from ui-system/palettes/ that overrides
+      the palette tokens (Lime-Editorial, Layer-Semantic, Executive, Revit, Catppuccin,
+      Slate). Skeleton shared, skin per tool.
+   3. Style values, keep names. Restyle the skin, never rename the contract.
+   4. Theme-flip rule: any DOM surface that must change between light and dark
+      references a token (var(--surface) / var(--bg-soft) / …), never a hardcoded
+      hex — a literal colour cannot re-theme. This holds for a tool's own runtime
+      dark mode too (e.g. ONEXUS's onexus-style.js native tokens). It's how ONEXUS
+      shipped a white minimap in dark mode; don't repeat it.
+   ============================================================================= */
+
+:root {
+  /* ---- Palette (SKIN — override via a ui-system/palettes/*.css block) ---- */
+  --bg:        #f6f7f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #14181f;   /* primary content */
+  --text2:     #44505f;   /* meaningful secondary */
+  --text3:     #7c8aa0;   /* metadata / hints ONLY — never status or instructions */
+
+  --accent:    #2563eb;   /* the one color a tool must set */
+  --on-accent: #ffffff;   /* text/icons on accent fills */
+
+  --accent2:      #b07d2b;   /* optional warm/secondary signal — use sparingly */
+  --accent2-dim:  #f3e9d6;
+  --accent2-text: #7a5519;
+
+  /* ---- Accent tints (DERIVED — set --accent and these follow) ---- */
+  --accent-dim:  color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 24%, transparent);
+
+  /* ---- Fonts (pool defaults — override --font-display per tool) ---- */
+  --font-display: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-body:    'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Radius scale (SKELETON — shared) ---- */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-pill: 999px;
+
+  /* ---- Spacing / shadow / motion ---- */
+  --gap: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Z-index scale (SKELETON — shared; replaces raw ints) ---- */
+  --z-base:    1;
+  --z-sticky:  100;
+  --z-popover: 500;
+  --z-overlay: 800;
+  --z-modal:   900;
+  --z-tooltip: 950;
+  --z-toast:   9999;
+}
+
+/* =============================================================================
+   Reset
+   ============================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* =============================================================================
+   Buttons — .btn / .btn-primary / .btn-ghost / .btn-danger
+   ============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease),
+              box-shadow 0.2s var(--ease), transform 0.12s var(--ease);
+}
+.btn:hover  { border-color: var(--accent); background: var(--accent-dim); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.btn-primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent); filter: brightness(0.94); }
+
+.btn-ghost {
+  color: var(--text2);
+  background: transparent;
+  border-color: var(--border2);
+}
+.btn-ghost:hover { background: var(--surface2); border-color: var(--accent); }
+
+.btn-danger {
+  color: #b3261e;
+  background: color-mix(in srgb, #e8455a 12%, transparent);
+  border-color: color-mix(in srgb, #e8455a 32%, transparent);
+}
+
+/* =============================================================================
+   Card
+   ============================================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+
+/* =============================================================================
+   Form fields — .input / .select / .textarea + .label
+   ============================================================================= */
+.input, .select, .textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.textarea { resize: vertical; min-height: 72px; }
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* =============================================================================
+   Section header — .ui-section-header / -title / -line / -action
+   ============================================================================= */
+.ui-section-header { display: flex; align-items: center; gap: 10px; }
+.ui-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.ui-section-line { flex: 1; height: 1px; background: var(--border); }
+.ui-section-action {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+.ui-section-action:hover { color: var(--accent); background: var(--accent-dim); }
+
+/* =============================================================================
+   Empty state
+   ============================================================================= */
+.empty-state { text-align: center; color: var(--text3); padding: 40px 20px; }
+.empty-state .e-icon  { display: block; font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state .e-title { font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.empty-state .e-sub   { font-size: 12px; color: var(--text3); }
+
+/* =============================================================================
+   Modal — .ui-modal-overlay / .ui-modal
+   ============================================================================= */
+.ui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open { opacity: 1; pointer-events: auto; }
+.ui-modal {
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open .ui-modal { transform: translateY(0) scale(1); }
+
+/* =============================================================================
+   Signature — left accent-bar reveal on row hover. Opt in with class .ui-row.
+   ============================================================================= */
+.ui-row { position: relative; }
+.ui-row::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 9px; bottom: 9px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;   /* single-sided: only the open edge is rounded */
+  background: var(--accent);
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  pointer-events: none;
+}
+.ui-row:hover::after { opacity: 1; transform: translateX(0); }
+
+/* =============================================================================
+   Toast — .ui-toast (+ .is-visible, --success / --error)
+   ============================================================================= */
+.ui-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: var(--z-toast);
+  padding: 9px 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.ui-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+.ui-toast--success { border-color: var(--accent-glow); color: var(--accent); }
+.ui-toast--error   { border-color: color-mix(in srgb, #e8455a 40%, transparent); color: #e8455a; }
+
+/* =============================================================================
+   Scrollbar + focus ring
+   ============================================================================= */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* =============================================================================
+   Micro-motion — opt-in classes
+   ============================================================================= */
+@keyframes ui-card-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.card-enter { animation: ui-card-enter 0.22s var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter, .ui-row::after, .ui-modal, .ui-toast { animation: none !important; transition: none !important; }
+}
+/* =============================================================================
+   Executive palette — "Boardroom"  ·  ui-system v1.2.0
+   Light, professional / leadership-facing. Cool navy authority + bronze signal.
+   Used by: onuresen.github.io, OneBridge, ROD, BIM Modelling Guide.
+   Load AFTER ui-base.css.   See esen-vault › concepts/Shared-UI-System.md
+   ============================================================================= */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #11243a;   /* deep navy ink */
+  --text2:     #3d5066;
+  --text3:     #7c8aa0;
+
+  --accent:        #1f5f8b;   /* brand blue — dim/glow derive from this in ui-base */
+  --on-accent:     #ffffff;
+
+  --accent2:       #b07d2b;   /* bronze — signal color, use sparingly (never a 2nd primary) */
+  --accent2-dim:   #f3e9d6;
+  --accent2-text:  #7a5519;
+
+  --font-display: 'Archivo', 'DM Sans', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+/* =============================================================================
+   town.css — Town Reboot's own layer on top of the Built Lab UI system.
+   Load after ui-base.css (v1.2.0) and palettes/executive.css, both copied from
+   built-lab/ui-system. This file only adds data colours and the map-app layout.
+   Every colour that changes the page is a token.
+   ============================================================================= */
+:root {
+  /* Data colours: map classes. Not brand colours. */
+  --clear: #d9621f; --part: #e8b04a; --hidden: #8e9bb0;
+  --n0: #2f7d5b; --n1: #9cc27a; --n2: #b9a6c9; --n3: #7a5a9c;
+  --r1: #5b2a86; --r2: #9a6cc4; --r3: #d4c3e6;
+  --haz: #c22f3d; --ok: #2f7d5b; --miss: #c22f3d;
+  --sea: #8fb8d6; --s0: #c9d2dc; --s1: #e9d39a; --s2: #e8a64a; --s3: #d9621f; --s4: #9c3d12;
+  --l1: #7fa7c4; --l2: #1f5f8b; --l3: #b07d2b;
+  --land: #dfe5ec; --ink: #11243a;
+  --signal: var(--accent2);
+  --bar: var(--accent); --bar-bg: var(--surface3);
+  --panel-w: 400px;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+/* Pressed state for .btn used as a toggle or tab */
+.btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- Map app: map fills the screen, panel on the right (bottom on phones) ---- */
+.tr-app { display: grid; grid-template-columns: minmax(0, 1fr) var(--panel-w); grid-template-rows: auto minmax(0, 1fr); height: 100vh; height: 100dvh; }
+.tr-top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px max(16px, env(safe-area-inset-left, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--surface); border-bottom: 1px solid var(--border); }
+.tr-top h1 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
+.tr-top .sub { color: var(--text2); font-size: 13px; }
+.tr-top .back { font-size: 13px; text-decoration: none; margin-right: 4px; }
+.tr-map { position: relative; min-height: 0; overflow: hidden; background: var(--surface2); }
+.tr-map canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline: none; }
+.tr-map canvas.dragging { cursor: grabbing; }
+.tr-map canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.tr-legend { position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--border); border-radius: var(--r-md); padding: 8px 12px;
+  font-size: 12.5px; color: var(--text2); box-shadow: var(--shadow-sm); pointer-events: none; }
+.tr-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.tr-tools .btn { background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: var(--shadow-sm); }
+.tr-hint { position: absolute; right: 12px; bottom: 12px; font-size: 12px; color: var(--text3); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 3px 8px; border-radius: var(--r-sm); pointer-events: none; }
+.sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.tr-panel { min-height: 0; overflow: auto; background: var(--surface); border-left: 1px solid var(--border); padding: 14px 16px 28px; display: flex; flex-direction: column; gap: 16px; }
+.tr-block { display: flex; flex-direction: column; gap: 8px; }
+.tr-block > .label, .tr-label { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin: 0; }
+.tr-note { font-size: 13px; color: var(--text2); margin: 0; }
+.tr-spot { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.tr-spot h2 { font-size: 17px; margin: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 3px 16px; color: var(--text2); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tr-panel details { border-top: 1px solid var(--border); padding-top: 10px; font-size: 13px; color: var(--text2); }
+.tr-panel summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.tr-panel details ul { padding-left: 18px; margin: 8px 0; } .tr-panel details li { margin-bottom: 4px; }
+@media (max-width: 900px) {
+  .tr-app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 62vh auto; grid-template-rows: auto 62dvh auto; height: auto; }
+  .tr-panel { border-left: 0; border-top: 1px solid var(--border); overflow: visible; }
+  .tr-hint { display: none; }
+}
+
+/* ---- Reading pages (home, compare): full width with a sensible line length ---- */
+.tr-page { padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.tr-wide { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.tr-lede { color: var(--text2); margin: 6px 0 0; max-width: 70ch; font-size: 15.5px; }
+</style>
+<style>
+body{margin:0}.dossier{max-width:1120px;margin:0 auto;display:grid;gap:20px}.top{display:flex;justify-content:space-between;gap:18px;align-items:start}.top h1{font-size:clamp(28px,5vw,46px);line-height:1.08;margin:5px 0 8px}.eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.sub{color:var(--text2);font-size:16px;margin:0}.back{display:inline-block;margin-bottom:4px}.price{text-align:right;color:var(--accent);font-size:28px;font-weight:700;white-space:nowrap}.price small{display:block;color:var(--text3);font-size:13px;font-weight:500}.privacy{padding:12px 14px;border:1px solid var(--signal);border-radius:10px;background:var(--signal-dim);color:var(--signal-text);font-size:14px}.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.75fr);gap:18px;align-items:start}.main,.side{display:grid;gap:16px}.panel{padding:18px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}.panel h2{font-size:19px;margin:0 0 14px}.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.fact{padding:11px;border-radius:8px;background:var(--bg)}.fact b{display:block;font-size:12px;color:var(--text3);margin-bottom:3px}.evidence{display:grid;gap:14px}.claim{padding-left:12px;border-left:3px solid var(--border2)}.claim.risk{border-color:var(--warn)}.claim h3{font-size:15px;margin:0 0 4px}.claim p{color:var(--text2);line-height:1.5;margin:0}.label{display:inline-block;margin-left:6px;padding:2px 6px;border:1px solid var(--border2);border-radius:999px;color:var(--text3);font:600 10px/1.2 var(--font-body);vertical-align:2px}.label.public{color:var(--accent);border-color:var(--accent)}.label.unknown{color:var(--warn);border-color:var(--warn)}.field{display:grid;gap:6px;margin-bottom:12px}.field:last-child{margin-bottom:0}.field label{font-size:13px;font-weight:700}.field textarea,.field input,.field select{width:100%;box-sizing:border-box;padding:9px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font:14px/1.45 var(--font-body)}.field textarea{min-height:82px;resize:vertical}.actions{display:flex;flex-wrap:wrap;gap:8px}.actions a,.actions button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 13px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--accent);font:700 14px/1 var(--font-body);text-decoration:none;cursor:pointer}.actions .primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}.history{display:grid;gap:8px;margin:0;padding:0;list-style:none}.history li{padding:9px 10px;border-left:2px solid var(--border2);color:var(--text2);font-size:13px}.history time{display:block;color:var(--text3);font-size:11px}.empty{color:var(--text3);font-size:13px}.saved{min-height:18px;color:var(--text3);font-size:12px}.tags{display:flex;flex-wrap:wrap;gap:5px}.tag{padding:3px 8px;border:1px solid var(--border2);border-radius:999px;color:var(--text2);font-size:12px}
+.cost-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.cost-total{font-size:24px;font-weight:700;color:var(--accent);text-align:right}.cost-total small{display:block;color:var(--text3);font-size:11px;font-weight:500}.cost-table{width:100%;border-collapse:collapse;margin-top:12px}.cost-table th,.cost-table td{padding:8px 5px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle}.cost-table th{color:var(--text3);font-size:11px}.cost-table input[type=number]{width:100%;min-width:78px;padding:7px;border:1px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text)}.cost-table .unresolved{text-align:center}.cost-table tr.is-unknown{color:var(--text3)}.cost-note{margin:10px 0 0;color:var(--text2);font-size:13px}.cost-alert{margin:10px 0 0;padding:9px 10px;border-left:3px solid var(--warn);background:var(--bg);font-size:13px}.repair-level{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}.repair-level select{padding:7px;border:1px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text)}
+.visit-head{display:flex;justify-content:space-between;gap:12px;align-items:start}.visit-progress{font-size:13px;color:var(--accent);font-weight:700}.visit-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.checklist{display:grid;gap:7px}.check{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;padding:8px;border:1px solid var(--border);border-radius:8px}.check input{margin-top:3px}.check span{font-size:13px}.field-check{display:grid;grid-template-columns:auto minmax(120px,.7fr) minmax(160px,1.3fr);gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}.field-check input[type=text]{width:100%;padding:7px 8px;border:1px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text)}.visit-sub{font-size:15px;margin:16px 0 9px}.photo-note{padding:9px 10px;border-left:3px solid var(--signal);background:var(--signal-dim);font-size:13px;color:var(--text2)}
+.reviewers{display:grid;grid-template-columns:1fr 1fr;gap:12px}.reviewer{padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--bg)}.reviewer h3{font-size:16px;margin:0 0 10px}.review-note{margin:10px 0 0;color:var(--text2);font-size:13px}.handoff-status{min-height:18px;color:var(--accent);font-size:12px;margin:8px 0 0}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.top{display:grid}.price{text-align:left}.side{grid-row:1}.facts{grid-template-columns:1fr 1fr}.visit-grid,.reviewers{grid-template-columns:1fr}}@media(max-width:480px){.facts{grid-template-columns:1fr}.panel{padding:15px}.cost-head,.visit-head{display:grid}.cost-total{text-align:left}.cost-table{font-size:12px}.cost-table th,.cost-table td{padding:6px 2px}.field-check{grid-template-columns:auto 1fr}.field-check input[type=text]{grid-column:2}}
+</style>
+<div class="tr-page"><main class="dossier">
+  <header class="top"><div><a class="back" href="deals.html">← My Search</a><div class="eyebrow">Candidate dossier</div><h1 id="name"></h1><p class="sub" id="place"></p></div><div class="price" id="price"></div></header>
+  <div class="privacy"><b>Private workspace.</b> Status, notes, questions, observations and history stay only in this browser. Public listing evidence remains unchanged.</div>
+  <div class="layout"><div class="main">
+    <section class="panel"><h2>Candidate identity <span class="label public">Advertised</span></h2><div class="facts" id="facts"></div><div class="tags" id="tags" style="margin-top:12px"></div></section>
+    <section class="panel"><h2>Decision evidence</h2><div class="evidence" id="evidence"></div></section>
+    <section class="panel"><div class="cost-head"><div><h2 style="margin-bottom:4px">All-in cost range</h2><span class="label">Private working range</span></div><div class="cost-total" id="costTotal"></div></div><p class="cost-note">Only resolved one-time items enter the supported total. Enter ranges from quotes or documents; leave unknown work unresolved.</p><div class="repair-level" id="repairLevelWrap"><label for="repairLevel"><b>Scope</b></label><select id="repairLevel"><option value="safe">Safe and dry</option><option value="weekend">Usable at weekends</option><option value="full">Fully renovated</option></select><span class="label unknown">No property-specific estimate yet</span></div><table class="cost-table"><thead><tr><th>One-time item</th><th>Low ¥M</th><th>High ¥M</th><th>Unknown</th></tr></thead><tbody id="costRows"></tbody></table><div class="cost-alert" id="costUnknown"></div><div class="facts" style="margin-top:12px"><div class="fact"><b>Annual recurring cost</b><span id="annualTotal"></span></div><div class="fact"><b>Range basis</b><span id="costBasis"></span></div></div></section>
+    <section class="panel"><div class="visit-head"><div><h2 style="margin-bottom:4px">Field visit</h2><span class="label">Saved only in this browser</span></div><div class="visit-progress" id="visitProgress"></div></div><div class="visit-grid" style="margin-top:14px"><div class="field"><label for="visitDate">Visit date</label><input id="visitDate" type="date"></div><div class="field"><label for="visitOutcome">Outcome</label><select id="visitOutcome"><option value="not-visited">Not visited</option><option value="promising">Promising</option><option value="follow-up">Needs follow-up</option><option value="reject">Reject</option><option value="due-diligence">Professional due diligence</option></select></div></div><div class="visit-grid"><div class="field"><label for="beforeVisit">Before the visit: what I expect</label><textarea id="beforeVisit" placeholder="What currently attracts or worries you?"></textarea></div><div class="field"><label for="afterVisit">After the visit: what changed</label><textarea id="afterVisit" placeholder="What became better, worse or newly uncertain?"></textarea></div></div><h3 class="visit-sub">Documents and broker preparation</h3><div class="checklist" id="visitDocs"></div><h3 class="visit-sub">On site</h3><div class="checklist" id="visitField"></div><div class="field" style="margin-top:14px"><label for="observations">General dated observations <span class="label">Personally observed</span></label><textarea id="observations" placeholder="What did you see or confirm yourself? Include the date and source."></textarea></div><div class="field"><label for="photoRefs">Photo references</label><textarea id="photoRefs" placeholder="Example: IMG_2041 — westward view from road; IMG_2042 — drainage at lower boundary"></textarea></div><p class="photo-note">Town Reboot stores only these references. It does not read or upload your photographs.</p></section>
+    <section class="panel"><div class="visit-head"><div><h2 style="margin-bottom:4px">Professional review</h2><span class="label">Two independent challenges</span></div></div><p class="review-note">Ask a local property contact and a building professional to challenge this dossier. Their statements remain attributed and unverified until supported by a document, inspection or quote.</p><div class="actions" style="margin:14px 0"><button type="button" class="primary" id="copyBrief">Copy review brief</button></div><p class="photo-note">The copied brief excludes reviewer contact details, private notes, visit observations and decision history.</p><div class="reviewers" style="margin-top:14px"><div class="reviewer" data-reviewer="broker"><h3>Local property contact</h3><div class="field"><label for="brokerName">Name or organisation</label><input id="brokerName" placeholder="Broker or akiya-bank contact"></div><div class="visit-grid"><div class="field"><label for="brokerStatus">Review status</label><select id="brokerStatus"><option value="not-contacted">Not contacted</option><option value="asked">Asked</option><option value="replied">Replied</option><option value="reviewed">Evidence reviewed</option></select></div><div class="field"><label for="brokerDate">Response date</label><input id="brokerDate" type="date"></div></div><div class="field"><label for="brokerFeedback">Attributed statement</label><textarea id="brokerFeedback" placeholder="What did they say? Keep their wording separate from confirmed evidence."></textarea></div><div class="field"><label for="brokerEvidence">Supporting document or source</label><textarea id="brokerEvidence" placeholder="Registry, disclosure, map, email date or other evidence"></textarea></div></div><div class="reviewer" data-reviewer="building"><h3>Building professional</h3><div class="field"><label for="buildingName">Name or organisation</label><input id="buildingName" placeholder="Inspector, architect or renovation contractor"></div><div class="visit-grid"><div class="field"><label for="buildingStatus">Review status</label><select id="buildingStatus"><option value="not-contacted">Not contacted</option><option value="asked">Asked</option><option value="replied">Replied</option><option value="reviewed">Evidence reviewed</option></select></div><div class="field"><label for="buildingDate">Response date</label><input id="buildingDate" type="date"></div></div><div class="field"><label for="buildingFeedback">Attributed statement</label><textarea id="buildingFeedback" placeholder="What did they say? Keep their wording separate from confirmed evidence."></textarea></div><div class="field"><label for="buildingEvidence">Supporting inspection, quote or source</label><textarea id="buildingEvidence" placeholder="Inspection date, quote reference, drawing or other evidence"></textarea></div></div></div><div class="visit-grid" style="margin-top:14px"><div class="field"><label for="reviewChanged">What changed after review?</label><textarea id="reviewChanged" placeholder="Which assumption, cost or blocker changed?"></textarea></div><div class="field"><label for="reviewNext">Next evidence or action</label><textarea id="reviewNext" placeholder="What still needs confirmation, by whom?"></textarea></div></div><div class="actions"><button type="button" id="recordReview">Record professional review</button></div><p class="handoff-status" id="handoffStatus" aria-live="polite"></p></section>
+    <section class="panel"><h2>Decision history</h2><div class="field"><label for="decisionNote">Add a decision note</label><textarea id="decisionNote" placeholder="What changed, and why?"></textarea></div><div class="actions"><button type="button" id="addDecision">Record decision</button></div><ul class="history" id="history"></ul></section>
+  </div><aside class="side">
+    <section class="panel"><h2>Current decision</h2><div class="field"><label for="status">Status</label><select id="status"></select></div><div class="field"><label for="notes">Private notes</label><textarea id="notes" placeholder="What should you remember?"></textarea></div><p class="saved" id="saved" aria-live="polite"></p></section>
+    <section class="panel" id="useCasePanel" hidden><h2 id="useCaseName"></h2><div class="evidence"><div class="claim"><h3>Priorities</h3><p id="useCasePriorities"></p></div><div class="claim"><h3>Questions to resolve</h3><p id="useCaseQuestions"></p></div><div class="claim"><h3>Field checks</h3><p id="useCaseVisit"></p></div></div><p class="saved">From your browser-local My Search brief. It is context, not a score.</p></section>
+    <section class="panel"><h2>Resolve before acting</h2><div class="field"><label for="blockers">Possible fatal blockers</label><textarea id="blockers"></textarea></div><div class="field"><label for="missing">Missing facts <span class="label unknown">Unknown</span></label><textarea id="missing"></textarea></div><div class="field"><label for="questions">Questions for the broker</label><textarea id="questions"></textarea></div><div class="field"><label for="nextAction">Next action</label><textarea id="nextAction"></textarea></div></section>
+    <section class="panel"><h2>Source and map context</h2><p id="checked" class="sub" style="font-size:13px;margin-bottom:12px"></p><div class="actions"><a class="primary" id="source" target="_blank" rel="noopener">Open current source</a><a id="finder">Show on Finder</a><a id="compare">Compare its town</a><a id="town" hidden>Inspect the town</a></div></section>
+  </aside></div>
+</main></div>
+<script>
+const X={"id":"fujimigaoka-1","name":"Fujimigaoka villa plot No. 1","town":"Futtsu, Hagi","code":"12226","property_type":"land","price_yen":5000000,"land_m2":149,"drive_min":70,"scenery":["sea","fuji","sunset"],"emotion":5,"flexibility":2,"thesis":"A compact terraced retreat with the rare combination of sea, Mt. Fuji and sunset potential.","value":"The entry price is modest for a scarce view and the station and interchange are relatively close.","risk":"Sediment-disaster caution area, private water, recurring management charges and a ban on commercial use weaken flexibility.","next":"Treat it as a lifestyle purchase unless the hazard, management and construction constraints prove acceptable in writing.","source":"https://kyonan.co.jp/property/%E5%AF%8C%E5%A3%AB%E8%A6%8B%E3%83%B6%E4%B8%98%E5%88%A5%E8%8D%98%E5%9C%B0%E5%8C%BA%E7%94%BBno-1/"};const M={"checked_on":"2026-11-20","origin":"Kawasaki Station","note":"Curated public listings. Availability, price and facts must be confirmed with the broker."};
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),yen=n=>'¥'+(n/1000000).toFixed(n<10000000?1:0)+'M';
+const STATUS=[['new','New'],['researching','Researching'],['visit','Visit-worthy'],['waiting','Waiting for information'],['hold','Hold'],['rejected','Rejected']];
+const LABEL={sea:'Sea',sunset:'Sunset',hills:'Hills',fuji:'Mt. Fuji',mountains:'Mountains',garden:'Garden',rural:'Rural estate',fields:'Fields','sea-nearby':'Sea nearby','hot-spring':'Hot spring',kominka:'Kominka',engawa:'Engawa'};
+function read(key,fallback){try{return JSON.parse(localStorage.getItem(key)||'null')||fallback}catch(e){return fallback}}function write(key,value){try{localStorage.setItem(key,JSON.stringify(value));return true}catch(e){return false}}
+let all=read('trCandidateWork',{}),w=all[X.id]||{status:'new',notes:''},detail=read('trDossier:'+X.id,{});
+const COSTS=[['acquisition','Acquisition tax, registration and brokerage'],['works','Repair or construction'],['utilities','Utilities and wastewater'],['clearing','Demolition and clearing'],['external','Retaining, access and outside works'],['professional','Survey, inspection, design and permits']];
+const VISIT_DOCS=[['property','Full property sheet and disclosures'],['title','Registry, ownership and encumbrances'],['boundary','Cadastral map, survey and boundary status'],['road','Road classification, frontage and rebuilding confirmation'],['planning','Planning, land category and hazard documents'],['services','Water, wastewater, electricity and recurring-fee documents']];
+const VISIT_FIELD=[['view','View at standing and likely upper-floor height'],['access','Road width, turning and emergency access'],['edges','Visible boundaries and adjoining land'],['drainage','Drainage, water flow and retaining conditions'],['structure','Roof, foundation, deformation, damp and termites'],['services','Water, wastewater, electricity and internet'],['surroundings','Neighbours, noise, smell and nearby activity'],['signal','Mobile signal'],['daily','Station, shops, clinic and everyday route']];
+const emptyCosts=Object.fromEntries(COSTS.map(([k])=>[k,{lo:0,hi:0,unknown:true}]));
+const visitDefault={date:'',outcome:'not-visited',before:'',after:'',photoRefs:'',docs:{},field:{}};
+const reviewerDefault={name:'',status:'not-contacted',date:'',feedback:'',evidence:''},professionalDefault={broker:reviewerDefault,building:reviewerDefault,changed:'',next:''};
+const defaults={blockers:X.risk,missing:'Confirm the listing is available. Resolve every unverified point in the risk statement.',questions:X.next,nextAction:X.next,observations:'',history:[],repairLevel:'weekend',costs:emptyCosts,annual:{lo:0,hi:0,unknown:true},visit:visitDefault,professional:professionalDefault};detail={...defaults,...detail,costs:{...emptyCosts,...(detail.costs||{})},annual:{...defaults.annual,...(detail.annual||{})},visit:{...visitDefault,...(detail.visit||{}),docs:{...(detail.visit?.docs||{})},field:{...(detail.visit?.field||{})}},professional:{...professionalDefault,...(detail.professional||{}),broker:{...reviewerDefault,...(detail.professional?.broker||{})},building:{...reviewerDefault,...(detail.professional?.building||{})}}};
+function stamp(){return new Date().toLocaleString('en-CA',{dateStyle:'medium',timeStyle:'short'})}
+function save(){all[X.id]={...w};write('trCandidateWork',all);write('trDossier:'+X.id,detail);$('saved').textContent='Saved in this browser.'}
+function drawHistory(){$('history').innerHTML=detail.history.length?detail.history.slice().reverse().map(h=>`<li><time>${esc(h.at)}</time>${esc(h.text)}</li>`).join(''):'<li class="empty">No decision changes recorded yet.</li>'}
+function amount(n){return '¥'+(+n||0).toFixed(1)+'M'}
+function drawCosts(){let lo=X.price_yen/1000000,hi=lo,unknown=[];for(const [k,label] of COSTS){const c=detail.costs[k];if(c.unknown)unknown.push(label);else{lo+=+c.lo||0;hi+=Math.max(+c.hi||0,+c.lo||0)}}$('costTotal').innerHTML=`${amount(lo)}–${amount(hi)}<small>purchase plus resolved one-time items</small>`;$('costUnknown').textContent=unknown.length?`Not a complete total. Still unresolved: ${unknown.join('; ')}.`:'Every listed one-time category has a working range. Professional verification is still required.';const a=detail.annual;$('annualTotal').textContent=a.unknown?'Unresolved':amount(a.lo)+'–'+amount(Math.max(+a.hi||0,+a.lo||0));$('costBasis').textContent=`Asking price plus ${COSTS.length-unknown.length} of ${COSTS.length} resolved categories.`}
+function initCosts(){$('repairLevelWrap').hidden=X.property_type!=='akiya';$('repairLevel').value=detail.repairLevel;$('repairLevel').addEventListener('change',e=>{detail.repairLevel=e.target.value;save();drawCosts()});$('costRows').innerHTML=COSTS.map(([k,label])=>{const c=detail.costs[k];return `<tr data-cost="${k}" class="${c.unknown?'is-unknown':''}"><td>${esc(label)}</td><td><input type="number" min="0" step="0.1" value="${c.lo}" data-bound="lo" aria-label="${esc(label)} low in millions of yen"></td><td><input type="number" min="0" step="0.1" value="${c.hi}" data-bound="hi" aria-label="${esc(label)} high in millions of yen"></td><td class="unresolved"><input type="checkbox" ${c.unknown?'checked':''} aria-label="${esc(label)} unresolved"></td></tr>`}).join('')+`<tr data-annual class="${detail.annual.unknown?'is-unknown':''}"><td>Annual taxes, management and other recurring costs</td><td><input type="number" min="0" step="0.01" value="${detail.annual.lo}" data-bound="lo" aria-label="Annual recurring cost low in millions of yen"></td><td><input type="number" min="0" step="0.01" value="${detail.annual.hi}" data-bound="hi" aria-label="Annual recurring cost high in millions of yen"></td><td class="unresolved"><input type="checkbox" ${detail.annual.unknown?'checked':''} aria-label="Annual recurring cost unresolved"></td></tr>`;document.querySelectorAll('[data-cost]').forEach(row=>{const c=detail.costs[row.dataset.cost];row.querySelectorAll('input[type=number]').forEach(i=>i.addEventListener('change',e=>{c[e.target.dataset.bound]=Math.max(0,+e.target.value||0);save();drawCosts()}));row.querySelector('input[type=checkbox]').addEventListener('change',e=>{c.unknown=e.target.checked;row.classList.toggle('is-unknown',c.unknown);save();drawCosts()})});const annual=document.querySelector('[data-annual]');annual.querySelectorAll('input[type=number]').forEach(i=>i.addEventListener('change',e=>{detail.annual[e.target.dataset.bound]=Math.max(0,+e.target.value||0);save();drawCosts()}));annual.querySelector('input[type=checkbox]').addEventListener('change',e=>{detail.annual.unknown=e.target.checked;annual.classList.toggle('is-unknown',detail.annual.unknown);save();drawCosts()});drawCosts()}
+function init(){document.title=X.name+' · Town Reboot';$('name').textContent=X.name;$('place').textContent=X.town+' · about '+X.drive_min+' min from Kawasaki';$('price').innerHTML=yen(X.price_yen)+`<small>${X.land_m2?Math.round(X.land_m2).toLocaleString('en-US')+' m² · '+Math.round(X.land_m2/3.3058)+' tsubo':'land area unknown'}</small>`;$('facts').innerHTML=`<div class="fact"><b>Property</b>${X.property_type==='akiya'?'Akiya':'Land'}</div><div class="fact"><b>Asking price</b>${yen(X.price_yen)}</div><div class="fact"><b>Known land</b>${X.land_m2?X.land_m2.toLocaleString('en-US')+' m²':'Unknown'}</div><div class="fact"><b>Public evidence checked</b>${esc(M.checked_on)}</div>`;$('tags').innerHTML=X.scenery.map(s=>`<span class="tag">${esc(LABEL[s]||s)}</span>`).join('');$('evidence').innerHTML=`<div class="claim"><h3>Why it feels special <span class="label">Town Reboot assessment</span></h3><p>${esc(X.thesis)}</p></div><div class="claim"><h3>Why the price may work <span class="label">Inferred</span></h3><p>${esc(X.value)}</p></div><div class="claim risk"><h3>What could break it <span class="label unknown">Unknown</span></h3><p>${esc(X.risk)}</p></div><div class="claim"><h3>Suggested next check <span class="label">Town Reboot assessment</span></h3><p>${esc(X.next)}</p></div>`;$('status').innerHTML=STATUS.map(s=>`<option value="${s[0]}"${s[0]===w.status?' selected':''}>${s[1]}</option>`).join('');$('notes').value=w.notes||'';for(const id of ['blockers','missing','questions','nextAction','observations']){$(id).value=detail[id]||'';$(id).addEventListener('change',e=>{detail[id]=e.target.value;save()})}$('status').addEventListener('change',e=>{const old=STATUS.find(s=>s[0]===w.status)?.[1]||'New',now=STATUS.find(s=>s[0]===e.target.value)?.[1]||e.target.value;w.status=e.target.value;detail.history.push({at:stamp(),text:`Status changed from ${old} to ${now}.`});save();drawHistory()});$('notes').addEventListener('change',e=>{w.notes=e.target.value;save()});$('source').href=X.source;$('checked').textContent=`Listing evidence checked ${M.checked_on}. Availability and facts must be confirmed with the broker.`;if(X.town_page){$('town').hidden=false;$('town').href=X.town_page}$('addDecision').addEventListener('click',()=>{const text=$('decisionNote').value.trim();if(!text)return;detail.history.push({at:stamp(),text});$('decisionNote').value='';save();drawHistory()});initCosts();drawHistory()}
+function visitProgress(){const done=VISIT_DOCS.filter(([k])=>detail.visit.docs[k]).length+VISIT_FIELD.filter(([k])=>detail.visit.field[k]?.done).length,total=VISIT_DOCS.length+VISIT_FIELD.length;$('visitProgress').textContent=`${done} of ${total} checks recorded`}
+function initVisit(){const v=detail.visit;$('visitDate').value=v.date;$('visitOutcome').value=v.outcome;$('beforeVisit').value=v.before;$('afterVisit').value=v.after;$('photoRefs').value=v.photoRefs;$('visitDocs').innerHTML=VISIT_DOCS.map(([k,label])=>`<label class="check"><input type="checkbox" data-doc="${k}" ${v.docs[k]?'checked':''}><span>${esc(label)}</span></label>`).join('');$('visitField').innerHTML=VISIT_FIELD.map(([k,label])=>{const x=v.field[k]||{done:false,note:''};return `<div class="field-check"><input type="checkbox" data-field="${k}" aria-label="${esc(label)} checked" ${x.done?'checked':''}><span>${esc(label)}</span><input type="text" data-field-note="${k}" aria-label="${esc(label)} observation" value="${esc(x.note)}" placeholder="Observation or unresolved question"></div>`}).join('');for(const [id,key] of [['visitDate','date'],['beforeVisit','before'],['afterVisit','after'],['photoRefs','photoRefs']])$(id).addEventListener('change',e=>{v[key]=e.target.value;save()});$('visitOutcome').addEventListener('change',e=>{const old=v.outcome;v.outcome=e.target.value;if(old!==v.outcome){detail.history.push({at:stamp(),text:`Visit outcome changed to ${e.target.options[e.target.selectedIndex].text}.`});drawHistory()}save()});document.querySelectorAll('[data-doc]').forEach(i=>i.addEventListener('change',e=>{v.docs[e.target.dataset.doc]=e.target.checked;save();visitProgress()}));document.querySelectorAll('[data-field]').forEach(i=>i.addEventListener('change',e=>{const k=e.target.dataset.field;v.field[k]={...(v.field[k]||{}),done:e.target.checked};save();visitProgress()}));document.querySelectorAll('[data-field-note]').forEach(i=>i.addEventListener('change',e=>{const k=e.target.dataset.fieldNote;v.field[k]={...(v.field[k]||{}),note:e.target.value};save()}));visitProgress()}
+function reviewBrief(){let lo=X.price_yen/1000000,hi=lo,unknown=[];for(const [k,label] of COSTS){const c=detail.costs[k];if(c.unknown)unknown.push(label);else{lo+=+c.lo||0;hi+=Math.max(+c.hi||0,+c.lo||0)}}return `TOWN REBOOT — PROFESSIONAL REVIEW BRIEF\n\nCandidate: ${X.name}\nPlace: ${X.town}\nProperty: ${X.property_type==='akiya'?'Akiya':'Land'}\nAdvertised price: ${yen(X.price_yen)}\nAdvertised land: ${X.land_m2?X.land_m2+' m²':'Unknown'}\nPublic evidence checked: ${M.checked_on}\nSource: ${X.source}\n\nWHY IT MAY BE SPECIAL — Town Reboot assessment\n${X.thesis}\n\nWHY THE PRICE MAY WORK — inferred, not a valuation\n${X.value}\n\nPOSSIBLE FATAL BLOCKERS — unresolved\n${detail.blockers}\n\nQUESTIONS ALREADY IDENTIFIED\n${detail.questions}\n\nSUPPORTED WORKING COST RANGE\n${amount(lo)}–${amount(hi)} including purchase and resolved one-time items.\nUnresolved: ${unknown.length?unknown.join('; '):'No listed cost category, but professional verification is still required.'}\n\nLOCAL PROPERTY CONTACT — please challenge\nAvailability; ownership and encumbrances; road classification, frontage and rebuilding; planning and land category; boundary status; utilities and recurring fees.\n\nBUILDING PROFESSIONAL — please challenge\nStructure and moisture; drainage and retaining; access; utilities and wastewater; realistic work scope and quote range.\n\nPlease identify what is supported, what is wrong, and what remains unknown. This brief is not a valuation, survey or purchase recommendation.`}
+async function copyText(text){if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(text);return}const box=document.createElement('textarea');box.value=text;box.style.position='fixed';box.style.opacity='0';document.body.appendChild(box);box.select();document.execCommand('copy');box.remove()}
+function initProfessional(){const p=detail.professional;for(const role of ['broker','building'])for(const [suffix,key] of [['Name','name'],['Status','status'],['Date','date'],['Feedback','feedback'],['Evidence','evidence']]){const el=$(role+suffix);el.value=p[role][key];el.addEventListener('change',e=>{p[role][key]=e.target.value;save()})}for(const [id,key] of [['reviewChanged','changed'],['reviewNext','next']]){$(id).value=p[key];$(id).addEventListener('change',e=>{p[key]=e.target.value;save()})}$('copyBrief').addEventListener('click',async()=>{try{await copyText(reviewBrief());$('handoffStatus').textContent='Review brief copied. Private notes and reviewer details were excluded.'}catch(e){$('handoffStatus').textContent='Copy was blocked by this browser. Open the page through a local web server and try again.'}});$('recordReview').addEventListener('click',()=>{const reviewed=['broker','building'].filter(role=>p[role].status==='replied'||p[role].status==='reviewed').map(role=>role==='broker'?'local property contact':'building professional');if(!reviewed.length){$('handoffStatus').textContent='Record at least one reply before adding a review milestone.';return}detail.history.push({at:stamp(),text:`Professional review recorded from ${reviewed.join(' and ')}.${p.changed?' '+p.changed:''}`});save();drawHistory();$('handoffStatus').textContent='Review milestone added to decision history.'})}
+function initUseCase(){const p=read('trActiveUseCase',null);if(!p)return;$('useCasePanel').hidden=false;$('useCaseName').textContent=p.label||'Custom brief';$('useCasePriorities').textContent=p.priorities||'Your edited requirements';$('useCaseQuestions').textContent=p.questions||'Record unresolved evidence in this dossier.';$('useCaseVisit').textContent=p.visit||'Use the field checklist and record what changes.'}
+function mapLinks(){$('finder').href='finder.html?candidate='+encodeURIComponent(X.id);$('compare').href='compare.html?candidate='+encodeURIComponent(X.id);if(X.town_page)$('town').href=X.town_page+'?candidate='+encodeURIComponent(X.id)}
+init();mapLinks();initVisit();initProfessional();initUseCase();
+</script>
+</body></html>

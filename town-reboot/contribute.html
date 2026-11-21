@@ -1,0 +1,423 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Prepare a dated, attributed Town Reboot contribution for manual review without copying property portals."><title>Contribution Kit · Town Reboot</title></head><body>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
+   ui-base.css — Shared Tier-A base for the maker-layer tools
+   VERSION 1.2.0   ·   CANONICAL SOURCE — edit ONLY here.
+
+   Canonical home:   github.com/onuresen/built-lab › ui-system/ui-base.css
+   Design reference: esen-vault › concepts/Shared-UI-System.md
+
+   ⚠ Do NOT edit downstream copies. This file is the single source of truth;
+     all tools consume this version. Bump VERSION (semver) on any change here.
+
+   WHAT THIS IS
+   The portable skeleton every "Tier A — Full" tool uses: the token contract,
+   the radius/z-index scales, and the shared UI primitives (.btn / .card / .input
+   / .label / .empty-state / .ui-modal / .ui-section / .ui-row hover-bar).
+
+   HOW TO USE
+   1. Load fonts in the host page (do NOT @import here — it blocks render):
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+   2. Load this file, THEN a palette block from ui-system/palettes/ that overrides
+      the palette tokens (Lime-Editorial, Layer-Semantic, Executive, Revit, Catppuccin,
+      Slate). Skeleton shared, skin per tool.
+   3. Style values, keep names. Restyle the skin, never rename the contract.
+   4. Theme-flip rule: any DOM surface that must change between light and dark
+      references a token (var(--surface) / var(--bg-soft) / …), never a hardcoded
+      hex — a literal colour cannot re-theme. This holds for a tool's own runtime
+      dark mode too (e.g. ONEXUS's onexus-style.js native tokens). It's how ONEXUS
+      shipped a white minimap in dark mode; don't repeat it.
+   ============================================================================= */
+
+:root {
+  /* ---- Palette (SKIN — override via a ui-system/palettes/*.css block) ---- */
+  --bg:        #f6f7f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #14181f;   /* primary content */
+  --text2:     #44505f;   /* meaningful secondary */
+  --text3:     #7c8aa0;   /* metadata / hints ONLY — never status or instructions */
+
+  --accent:    #2563eb;   /* the one color a tool must set */
+  --on-accent: #ffffff;   /* text/icons on accent fills */
+
+  --accent2:      #b07d2b;   /* optional warm/secondary signal — use sparingly */
+  --accent2-dim:  #f3e9d6;
+  --accent2-text: #7a5519;
+
+  /* ---- Accent tints (DERIVED — set --accent and these follow) ---- */
+  --accent-dim:  color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 24%, transparent);
+
+  /* ---- Fonts (pool defaults — override --font-display per tool) ---- */
+  --font-display: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-body:    'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Radius scale (SKELETON — shared) ---- */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-pill: 999px;
+
+  /* ---- Spacing / shadow / motion ---- */
+  --gap: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Z-index scale (SKELETON — shared; replaces raw ints) ---- */
+  --z-base:    1;
+  --z-sticky:  100;
+  --z-popover: 500;
+  --z-overlay: 800;
+  --z-modal:   900;
+  --z-tooltip: 950;
+  --z-toast:   9999;
+}
+
+/* =============================================================================
+   Reset
+   ============================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* =============================================================================
+   Buttons — .btn / .btn-primary / .btn-ghost / .btn-danger
+   ============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease),
+              box-shadow 0.2s var(--ease), transform 0.12s var(--ease);
+}
+.btn:hover  { border-color: var(--accent); background: var(--accent-dim); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.btn-primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent); filter: brightness(0.94); }
+
+.btn-ghost {
+  color: var(--text2);
+  background: transparent;
+  border-color: var(--border2);
+}
+.btn-ghost:hover { background: var(--surface2); border-color: var(--accent); }
+
+.btn-danger {
+  color: #b3261e;
+  background: color-mix(in srgb, #e8455a 12%, transparent);
+  border-color: color-mix(in srgb, #e8455a 32%, transparent);
+}
+
+/* =============================================================================
+   Card
+   ============================================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+
+/* =============================================================================
+   Form fields — .input / .select / .textarea + .label
+   ============================================================================= */
+.input, .select, .textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.textarea { resize: vertical; min-height: 72px; }
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* =============================================================================
+   Section header — .ui-section-header / -title / -line / -action
+   ============================================================================= */
+.ui-section-header { display: flex; align-items: center; gap: 10px; }
+.ui-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.ui-section-line { flex: 1; height: 1px; background: var(--border); }
+.ui-section-action {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+.ui-section-action:hover { color: var(--accent); background: var(--accent-dim); }
+
+/* =============================================================================
+   Empty state
+   ============================================================================= */
+.empty-state { text-align: center; color: var(--text3); padding: 40px 20px; }
+.empty-state .e-icon  { display: block; font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state .e-title { font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.empty-state .e-sub   { font-size: 12px; color: var(--text3); }
+
+/* =============================================================================
+   Modal — .ui-modal-overlay / .ui-modal
+   ============================================================================= */
+.ui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open { opacity: 1; pointer-events: auto; }
+.ui-modal {
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open .ui-modal { transform: translateY(0) scale(1); }
+
+/* =============================================================================
+   Signature — left accent-bar reveal on row hover. Opt in with class .ui-row.
+   ============================================================================= */
+.ui-row { position: relative; }
+.ui-row::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 9px; bottom: 9px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;   /* single-sided: only the open edge is rounded */
+  background: var(--accent);
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  pointer-events: none;
+}
+.ui-row:hover::after { opacity: 1; transform: translateX(0); }
+
+/* =============================================================================
+   Toast — .ui-toast (+ .is-visible, --success / --error)
+   ============================================================================= */
+.ui-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: var(--z-toast);
+  padding: 9px 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.ui-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+.ui-toast--success { border-color: var(--accent-glow); color: var(--accent); }
+.ui-toast--error   { border-color: color-mix(in srgb, #e8455a 40%, transparent); color: #e8455a; }
+
+/* =============================================================================
+   Scrollbar + focus ring
+   ============================================================================= */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* =============================================================================
+   Micro-motion — opt-in classes
+   ============================================================================= */
+@keyframes ui-card-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.card-enter { animation: ui-card-enter 0.22s var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter, .ui-row::after, .ui-modal, .ui-toast { animation: none !important; transition: none !important; }
+}
+/* =============================================================================
+   Executive palette — "Boardroom"  ·  ui-system v1.2.0
+   Light, professional / leadership-facing. Cool navy authority + bronze signal.
+   Used by: onuresen.github.io, OneBridge, ROD, BIM Modelling Guide.
+   Load AFTER ui-base.css.   See esen-vault › concepts/Shared-UI-System.md
+   ============================================================================= */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #11243a;   /* deep navy ink */
+  --text2:     #3d5066;
+  --text3:     #7c8aa0;
+
+  --accent:        #1f5f8b;   /* brand blue — dim/glow derive from this in ui-base */
+  --on-accent:     #ffffff;
+
+  --accent2:       #b07d2b;   /* bronze — signal color, use sparingly (never a 2nd primary) */
+  --accent2-dim:   #f3e9d6;
+  --accent2-text:  #7a5519;
+
+  --font-display: 'Archivo', 'DM Sans', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+/* =============================================================================
+   town.css — Town Reboot's own layer on top of the Built Lab UI system.
+   Load after ui-base.css (v1.2.0) and palettes/executive.css, both copied from
+   built-lab/ui-system. This file only adds data colours and the map-app layout.
+   Every colour that changes the page is a token.
+   ============================================================================= */
+:root {
+  /* Data colours: map classes. Not brand colours. */
+  --clear: #d9621f; --part: #e8b04a; --hidden: #8e9bb0;
+  --n0: #2f7d5b; --n1: #9cc27a; --n2: #b9a6c9; --n3: #7a5a9c;
+  --r1: #5b2a86; --r2: #9a6cc4; --r3: #d4c3e6;
+  --haz: #c22f3d; --ok: #2f7d5b; --miss: #c22f3d;
+  --sea: #8fb8d6; --s0: #c9d2dc; --s1: #e9d39a; --s2: #e8a64a; --s3: #d9621f; --s4: #9c3d12;
+  --l1: #7fa7c4; --l2: #1f5f8b; --l3: #b07d2b;
+  --land: #dfe5ec; --ink: #11243a;
+  --signal: var(--accent2);
+  --bar: var(--accent); --bar-bg: var(--surface3);
+  --panel-w: 400px;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+/* Pressed state for .btn used as a toggle or tab */
+.btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- Map app: map fills the screen, panel on the right (bottom on phones) ---- */
+.tr-app { display: grid; grid-template-columns: minmax(0, 1fr) var(--panel-w); grid-template-rows: auto minmax(0, 1fr); height: 100vh; height: 100dvh; }
+.tr-top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px max(16px, env(safe-area-inset-left, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--surface); border-bottom: 1px solid var(--border); }
+.tr-top h1 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
+.tr-top .sub { color: var(--text2); font-size: 13px; }
+.tr-top .back { font-size: 13px; text-decoration: none; margin-right: 4px; }
+.tr-map { position: relative; min-height: 0; overflow: hidden; background: var(--surface2); }
+.tr-map canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline: none; }
+.tr-map canvas.dragging { cursor: grabbing; }
+.tr-map canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.tr-legend { position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--border); border-radius: var(--r-md); padding: 8px 12px;
+  font-size: 12.5px; color: var(--text2); box-shadow: var(--shadow-sm); pointer-events: none; }
+.tr-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.tr-tools .btn { background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: var(--shadow-sm); }
+.tr-hint { position: absolute; right: 12px; bottom: 12px; font-size: 12px; color: var(--text3); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 3px 8px; border-radius: var(--r-sm); pointer-events: none; }
+.sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.tr-panel { min-height: 0; overflow: auto; background: var(--surface); border-left: 1px solid var(--border); padding: 14px 16px 28px; display: flex; flex-direction: column; gap: 16px; }
+.tr-block { display: flex; flex-direction: column; gap: 8px; }
+.tr-block > .label, .tr-label { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin: 0; }
+.tr-note { font-size: 13px; color: var(--text2); margin: 0; }
+.tr-spot { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.tr-spot h2 { font-size: 17px; margin: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 3px 16px; color: var(--text2); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tr-panel details { border-top: 1px solid var(--border); padding-top: 10px; font-size: 13px; color: var(--text2); }
+.tr-panel summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.tr-panel details ul { padding-left: 18px; margin: 8px 0; } .tr-panel details li { margin-bottom: 4px; }
+@media (max-width: 900px) {
+  .tr-app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 62vh auto; grid-template-rows: auto 62dvh auto; height: auto; }
+  .tr-panel { border-left: 0; border-top: 1px solid var(--border); overflow: visible; }
+  .tr-hint { display: none; }
+}
+
+/* ---- Reading pages (home, compare): full width with a sensible line length ---- */
+.tr-page { padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.tr-wide { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.tr-lede { color: var(--text2); margin: 6px 0 0; max-width: 70ch; font-size: 15.5px; }
+</style>
+<style>
+body{margin:0}.contribute{max-width:920px;margin:0 auto;display:grid;gap:20px}.head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px}.head h1{font-size:clamp(30px,5vw,48px);line-height:1.05;margin:4px 0 8px}.sub{color:var(--text2);font-size:16px;line-height:1.5;margin:0;max-width:68ch}.workspace-nav{display:flex;gap:5px;flex-wrap:wrap}.workspace-nav a{padding:7px 10px;border-radius:7px;color:var(--text2);font-size:14px;font-weight:600;text-decoration:none}.workspace-nav a[aria-current=page]{background:var(--surface2);color:var(--text)}.boundary{padding:14px;border-left:4px solid var(--signal);background:var(--surface);border-radius:0 10px 10px 0}.boundary p{margin:4px 0 0;color:var(--text2)}.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.rule{padding:13px;border:1px solid var(--border);border-radius:10px;background:var(--surface)}.rule b{display:block;margin-bottom:4px}.rule span{font-size:13px;color:var(--text2)}.form{padding:18px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}.form h2{font-size:20px;margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:grid;gap:5px}.field.wide{grid-column:1/-1}.field label,.field .label{font-size:13px;font-weight:700}.field input,.field select,.field textarea{width:100%;box-sizing:border-box;padding:9px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font:14px/1.4 var(--font-body)}.field textarea{min-height:85px;resize:vertical}.checks{display:grid;gap:8px}.check{display:flex;gap:8px;align-items:start;color:var(--text2);font-size:13px}.check input{margin-top:3px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.actions button{min-height:40px;padding:0 13px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--accent);font-weight:700;cursor:pointer}.actions .primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}.actions button:disabled{opacity:.45;cursor:not-allowed}.preview{margin-top:14px;white-space:pre-wrap;max-height:360px;overflow:auto;padding:13px;border-radius:9px;background:var(--bg);font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--text2)}.status{min-height:20px;margin:8px 0 0;color:var(--accent);font-size:13px}.process{padding:18px;border:1px solid var(--border);border-radius:12px}.process h2{font-size:19px;margin:0 0 8px}.process ol{margin:0;padding-left:20px;color:var(--text2)}.process li{margin:6px 0}.professional-note{padding:10px;border:1px solid var(--warn);border-radius:8px;color:var(--text2);font-size:13px}
+@media(max-width:720px){.head{grid-template-columns:1fr}.rules,.grid{grid-template-columns:1fr}.field.wide{grid-column:auto}}@media(max-width:460px){.workspace-nav{display:grid;grid-template-columns:1fr 1fr}.workspace-nav a{text-align:center}.rules{grid-template-columns:1fr}}
+</style>
+<div class="tr-page"><main class="contribute"><header class="head"><div><a href="pilot.html">← First case</a><h1>Contribution kit</h1><p class="sub">Prepare a small, reviewable contribution without turning Town Reboot into an unverified property feed.</p></div><nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html">Explore</a><a href="deals.html">My Search</a><a href="pilot.html">First case</a><a href="contribute.html" aria-current="page">Contribute</a></nav></header>
+<section class="boundary"><b>Download only. Nothing is submitted or published automatically.</b><p>The exported file must be reviewed by a maintainer before any public inclusion.</p></section><section class="rules"><div class="rule"><b>Link, do not copy</b><span>Submit a source URL and your own short summary. Do not copy portal descriptions, photos or contact databases.</span></div><div class="rule"><b>State the evidence</b><span>Official evidence, advertised claims, personal observations and professional statements remain visibly different.</span></div><div class="rule"><b>Date and attribute</b><span>Every contribution needs an observation date and the public attribution you authorize.</span></div></section>
+<section class="form"><h2>Prepare a contribution</h2><div class="grid"><div class="field"><label for="kind">Contribution type</label><select id="kind"><option value="candidate">Candidate source link</option><option value="correction">Evidence correction</option><option value="observation">Field observation</option><option value="professional">Local professional recommendation</option></select></div><div class="field"><label for="basis">Evidence basis</label><select id="basis"><option value="official">Official or public document</option><option value="advertised">Advertised claim</option><option value="observed">Personally observed</option><option value="professional-statement">Attributed professional statement</option></select></div><div class="field"><label for="observedOn">Observed or checked date</label><input id="observedOn" type="date"></div><div class="field"><label for="attribution">Public attribution</label><input id="attribution" placeholder="Name, handle or organisation you authorize"></div><div class="field wide"><label for="sourceUrl">Source URL</label><input id="sourceUrl" type="url" placeholder="https://…"></div><div class="field wide"><label for="summary">Original summary</label><textarea id="summary" placeholder="Describe the useful fact or correction in your own words. Do not paste portal text."></textarea></div><div class="field wide"><label for="where">Broad place only</label><input id="where" placeholder="Example: western Saitama; do not include a private home address"></div><div class="field wide"><label for="limits">Limits and what still needs checking</label><textarea id="limits" placeholder="What might be wrong, incomplete, seasonal or outside your expertise?"></textarea></div><div class="field wide" id="professionalFields" hidden><div class="professional-note">Professional recommendations require a relationship and benefit disclosure. Inclusion would still be manual and would not mean Town Reboot endorsement.</div><label for="disclosure">Relationship and benefit disclosure</label><textarea id="disclosure" placeholder="How do you know this professional? Did anyone pay, refer, or benefit?"></textarea></div><div class="field wide checks"><label class="check"><input id="rights" type="checkbox">I wrote this summary myself and did not copy listing text, photographs or a private database.</label><label class="check"><input id="privacy" type="checkbox">I removed private addresses, personal contact details and information I am not authorized to share.</label><label class="check"><input id="review" type="checkbox">I understand this is a draft for manual review, not a direct publication or official correction.</label></div></div><div class="actions"><button id="previewBtn" type="button">Refresh preview</button><button id="downloadBtn" class="primary" type="button" disabled>Download contribution JSON</button><button id="templateBtn" type="button">Download empty template</button></div><pre class="preview" id="preview"></pre><p class="status" id="status" aria-live="polite"></p></section>
+<section class="process"><h2>Manual review path</h2><ol><li>Download the JSON file and inspect it locally.</li><li>Send it to the Town Reboot maintainer with the source link or open a repository issue.</li><li>The maintainer checks relevance, source, wording, privacy and duplication.</li><li>Accepted material is rewritten into the appropriate evidence layer with attribution and date. Rejected submissions are not published.</li></ol></section></main></div>
+<script>
+const $=id=>document.getElementById(id),FIELDS=['kind','basis','observedOn','attribution','sourceUrl','summary','where','limits','disclosure'];
+function value(id){return $(id).value.trim()}function payload(empty=false){const kind=empty?'candidate':value('kind');return{schema:'town-reboot-contribution',version:1,kind,evidence_basis:empty?'advertised':value('basis'),observed_on:empty?'':value('observedOn'),public_attribution:empty?'':value('attribution'),source_url:empty?'':value('sourceUrl'),broad_place:empty?'':value('where'),original_summary:empty?'':value('summary'),limits_and_open_checks:empty?'':value('limits'),professional_disclosure:kind==='professional'&&!empty?value('disclosure'):'',review_state:'submitted-for-manual-review'}}
+function valid(){const p=payload(),url=/^https:\/\//.test(p.source_url),professional=p.kind!=='professional'||p.professional_disclosure;return p.observed_on&&p.public_attribution&&url&&p.original_summary&&p.limits_and_open_checks&&professional&&$('rights').checked&&$('privacy').checked&&$('review').checked}
+function draw(){const p=payload();$('professionalFields').hidden=p.kind!=='professional';$('preview').textContent=JSON.stringify(p,null,2);$('downloadBtn').disabled=!valid();$('status').textContent=valid()?'Ready to download for manual review. Nothing will be sent automatically.':'Complete the required fields, disclosures and confirmations.'}
+function download(data,name){const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(a.href)}
+function init(){const saved=(()=>{try{return JSON.parse(localStorage.getItem('trContributionDraft')||'{}')}catch(e){return{}}})();for(const id of FIELDS){if(saved[id])$(id).value=saved[id];$(id).addEventListener('change',()=>{const draft=Object.fromEntries(FIELDS.map(k=>[k,$(k).value]));localStorage.setItem('trContributionDraft',JSON.stringify(draft));draw()})}for(const id of ['rights','privacy','review'])$(id).addEventListener('change',draw);$('previewBtn').addEventListener('click',draw);$('downloadBtn').addEventListener('click',()=>download(payload(),`town-reboot-${value('kind')}-${value('observedOn')}.json`));$('templateBtn').addEventListener('click',()=>download(payload(true),'town-reboot-contribution-template-v1.json'));draw()}
+init();
+</script>
+</body></html>

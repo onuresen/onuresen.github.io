@@ -1,0 +1,433 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="The first real Town Reboot property search case from Kawasaki, with source freshness, evidence gates and browser-local progress."><title>First Search Case · Town Reboot</title></head><body>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap"><style>/* =============================================================================
+   ui-base.css — Shared Tier-A base for the maker-layer tools
+   VERSION 1.2.0   ·   CANONICAL SOURCE — edit ONLY here.
+
+   Canonical home:   github.com/onuresen/built-lab › ui-system/ui-base.css
+   Design reference: esen-vault › concepts/Shared-UI-System.md
+
+   ⚠ Do NOT edit downstream copies. This file is the single source of truth;
+     all tools consume this version. Bump VERSION (semver) on any change here.
+
+   WHAT THIS IS
+   The portable skeleton every "Tier A — Full" tool uses: the token contract,
+   the radius/z-index scales, and the shared UI primitives (.btn / .card / .input
+   / .label / .empty-state / .ui-modal / .ui-section / .ui-row hover-bar).
+
+   HOW TO USE
+   1. Load fonts in the host page (do NOT @import here — it blocks render):
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+   2. Load this file, THEN a palette block from ui-system/palettes/ that overrides
+      the palette tokens (Lime-Editorial, Layer-Semantic, Executive, Revit, Catppuccin,
+      Slate). Skeleton shared, skin per tool.
+   3. Style values, keep names. Restyle the skin, never rename the contract.
+   4. Theme-flip rule: any DOM surface that must change between light and dark
+      references a token (var(--surface) / var(--bg-soft) / …), never a hardcoded
+      hex — a literal colour cannot re-theme. This holds for a tool's own runtime
+      dark mode too (e.g. ONEXUS's onexus-style.js native tokens). It's how ONEXUS
+      shipped a white minimap in dark mode; don't repeat it.
+   ============================================================================= */
+
+:root {
+  /* ---- Palette (SKIN — override via a ui-system/palettes/*.css block) ---- */
+  --bg:        #f6f7f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #14181f;   /* primary content */
+  --text2:     #44505f;   /* meaningful secondary */
+  --text3:     #7c8aa0;   /* metadata / hints ONLY — never status or instructions */
+
+  --accent:    #2563eb;   /* the one color a tool must set */
+  --on-accent: #ffffff;   /* text/icons on accent fills */
+
+  --accent2:      #b07d2b;   /* optional warm/secondary signal — use sparingly */
+  --accent2-dim:  #f3e9d6;
+  --accent2-text: #7a5519;
+
+  /* ---- Accent tints (DERIVED — set --accent and these follow) ---- */
+  --accent-dim:  color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 24%, transparent);
+
+  /* ---- Fonts (pool defaults — override --font-display per tool) ---- */
+  --font-display: 'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-body:    'DM Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Radius scale (SKELETON — shared) ---- */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-pill: 999px;
+
+  /* ---- Spacing / shadow / motion ---- */
+  --gap: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.10);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Z-index scale (SKELETON — shared; replaces raw ints) ---- */
+  --z-base:    1;
+  --z-sticky:  100;
+  --z-popover: 500;
+  --z-overlay: 800;
+  --z-modal:   900;
+  --z-tooltip: 950;
+  --z-toast:   9999;
+}
+
+/* =============================================================================
+   Reset
+   ============================================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* =============================================================================
+   Buttons — .btn / .btn-primary / .btn-ghost / .btn-danger
+   ============================================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease),
+              box-shadow 0.2s var(--ease), transform 0.12s var(--ease);
+}
+.btn:hover  { border-color: var(--accent); background: var(--accent-dim); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.btn-primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: var(--accent); filter: brightness(0.94); }
+
+.btn-ghost {
+  color: var(--text2);
+  background: transparent;
+  border-color: var(--border2);
+}
+.btn-ghost:hover { background: var(--surface2); border-color: var(--accent); }
+
+.btn-danger {
+  color: #b3261e;
+  background: color-mix(in srgb, #e8455a 12%, transparent);
+  border-color: color-mix(in srgb, #e8455a 32%, transparent);
+}
+
+/* =============================================================================
+   Card
+   ============================================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 16px 18px;
+}
+
+/* =============================================================================
+   Form fields — .input / .select / .textarea + .label
+   ============================================================================= */
+.input, .select, .textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.input:focus, .select:focus, .textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.textarea { resize: vertical; min-height: 72px; }
+
+.label {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+}
+
+/* =============================================================================
+   Section header — .ui-section-header / -title / -line / -action
+   ============================================================================= */
+.ui-section-header { display: flex; align-items: center; gap: 10px; }
+.ui-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text3);
+  white-space: nowrap;
+}
+.ui-section-line { flex: 1; height: 1px; background: var(--border); }
+.ui-section-action {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text3);
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+.ui-section-action:hover { color: var(--accent); background: var(--accent-dim); }
+
+/* =============================================================================
+   Empty state
+   ============================================================================= */
+.empty-state { text-align: center; color: var(--text3); padding: 40px 20px; }
+.empty-state .e-icon  { display: block; font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state .e-title { font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 4px; }
+.empty-state .e-sub   { font-size: 12px; color: var(--text3); }
+
+/* =============================================================================
+   Modal — .ui-modal-overlay / .ui-modal
+   ============================================================================= */
+.ui-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open { opacity: 1; pointer-events: auto; }
+.ui-modal {
+  width: 100%;
+  max-width: 500px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  transform: translateY(16px) scale(0.98);
+  transition: transform 0.18s var(--ease);
+}
+.ui-modal-overlay.is-open .ui-modal { transform: translateY(0) scale(1); }
+
+/* =============================================================================
+   Signature — left accent-bar reveal on row hover. Opt in with class .ui-row.
+   ============================================================================= */
+.ui-row { position: relative; }
+.ui-row::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 9px; bottom: 9px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;   /* single-sided: only the open edge is rounded */
+  background: var(--accent);
+  opacity: 0;
+  transform: translateX(-3px);
+  transition: opacity 0.18s var(--ease), transform 0.18s var(--ease);
+  pointer-events: none;
+}
+.ui-row:hover::after { opacity: 1; transform: translateX(0); }
+
+/* =============================================================================
+   Toast — .ui-toast (+ .is-visible, --success / --error)
+   ============================================================================= */
+.ui-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  z-index: var(--z-toast);
+  padding: 9px 18px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.ui-toast.is-visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+.ui-toast--success { border-color: var(--accent-glow); color: var(--accent); }
+.ui-toast--error   { border-color: color-mix(in srgb, #e8455a 40%, transparent); color: #e8455a; }
+
+/* =============================================================================
+   Scrollbar + focus ring
+   ============================================================================= */
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
+
+/* =============================================================================
+   Micro-motion — opt-in classes
+   ============================================================================= */
+@keyframes ui-card-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.card-enter { animation: ui-card-enter 0.22s var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card-enter, .ui-row::after, .ui-modal, .ui-toast { animation: none !important; transition: none !important; }
+}
+/* =============================================================================
+   Executive palette — "Boardroom"  ·  ui-system v1.2.0
+   Light, professional / leadership-facing. Cool navy authority + bronze signal.
+   Used by: onuresen.github.io, OneBridge, ROD, BIM Modelling Guide.
+   Load AFTER ui-base.css.   See esen-vault › concepts/Shared-UI-System.md
+   ============================================================================= */
+:root {
+  --bg:        #f4f6f9;
+  --surface:   #ffffff;
+  --surface2:  #eef1f5;
+  --surface3:  #e3e8ef;
+
+  --border:    #dde3ea;
+  --border2:   #c4ccd6;
+
+  --text:      #11243a;   /* deep navy ink */
+  --text2:     #3d5066;
+  --text3:     #7c8aa0;
+
+  --accent:        #1f5f8b;   /* brand blue — dim/glow derive from this in ui-base */
+  --on-accent:     #ffffff;
+
+  --accent2:       #b07d2b;   /* bronze — signal color, use sparingly (never a 2nd primary) */
+  --accent2-dim:   #f3e9d6;
+  --accent2-text:  #7a5519;
+
+  --font-display: 'Archivo', 'DM Sans', system-ui, sans-serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+}
+/* =============================================================================
+   town.css — Town Reboot's own layer on top of the Built Lab UI system.
+   Load after ui-base.css (v1.2.0) and palettes/executive.css, both copied from
+   built-lab/ui-system. This file only adds data colours and the map-app layout.
+   Every colour that changes the page is a token.
+   ============================================================================= */
+:root {
+  /* Data colours: map classes. Not brand colours. */
+  --clear: #d9621f; --part: #e8b04a; --hidden: #8e9bb0;
+  --n0: #2f7d5b; --n1: #9cc27a; --n2: #b9a6c9; --n3: #7a5a9c;
+  --r1: #5b2a86; --r2: #9a6cc4; --r3: #d4c3e6;
+  --haz: #c22f3d; --ok: #2f7d5b; --miss: #c22f3d;
+  --sea: #8fb8d6; --s0: #c9d2dc; --s1: #e9d39a; --s2: #e8a64a; --s3: #d9621f; --s4: #9c3d12;
+  --l1: #7fa7c4; --l2: #1f5f8b; --l3: #b07d2b;
+  --land: #dfe5ec; --ink: #11243a;
+  --signal: var(--accent2);
+  --bar: var(--accent); --bar-bg: var(--surface3);
+  --panel-w: 400px;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; line-height: 1.5; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+
+/* Pressed state for .btn used as a toggle or tab */
+.btn[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- Map app: map fills the screen, panel on the right (bottom on phones) ---- */
+.tr-app { display: grid; grid-template-columns: minmax(0, 1fr) var(--panel-w); grid-template-rows: auto minmax(0, 1fr); height: 100vh; height: 100dvh; }
+.tr-top { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px max(16px, env(safe-area-inset-left, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px)); background: var(--surface); border-bottom: 1px solid var(--border); }
+.tr-top h1 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
+.tr-top .sub { color: var(--text2); font-size: 13px; }
+.tr-top .back { font-size: 13px; text-decoration: none; margin-right: 4px; }
+.tr-map { position: relative; min-height: 0; overflow: hidden; background: var(--surface2); }
+.tr-map canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; outline: none; }
+.tr-map canvas.dragging { cursor: grabbing; }
+.tr-map canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.tr-legend { position: absolute; left: 12px; bottom: 12px; max-width: calc(100% - 24px); display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--border); border-radius: var(--r-md); padding: 8px 12px;
+  font-size: 12.5px; color: var(--text2); box-shadow: var(--shadow-sm); pointer-events: none; }
+.tr-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+.tr-tools .btn { background: color-mix(in srgb, var(--surface) 94%, transparent); box-shadow: var(--shadow-sm); }
+.tr-hint { position: absolute; right: 12px; bottom: 12px; font-size: 12px; color: var(--text3); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 3px 8px; border-radius: var(--r-sm); pointer-events: none; }
+.sw { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.tr-panel { min-height: 0; overflow: auto; background: var(--surface); border-left: 1px solid var(--border); padding: 14px 16px 28px; display: flex; flex-direction: column; gap: 16px; }
+.tr-block { display: flex; flex-direction: column; gap: 8px; }
+.tr-block > .label, .tr-label { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text3); margin: 0; }
+.tr-note { font-size: 13px; color: var(--text2); margin: 0; }
+.tr-spot { border-top: 1px solid var(--border); padding-top: 14px; display: flex; flex-direction: column; gap: 6px; }
+.tr-spot h2 { font-size: 17px; margin: 0; }
+.facts { display: flex; flex-wrap: wrap; gap: 3px 16px; color: var(--text2); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.tr-panel details { border-top: 1px solid var(--border); padding-top: 10px; font-size: 13px; color: var(--text2); }
+.tr-panel summary { cursor: pointer; font-weight: 600; color: var(--text); }
+.tr-panel details ul { padding-left: 18px; margin: 8px 0; } .tr-panel details li { margin-bottom: 4px; }
+@media (max-width: 900px) {
+  .tr-app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 62vh auto; grid-template-rows: auto 62dvh auto; height: auto; }
+  .tr-panel { border-left: 0; border-top: 1px solid var(--border); overflow: visible; }
+  .tr-hint { display: none; }
+}
+
+/* ---- Reading pages (home, compare): full width with a sensible line length ---- */
+.tr-page { padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.tr-wide { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+.tr-lede { color: var(--text2); margin: 6px 0 0; max-width: 70ch; font-size: 15.5px; }
+</style>
+<style>
+body{margin:0}.pilot{max-width:1120px;margin:0 auto;display:grid;gap:20px}.pilot-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px}.pilot h1{font-size:clamp(30px,5vw,48px);line-height:1.05;margin:4px 0 8px}.sub{color:var(--text2);font-size:16px;max-width:70ch;margin:0}.workspace-nav{display:flex;gap:5px}.workspace-nav a{padding:7px 10px;border-radius:7px;color:var(--text2);font-size:14px;font-weight:600;text-decoration:none}.workspace-nav a[aria-current=page]{background:var(--surface2);color:var(--text)}.notice,.route,.story,.how{padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}.notice{border-left:4px solid var(--signal)}.notice p,.route p{margin:5px 0 0;color:var(--text2)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.metric{padding:14px;border-radius:10px;background:var(--surface);border:1px solid var(--border)}.metric b{display:block;font-size:25px;color:var(--accent)}.metric span{font-size:12px;color:var(--text3)}.route h2,.group h2,.story h2,.how h2{margin:0;font-size:20px}.route-list{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}.route-list a{padding:7px 10px;border:1px solid var(--border2);border-radius:8px;text-decoration:none;font-weight:700}.groups{display:grid;gap:18px}.group{display:grid;gap:10px}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.case{padding:16px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}.case h3{font-size:17px;margin:0}.case .place{font-size:13px;color:var(--text3);margin:3px 0 10px}.case p{font-size:14px;line-height:1.45;color:var(--text2);margin:8px 0}.case p b{color:var(--text)}.state{display:inline-block;padding:3px 7px;border-radius:999px;background:var(--surface2);font-size:11px;font-weight:700}.progress{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}.progress span{padding:3px 6px;border:1px solid var(--border);border-radius:6px;font-size:11px;color:var(--text3)}.progress .done{color:var(--ok);border-color:var(--ok)}.links{display:flex;flex-wrap:wrap;gap:7px}.links a{font-size:13px;font-weight:700}.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.story .field{display:grid;gap:5px}.story label{font-size:13px;font-weight:700}.story input,.story select,.story textarea{width:100%;box-sizing:border-box;padding:9px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font:14px/1.4 var(--font-body)}.story textarea{min-height:88px;resize:vertical}.story .wide{grid-column:1/-1}.preview{white-space:pre-wrap;padding:14px;border-radius:9px;background:var(--bg);color:var(--text2);font-size:13px;line-height:1.5}.safety{display:flex;gap:8px;align-items:start;font-size:13px;color:var(--text2)}.story button{min-height:40px;padding:0 13px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:var(--surface);font-weight:700;cursor:pointer}.story button:disabled{opacity:.45;cursor:not-allowed}.copy-status{min-height:18px;color:var(--accent);font-size:12px}.how ol{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0;list-style:none;counter-reset:steps;margin:14px 0 0}.how li{counter-increment:steps;padding:12px;background:var(--bg);border-radius:9px;color:var(--text2);font-size:13px}.how li:before{content:counter(steps);display:block;color:var(--accent);font-size:20px;font-weight:700}.method{font-size:13px;color:var(--text3)}
+@media(max-width:780px){.pilot-head{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.cards,.story-grid{grid-template-columns:1fr}.story .wide{grid-column:auto}.how ol{grid-template-columns:1fr 1fr}}@media(max-width:460px){.metrics,.how ol{grid-template-columns:1fr}.workspace-nav{display:grid;grid-template-columns:1fr 1fr}.workspace-nav a{text-align:center}}
+</style>
+<div class="tr-page"><main class="pilot"><header class="pilot-head"><div><a href="deals.html">← My Search</a><h1 id="title"></h1><p class="sub">One real search from attraction to documents, visits and professional review. No automatic winner and no assumed availability.</p></div><nav class="workspace-nav" aria-label="Town Reboot tools"><a href="finder.html">Explore</a><a href="compare.html">Compare</a><a href="deals.html">My Search</a><a href="pilot.html" aria-current="page">First case</a><a href="contribute.html">Contribute</a></nav></header>
+<section class="notice"><b>Source check, not availability confirmation</b><p id="availability"></p></section><section class="metrics"><div class="metric"><b id="mSources"></b><span>source pages active</span></div><div class="metric"><b id="mCosts"></b><span>candidates with every cost category resolved</span></div><div class="metric"><b id="mVisits"></b><span>visits recorded in this browser</span></div><div class="metric"><b id="mReviews"></b><span>professional replies recorded</span></div></section>
+<section class="route"><h2 id="routeName"></h2><p id="routeWhy"></p><div class="route-list" id="routeList"></div><p><b>Booking gate:</b> <span id="routeGate"></span></p></section><div class="groups" id="groups"></div>
+<section class="how"><h2>How I used Town Reboot</h2><ol><li>Started with emotional attraction and a practical Kawasaki travel limit.</li><li>Separated advertised facts, assessments, observations and unknowns.</li><li>Made documents, total cost, field evidence and professional review explicit gates.</li><li>Treated rejection and prevented travel as useful outcomes, not failures.</li></ol></section>
+<section class="story"><h2>Build an anonymized case story</h2><p class="sub">The builder uses public candidate evidence and safe progress counts. It never automatically inserts exact location, source URL, private notes, raw observations, photographs, reviewer identity or decision history.</p><div class="story-grid"><div class="field"><label for="storyCandidate">Candidate dossier</label><select id="storyCandidate"></select></div><div class="field"><label for="storyTitle">Public case title</label><input id="storyTitle"></div><div class="field wide"><label for="storyEvidence">Evidence examined</label><textarea id="storyEvidence"></textarea></div><div class="field wide"><label for="storyVisit">Sanitized visit findings</label><textarea id="storyVisit" placeholder="Write a new public-safe summary. Raw observations are never inserted here."></textarea></div><div class="field"><label for="storyDecision">Final decision</label><select id="storyDecision"><option value="in-progress">Still investigating</option><option value="rejected">Rejected</option><option value="hold">Hold</option><option value="due-diligence">Professional due diligence</option><option value="pursue">Pursue purchase</option></select></div><div class="field"><label for="storyReason">Why the decision changed</label><textarea id="storyReason"></textarea></div><div class="field"><label for="storyRight">What Town Reboot got right</label><textarea id="storyRight"></textarea></div><div class="field"><label for="storyMissed">What Town Reboot missed</label><textarea id="storyMissed"></textarea></div><div class="field wide"><label class="safety"><input id="storySafe" type="checkbox">I reviewed the preview and removed exact location, personal information, contact details and anything I do not want public.</label></div><div class="field wide"><div class="preview" id="storyPreview"></div><div><button id="copyStory" type="button" disabled>Copy anonymized case</button></div><div class="copy-status" id="storyStatus" aria-live="polite"></div></div></div></section>
+<p class="method">Public pilot facts were checked <span id="checked"></span>. Your dossier progress is read only from this browser. A source page being active is not proof that the property remains available.</p></main></div>
+<script>
+const D={"meta":{"checked_on":"2026-11-20","origin":"Kawasaki Station","note":"Curated public listings. Availability, price and facts must be confirmed with the broker."},"listings":[{"id":"amou-f5","name":"Amou Marine Hill F-5","town":"Futtsu, Takeoka","code":"12226","property_type":"land","price_yen":7740000,"land_m2":287,"drive_min":70,"scenery":["sea","sunset","hills"],"emotion":5,"flexibility":4,"thesis":"An elevated sea horizon, a gentle slope and a broad south-facing public road make the view usable, not merely nearby.","value":"The view is the scarce asset. Public water, road frontage, interchange access and a price reduction support a future resale story.","risk":"The exact view corridor, subdivision rules, retaining cost, wind exposure and recurring charges are not yet confirmed.","next":"Stand at likely ground- and second-floor eye height; request subdivision rules, fee schedule and a preliminary build-cost opinion.","source":"https://kyonan.co.jp/property/%E5%A4%A9%E7%BE%BD%E3%83%AA%E3%83%BC%E3%83%B3%E3%83%92%E3%83%AB%E5%88%A5%E8%8D%98%E5%9C%B0f-5/"},{"id":"subashiri-fuji","name":"Subashiri Fuji-view land","town":"Oyama, Subashiri","code":"22344","property_type":"land","price_yen":5000000,"land_m2":200.88,"drive_min":90,"scenery":["fuji","mountains"],"emotion":5,"flexibility":4,"thesis":"A small buildable corner plot with a direct relationship to Mt. Fuji, near the trailhead and Lake Yamanaka.","value":"Utilities, expressway access and no existing building let the architecture frame the landscape instead of paying to undo a poor house.","risk":"Snow, volcanic and sediment hazards, winter access, ground conditions and future tree obstruction can change the proposition.","next":"Verify the year-round view and hazard documents; photograph the mountain from the maximum permitted building height.","source":"https://www.your-sweethome.co.jp/uri-tochi/detail-685f997a6940e20b3a1e04b1/","town_page":"view-22344.html"},{"id":"takeoka-438","name":"Takeoka 438-tsubo canvas","town":"Futtsu, Takeoka","code":"12226","property_type":"land","price_yen":9000000,"land_m2":1450,"drive_min":70,"scenery":["hills","garden","sea-nearby"],"emotion":4,"flexibility":5,"thesis":"A broad flat clearing surrounded by hills can become a composed landscape of house, orchard, garden, workshop and water.","value":"Large usable land and walkable station access create more options than a dramatic but steep villa plot; the sea is about eight minutes away by car.","risk":"Road frontage, drainage, utilities, registered land use, soil work and the effect of any old structure remain unclear.","next":"Obtain the parcel schedule and infrastructure plan; test a concept layout before valuing the full headline area.","source":"https://www.totaku.com/bkndetail/3238494541/"},{"id":"fujimigaoka-1","name":"Fujimigaoka villa plot No. 1","town":"Futtsu, Hagi","code":"12226","property_type":"land","price_yen":5000000,"land_m2":149,"drive_min":70,"scenery":["sea","fuji","sunset"],"emotion":5,"flexibility":2,"thesis":"A compact terraced retreat with the rare combination of sea, Mt. Fuji and sunset potential.","value":"The entry price is modest for a scarce view and the station and interchange are relatively close.","risk":"Sediment-disaster caution area, private water, recurring management charges and a ban on commercial use weaken flexibility.","next":"Treat it as a lifestyle purchase unless the hazard, management and construction constraints prove acceptable in writing.","source":"https://kyonan.co.jp/property/%E5%AF%8C%E5%A3%AB%E8%A6%8B%E3%83%B6%E4%B8%98%E5%88%A5%E8%8D%98%E5%9C%B0%E5%8C%BA%E7%94%BBno-1/"},{"id":"south-hakone","name":"South Hakone Dialand land","town":"Kannami, Hirai","code":"22325","property_type":"land","price_yen":3500000,"land_m2":283,"drive_min":110,"scenery":["fuji","mountains","hot-spring"],"emotion":5,"flexibility":2,"thesis":"Mt. Fuji, the Hakone ranges and hot-spring rights create a complete mountain-retreat fantasy.","value":"Very low entry price for a serviced, managed villa area with a distinctive view.","risk":"North-east descending slope, annual fees, a ten-year renewal charge and a listing history since 2019 signal construction and resale friction.","next":"Price the slope build and every recurring fee; ask for comparable completed sales rather than nearby asking prices.","source":"https://www.homes.co.jp/tochi/b-1111450003055/"},{"id":"ogawa-78","name":"Ogawa Akiya Bank No. 78","town":"Ogawa, Kamiyokota","code":"11343","property_type":"akiya","price_yen":5000000,"land_m2":1663.44,"drive_min":86,"scenery":["rural","fields","hills"],"emotion":4,"flexibility":3,"thesis":"A 503-tsubo rural landscape plus surrounding farmland, close enough to the station and interchange to remain usable.","value":"The raw land-for-money leader and a credible regenerative landscape project.","risk":"Major building repairs, unregistered structure, undisclosed boundaries, as-is sale, agricultural land and control-area permissions.","next":"Require written rebuilding confirmation, a parcel schedule, boundary plan, title review and repair estimate before treating the area as usable.","source":"https://www.town.ogawa.saitama.jp/material/files/group/13/No78_zumen_20251110.pdf","town_page":"view-11343.html"},{"id":"ogawa-93","name":"Ogawa Akiya Bank No. 93","town":"Ogawa, Kibe","code":"11343","property_type":"akiya","price_yen":8600000,"land_m2":2328.99,"drive_min":86,"scenery":["rural","garden","hills"],"emotion":4,"flexibility":3,"thesis":"A traditional single-storey house within enough land to become a composed rural estate.","value":"The scale is exceptional at the asking price if a meaningful share is residential and accessible.","risk":"Mixed residential, miscellaneous, forest and agricultural registrations can make the usable portion much smaller than the headline area.","next":"Obtain the exact parcel and land-category schedule, then inspect access, scenery, structure and agricultural conversion constraints.","source":"https://www.town.ogawa.saitama.jp/gyosei/sosiki/13/4/5191.html","town_page":"view-11343.html"},{"id":"moroyama-r8-14","name":"Moroyama kominka R8-14","town":"Moroyama, Tsuzuranuki","code":"11326","property_type":"akiya","price_yen":10000000,"land_m2":710.18,"drive_min":77,"scenery":["kominka","garden","hills"],"emotion":5,"flexibility":3,"thesis":"A secluded, substantial kominka with doma and irori has character that would be expensive to recreate.","value":"The setting, 200-plus tsubo and proximity to Saitama Medical University give it more substance than a purely remote old house.","risk":"Unknown age, structure, roof, termites, foundations, simple toilet, no sewer and unresolved flood or sediment position.","next":"Commission a building inspection and renovation range before comparing the asking price with land-only alternatives.","source":"https://www.town.moroyama.saitama.jp/soshikikarasagasu/kikakuzaiseika/kikakukakari/utilization_of_vacant_house/akiyajohokanshousaijouhou/14267.html","town_page":"view-11326.html"},{"id":"kisarazu-a032","name":"Kisarazu Akiya Bank A032","town":"Kisarazu, Mariyatsu","code":"12206","property_type":"akiya","price_yen":4500000,"land_m2":null,"drive_min":50,"scenery":["garden","engawa","rural"],"emotion":4,"flexibility":3,"thesis":"A south-facing house with an engawa and Japanese garden already contains an emotional setting at a low entry price.","value":"Kisarazu has the strongest access and city-level liquidity in this shortlist, although Mariyatsu is a rural submarket.","risk":"Land area, building condition, utilities, road status and hazard position are not yet confirmed from the summary listing.","next":"Get the full property sheet and exact location before scoring it against the better-documented land candidates.","source":"https://www.city.kisarazu.lg.jp/soshiki/toshiseibi/jutaku/1/bukkennitirann/12351.html","town_page":"view-12206.html"}]};const P={"checked_on":"2026-11-20","title":"First Kawasaki-area search case","availability_note":"Every source page was reachable and still presented the candidate when checked. This does not replace direct availability confirmation from the broker.","route":{"name":"Futtsu scenery route","why":"Three different ownership ideas can be tested in one area: designed sea-view land, a large landscape canvas, and a compact Fuji-and-sea retreat.","candidate_ids":["amou-f5","takeoka-438","fujimigaoka-1"],"before_booking":"Confirm all three are available, ask for parcel and management documents, and do not book the route until at least two viewings are confirmed."},"candidates":{"amou-f5":{"stage":"route","freshness":"Active in the agent's current sea-view inventory at ¥7.74M.","gate":"Subdivision rules, all recurring fees, retaining implications and a build-cost opinion.","reason":"Strongest designed-view proposition and the anchor for the first route."},"takeoka-438":{"stage":"route","freshness":"Updated 2026-11-12 at ¥9M; source terms valid through 2026-11-26.","gate":"Parcel schedule, road and utility plan, drainage and whether the full 1,450 m² is practically usable.","reason":"Best large-land comparison on the same route; value depends on usable land rather than headline area."},"fujimigaoka-1":{"stage":"route","freshness":"Active at ¥5M on the agent's current property page.","gate":"Written hazard, cliff, private-water, management-fee and commercial-use constraints.","reason":"Useful lifestyle benchmark, but documented constraints make it weaker as a flexible investment."},"subashiri-fuji":{"stage":"later","freshness":"Active at ¥5M with the same 200.88 m² residential-land details.","gate":"Year-round view, snow access, ground and volcanic or sediment documents.","reason":"Exceptional singular scenery, but it deserves its own mountain-season visit rather than a mixed route."},"south-hakone":{"stage":"hold","freshness":"Active at ¥3.5M; the source also records publication since 2019.","gate":"Slope-build estimate, current fee schedule and completed-sale evidence.","reason":"Long market exposure, slope and recurring charges must be resolved before travel."},"ogawa-78":{"stage":"documents","freshness":"Still listed by Ogawa Town at ¥5M and 1,663.44 m².","gate":"Title, building registration, boundaries, written rebuilding basis, parcel schedule and repair inspection.","reason":"Best raw land-for-money case, but documents can eliminate it before a visit."},"ogawa-93":{"stage":"documents","freshness":"Still listed by Ogawa Town at ¥8.6M and 2,328.99 m².","gate":"Exact residential, agricultural, forest and miscellaneous parcel breakdown plus access and condition.","reason":"Headline scale is not meaningful until the usable residential share is known."},"moroyama-r8-14":{"stage":"documents","freshness":"Town page updated 2026-11-02 and still offers it at ¥10M.","gate":"Structural inspection, roof, moisture, termites, wastewater and a scoped renovation range.","reason":"Strongest house character, but the building—not the asking price—will decide the case."},"kisarazu-a032":{"stage":"documents","freshness":"The city page still presents A032 at ¥4.5M; its page date is 2025-05-23.","gate":"Full property sheet, exact land and building areas, utilities, road, hazards and current availability.","reason":"Closest and cheapest house case, but the public summary is too incomplete for comparison."}}};
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const STAGES={route:['First viewing route','Confirm and compare on one efficient trip'],documents:['Documents first','Resolve fatal paper and condition questions before travel'],later:['Later scenery comparison','Strong idea, but not efficient in the first route'],hold:['Evidence hold','Do not spend travel or professional fees until the named gate is resolved']};
+function read(key){try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return{}}}function progress(x){const d=read('trDossier:'+x.id),costs=d.costs||{},keys=['acquisition','works','utilities','clearing','external','professional'],resolved=keys.filter(k=>costs[k]&&!costs[k].unknown),visited=!!d.visit?.date,reviews=['broker','building'].filter(k=>['replied','reviewed'].includes(d.professional?.[k]?.status)).length;let lo=x.price_yen/1000000,hi=lo;for(const k of resolved){lo+=+costs[k].lo||0;hi+=Math.max(+costs[k].hi||0,+costs[k].lo||0)}return{resolved:resolved.length,unknown:keys.length-resolved.length,lo,hi,allCosts:resolved.length===6&&!!d.annual&&!d.annual.unknown,annualResolved:!!d.annual&&!d.annual.unknown,visited,reviews}}
+function card(x){const p=P.candidates[x.id],q=progress(x);return `<article class="case"><span class="state">${esc(STAGES[p.stage][0])}</span><h3>${esc(x.name)}</h3><div class="place">${esc(x.town)} · ¥${(x.price_yen/1000000).toFixed(1)}M · ${x.land_m2?Math.round(x.land_m2).toLocaleString('en-US')+' m²':'land unknown'}</div><p><b>Freshness:</b> ${esc(p.freshness)}</p><p><b>Why here:</b> ${esc(p.reason)}</p><p><b>Gate:</b> ${esc(p.gate)}</p><p><b>Supported cost now:</b> ¥${q.lo.toFixed(1)}–¥${q.hi.toFixed(1)}M + ${q.unknown} unresolved one-time item${q.unknown===1?'':'s'}; annual cost ${q.annualResolved?'entered':'unresolved'}.</p><div class="progress"><span class="done">source checked</span><span class="${q.resolved?'done':''}">${q.resolved}/6 costs</span><span class="${q.visited?'done':''}">${q.visited?'visit recorded':'not visited'}</span><span class="${q.reviews?'done':''}">${q.reviews}/2 reviews</span></div><div class="links"><a href="dossier-${esc(x.id)}.html">Open dossier</a><a href="${esc(x.source)}" target="_blank" rel="noopener">Open source</a></div></article>`}
+function publicLabel(x){if(x.property_type==='akiya')return x.scenery.includes('kominka')?'Traditional-house candidate':'Rural-house candidate';if(x.scenery.includes('sea'))return'Coastal-land candidate';if(x.scenery.includes('fuji'))return'Mountain-view land candidate';return'Large-land candidate'}
+function storyDefaults(x){const q=progress(x);return{title:publicLabel(x),evidence:`Public listing evidence checked; ${q.resolved} of 6 one-time cost categories resolved; visit ${q.visited?'recorded':'not yet recorded'}; ${q.reviews} of 2 professional reviews recorded.`,visit:'',decision:'in-progress',reason:'',right:'',missed:''}}
+let storyCandidate,story;
+function storyText(){const x=D.listings.find(y=>y.id===storyCandidate),p=P.candidates[x.id];return `${story.title}\n\nINITIAL ATTRACTION — Town Reboot assessment\n${x.thesis}\n\nEVIDENCE EXAMINED\n${story.evidence}\n\nIMPORTANT UNKNOWNS\n${p.gate}\n\nVISIT FINDINGS — manually sanitized\n${story.visit||'No public visit finding recorded.'}\n\nDECISION\n${$('storyDecision').options[$('storyDecision').selectedIndex].text}: ${story.reason||'Reason not yet recorded.'}\n\nWHAT TOWN REBOOT GOT RIGHT\n${story.right||'Not yet recorded.'}\n\nWHAT TOWN REBOOT MISSED\n${story.missed||'Not yet recorded.'}\n\nThis anonymized case omits the exact property, source link, private notes, raw observations, photographs, reviewer identity and decision history.`}
+function saveStory(){localStorage.setItem('trCaseStory:'+storyCandidate,JSON.stringify(story));$('storyPreview').textContent=storyText();$('storySafe').checked=false;$('copyStory').disabled=true;$('storyStatus').textContent='Saved only in this browser. Review the preview before copying.'}
+function loadStory(id){storyCandidate=id;const x=D.listings.find(y=>y.id===id),saved=read('trCaseStory:'+id);story={...storyDefaults(x),...saved};for(const [el,key] of [['storyTitle','title'],['storyEvidence','evidence'],['storyVisit','visit'],['storyDecision','decision'],['storyReason','reason'],['storyRight','right'],['storyMissed','missed']])$(el).value=story[key];$('storySafe').checked=false;$('copyStory').disabled=true;$('storyPreview').textContent=storyText();$('storyStatus').textContent='Saved only in this browser.'}
+async function copyStory(){const text=storyText();if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(text);else{const t=document.createElement('textarea');t.value=text;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}}
+function initStory(){const select=$('storyCandidate');select.innerHTML=D.listings.map(x=>`<option value="${esc(x.id)}">${esc(publicLabel(x))}</option>`).join('');select.addEventListener('change',()=>loadStory(select.value));for(const [el,key] of [['storyTitle','title'],['storyEvidence','evidence'],['storyVisit','visit'],['storyDecision','decision'],['storyReason','reason'],['storyRight','right'],['storyMissed','missed']])$(el).addEventListener('change',e=>{story[key]=e.target.value;saveStory()});$('storySafe').addEventListener('change',e=>{$('copyStory').disabled=!e.target.checked;$('storyStatus').textContent=e.target.checked?'Ready to copy. Nothing is published automatically.':'Review and confirm the preview before copying.'});$('copyStory').addEventListener('click',async()=>{try{await copyStory();$('storyStatus').textContent='Anonymized case copied. Nothing was published automatically.'}catch(e){$('storyStatus').textContent='Copy was blocked by this browser.'}});loadStory(D.listings[0].id)}
+function init(){const list=D.listings;$('title').textContent=P.title;$('availability').textContent=P.availability_note;$('checked').textContent=P.checked_on;$('mSources').textContent=list.length;const pp=list.map(progress);$('mCosts').textContent=pp.filter(x=>x.allCosts).length;$('mVisits').textContent=pp.filter(x=>x.visited).length;$('mReviews').textContent=pp.filter(x=>x.reviews).length;$('routeName').textContent=P.route.name;$('routeWhy').textContent=P.route.why;$('routeGate').textContent=P.route.before_booking;$('routeList').innerHTML=P.route.candidate_ids.map(id=>{const x=list.find(y=>y.id===id);return `<a href="dossier-${esc(id)}.html">${esc(x.name)}</a>`}).join('');$('groups').innerHTML=Object.keys(STAGES).map(stage=>{const rows=list.filter(x=>P.candidates[x.id].stage===stage);return `<section class="group"><div><h2>${STAGES[stage][0]}</h2><p class="sub">${STAGES[stage][1]}</p></div><div class="cards">${rows.map(card).join('')}</div></section>`}).join('');initStory()}
+init();
+</script>
+</body></html>
